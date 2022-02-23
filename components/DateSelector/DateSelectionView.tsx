@@ -4,6 +4,7 @@ import DatePicker from "./DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import getRandomDate from "./getRandomDate";
 import useWindowDimensions from "../../utils/useWindowDimensions";
+import * as ga from "../../utils/googleAnalytics";
 
 interface DateSelectionProps {
   showingDate: Dayjs;
@@ -30,16 +31,33 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
 
   const handleRandom = () => {
     if (!justFinished) {
-      const date = getRandomDate();
-      setDate(date);
-      submitDate(date);
+      const newDate = getRandomDate();
+      setDate(newDate);
+      submitDate(newDate);
+      sendBtnClickToGA("random", newDate?.format("YYYY-MM-DD") || "");
     }
   };
+
   useEffect(() => {
     // set random to start
     submitDate(date);
   }, []);
-  /** Inst **/
+
+  const sendBtnClickToGA = (btnName: string, dateStr: string) => {
+    ga.event({
+      action: "btn_click",
+      params: {
+        event_label: btnName,
+        value: dateStr,
+      },
+    });
+  };
+
+  const handleGo = () => {
+    sendBtnClickToGA("go", date?.format("YYYY-MM-DD") || "");
+    submitDate(date);
+  };
+
   const buttonSize = width > 500 ? "large" : "middle";
   const orDividerWidth = width < 500 ? "90%" : width > 800 ? "50%" : "70%";
   return (
@@ -90,7 +108,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                   date.isBefore("2010-01-01") ||
                   date.isAfter(new Date())
                 }
-                onClick={() => submitDate(date)}
+                onClick={handleGo}
               >
                 Go
               </Button>
@@ -110,7 +128,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
           </Row>
           <Row justify="center">
             <Button
-              onClick={() => handleRandom()}
+              onClick={handleRandom}
               size="large"
               aria-label="View posts from a random date"
               disabled={justFinished}
