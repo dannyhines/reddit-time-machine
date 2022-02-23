@@ -6,37 +6,35 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 const Home: NextPage = () => {
+  const description = "View the most popular news, discussions and memes from Reddit on a day in the past.";
   return (
     <div>
       <Head>
+        {/*   Primary Meta Tags   */}
+
         <title>Reddit Time Machine</title>
-        <meta name="theme-color" content="#000000" />
-        <meta property="og:site_title" content="Reddit Time Machine" />
-        <meta property="og:title" content="Reddit Time Machine" />
-        <meta property="og:author" content="Danny Hines" />
-        <meta
-          property="description"
-          content="View the most popular news, discussions and memes from Reddit on a day in the past."
-        />
-        <meta
-          property="og:description"
-          content="View the most popular news, discussions and memes from Reddit on a day in the past."
-        />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:image"
-          content="https://random-public-images-dch.s3.amazonaws.com/rtm-screenshot.png"
-        />
-        <meta
-          name="keywords"
-          content="Reddit,news,politics,memes,history,internet"
-        />
+        <meta name="title" content="Reddit Time Machine" />
+        <meta name="description" content={description} />
+        <meta name="keywords" content="Reddit,news,politics,memes,history,internet" />
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#000000" />
+
+        {/*   Open Graph / Facebook   */}
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.reddit-time-machine.com" />
+        <meta property="og:title" content="Reddit Time Machine" />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content="https://random-public-images-dch.s3.amazonaws.com/rtm-screenshot.png" />
+        <meta property="og:author" content="Danny Hines" />
+
         {/*   Twitter   */}
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:text:title" content="Reddit Time Machine" />
-        <meta name="twitter:creator" content="@danny__hines" />
+        <meta property="twitter:card" content="summary" />
+        <meta property="twitter:url" content="https://www.reddit-time-machine.com" />
+        <meta property="twitter:title" content="Reddit Time Machine" />
+        <meta property="twitter:description" content={description} />
+        <meta property="twitter:image" content="https://random-public-images-dch.s3.amazonaws.com/rtm-screenshot.png" />
       </Head>
 
       <Header />
