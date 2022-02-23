@@ -30,11 +30,11 @@ const Home: NextPage = () => {
         <meta property="og:author" content="Danny Hines" />
 
         {/*   Twitter   */}
-        <meta property="twitter:card" content="summary" />
-        <meta property="twitter:url" content="https://www.reddit-time-machine.com" />
-        <meta property="twitter:title" content="Reddit Time Machine" />
-        <meta property="twitter:description" content={description} />
-        <meta property="twitter:image" content="https://random-public-images-dch.s3.amazonaws.com/rtm-screenshot.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:url" content="https://www.reddit-time-machine.com" />
+        <meta name="twitter:title" content="Reddit Time Machine" />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content="https://random-public-images-dch.s3.amazonaws.com/rtm-screenshot.png" />
       </Head>
 
       <Header />
