@@ -1,3 +1,5 @@
+@import "~antd/dist/antd.dark.css";
+
 html,
 body {
   padding: 0;
@@ -13,4 +15,22 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+div {
+  color: rgb(250, 250, 250);
+}
+
+a {
+  color: #61dafb;
+}
+
+.ant-card-meta-title {
+  white-space: normal;
 }
