@@ -10,8 +10,6 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        {/*   Primary Meta Tags   */}
-
         <title>Reddit Time Machine</title>
         <meta name="title" content="Reddit Time Machine" />
         <meta name="description" content={description} />
@@ -20,8 +18,6 @@ const Home: NextPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#000000" />
 
-        {/*   Open Graph / Facebook   */}
-
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.reddit-time-machine.com" />
         <meta property="og:title" content="Reddit Time Machine" />
@@ -29,7 +25,6 @@ const Home: NextPage = () => {
         <meta property="og:image" content="https://random-public-images-dch.s3.amazonaws.com/rtm-screenshot.png" />
         <meta property="og:author" content="Danny Hines" />
 
-        {/*   Twitter   */}
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:url" content="https://www.reddit-time-machine.com" />
         <meta name="twitter:title" content="Reddit Time Machine" />
