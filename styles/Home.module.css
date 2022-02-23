@@ -3,13 +3,14 @@
 } */
 
 .main {
-  min-height: 100vh;
+  /* min-height: 100vh; */
+  /* min-width: 80vw;
   padding: 2rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 }
 
 /* .footer {
@@ -125,7 +126,6 @@
 
 /* Header */
 .app_logo {
-  height: 45px;
   pointer-events: none;
   margin: 1rem;
   padding-left: 4vw;

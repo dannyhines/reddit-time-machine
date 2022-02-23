@@ -16,7 +16,11 @@ const Footer: React.FC<HeaderProps> = (props) => {
         <Col span={24}>
           <p className={styles.footer_subtitle}>
             Data comes from{" "}
-            <a href="https://pushshift.io" target="_blank" rel="noreferrer">
+            <a
+              href="https://pushshift.io"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               pushshift.io
             </a>
           </p>

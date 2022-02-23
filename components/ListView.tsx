@@ -12,7 +12,7 @@ interface ListViewProps {
 const ListView: React.FC<ListViewProps> = (props) => {
   const { title, posts, loading } = props;
   const LoadingListView = [0, 1, 2, 3, 4, 5].map((value, i) => (
-    <Skeleton active avatar />
+    <Skeleton key={i} active avatar />
   ));
   return (
     <>

@@ -6,7 +6,7 @@ import getRandomDate from "./getRandomDate";
 import useWindowDimensions from "../../utils/useWindowDimensions";
 
 interface DateSelectionProps {
-  showingDate: number;
+  showingDate: Dayjs;
   handleSubmit: (epoch: number) => void;
 }
 
@@ -39,7 +39,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
     // set random to start
     submitDate(date);
   }, []);
-
+  /** Inst **/
   const buttonSize = width > 500 ? "large" : "middle";
   const orDividerWidth = width < 500 ? "90%" : width > 800 ? "50%" : "70%";
   return (
@@ -51,9 +51,9 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
           style={{ width: "100%" }}
         >
           <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
-            <h1>The Internet on a Day</h1>
-            <p style={{ marginBottom: "1rem" }}>
-              Select a date or click <strong>Random</strong> to see the most
+            <h2 style={{ fontSize: 24 }}>The Internet on a Day</h2>
+            <p style={{ marginBottom: "1rem", color: "#bfbfbf" }}>
+              Choose a date or click <strong>Random</strong> to see the most
               upvoted news, pictures and memes from a particular day between
               2010 and today.
             </p>
@@ -80,10 +80,11 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
               <Button
                 type="primary"
                 htmlType="submit"
+                aria-label="Show results for this date"
                 size={buttonSize}
                 style={{ paddingLeft: 10, paddingRight: 10 }}
                 disabled={
-                  date?.isSame(dayjs(showingDate)) ||
+                  date?.isSame(showingDate, "day") ||
                   justFinished ||
                   date === null ||
                   date.isBefore("2010-01-01") ||
@@ -111,6 +112,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
             <Button
               onClick={() => handleRandom()}
               size="large"
+              aria-label="View posts from a random date"
               disabled={justFinished}
               style={{ backgroundColor: "black", padding: "0 20px" }}
             >

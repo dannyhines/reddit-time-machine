@@ -11,14 +11,14 @@ interface CardViewProps {
 
 const LoadingCard = () => {
   const { width } = useWindowDimensions();
-  const imgWidth = width >= 1024 ? 340 : 140;
+  const imgWidth = width >= 1024 ? 300 : 140;
   const imgHeight = width >= 1024 ? 200 : 120;
   return (
     <Card
       style={{ maxWidth: 400, margin: "16px 0" }}
       bodyStyle={{ padding: 12 }}
     >
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "100%", opacity: 0.7 }}>
         <Skeleton.Image style={{ width: imgWidth, height: imgHeight }} />
       </div>
       <Meta description={<Skeleton active />} />
@@ -28,10 +28,10 @@ const LoadingCard = () => {
 
 const ImageCard: React.FC<CardViewProps> = (props) => {
   const { post } = props;
-
   if (!post) {
     return <LoadingCard />;
   }
+  /* eslint-disable */
   const { hasError, hasStartedInitialFetch, hasLoaded } = useImage(post.url);
   if (hasError) return null;
   if (hasStartedInitialFetch && !hasLoaded) {

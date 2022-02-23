@@ -5,7 +5,6 @@ import ListView from "./ListView";
 import { Post } from "../types/Post";
 import dayjs, { Dayjs } from "dayjs";
 import ImageCard from "./ImageCard";
-import useWindowDimensions from "../utils/useWindowDimensions";
 import styles from "../styles/Home.module.css";
 import ListTitle from "./ListTitle";
 
@@ -91,8 +90,6 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
     "MMM."
   )} ${getOrdinalNum(dateObj.date())} ${dateObj.year()}`;
 
-  const { width } = useWindowDimensions();
-
   const LoadingImageCards = [0, 1, 2, 3, 4, 5].map((value, i) => (
     <ImageCard key={i} post={undefined} />
   ));
@@ -102,7 +99,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
       <div className={styles.content_view}>
         <BackTop />
 
-        <DateSelectionView handleSubmit={dateChanged} showingDate={startDate} />
+        <DateSelectionView handleSubmit={dateChanged} showingDate={dateObj} />
 
         <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>
           <Divider style={{ borderTopColor: "#636363" }}>
