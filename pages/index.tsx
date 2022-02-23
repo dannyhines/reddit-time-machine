@@ -11,9 +11,9 @@ const Home: NextPage = () => {
       <Head>
         <title>Reddit Time Machine</title>
         <meta name="theme-color" content="#000000" />
-        <html prefix="og: http://ogp.me/ns#"></html>
         <meta property="og:site_title" content="Reddit Time Machine" />
         <meta property="og:title" content="Reddit Time Machine" />
+        <meta name="og:author" content="Danny Hines" />
         <meta
           property="og:description"
           content="View the most popular news, discussions and memes from Reddit on a day in the past."
@@ -27,13 +27,16 @@ const Home: NextPage = () => {
           name="keywords"
           content="Reddit,news,politics,memes,history,internet"
         />
-        <meta name="author" content="Danny Hines" />
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {/*   Twitter   */}
-        <meta name="twitter:card" content="app" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:text:title" content="Reddit Time Machine" />
         <meta name="twitter:creator" content="@danny__hines" />
+        <meta
+          name="twitter:image"
+          content="https://random-public-images-dch.s3.amazonaws.com/rtm-screenshot.png"
+        />
       </Head>
 
       <Header />
