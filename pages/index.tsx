@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 const Home: NextPage = () => {
-  const description = "View the most popular news, discussions and memes from Reddit on a day in the past.";
+  const description = "View the most popular news, pictures and memes from a day in Reddit history.";
   return (
     <div>
       <Head>

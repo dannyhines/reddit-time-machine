@@ -4,7 +4,7 @@ import DatePicker from "./DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import getRandomDate from "./getRandomDate";
 import useWindowDimensions from "../../utils/useWindowDimensions";
-import * as ga from "../../utils/googleAnalytics";
+import { sendBtnClickToGA } from "../../utils/googleAnalytics";
 
 interface DateSelectionProps {
   showingDate: Dayjs;
@@ -13,7 +13,7 @@ interface DateSelectionProps {
 
 const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
   const { showingDate, handleSubmit } = props;
-  const { width } = useWindowDimensions();
+  const { width, isMobile } = useWindowDimensions();
   const [date, setDate] = useState<Dayjs | null>(getRandomDate());
   // this variable makes sure they don't spam the 'Go' or 'Random' btns
   const [justFinished, setJustFinished] = useState(false);
@@ -43,16 +43,6 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
     submitDate(date);
   }, []);
 
-  const sendBtnClickToGA = (btnName: string, dateStr: string) => {
-    ga.event({
-      action: "btn_click",
-      params: {
-        event_label: btnName,
-        value: dateStr,
-      },
-    });
-  };
-
   const handleGo = () => {
     sendBtnClickToGA("go", date?.format("YYYY-MM-DD") || "");
     submitDate(date);
@@ -63,25 +53,15 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
   return (
     <Row justify="center">
       <Col lg={24} md={18}>
-        <Card
-          bordered={false}
-          headStyle={{ borderBottom: 0 }}
-          style={{ width: "100%" }}
-        >
+        <Card bordered={false} headStyle={{ borderBottom: 0 }} style={{ width: "100%" }}>
           <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
             <h2 style={{ fontSize: 24 }}>The Internet on a Day</h2>
             <p style={{ marginBottom: "1rem", color: "#bfbfbf" }}>
-              Choose a date or click <strong>Random</strong> to see the most
-              upvoted news, pictures and memes from a particular day between
-              2010 and today.
+              Choose a date or click <strong>Random</strong> to see the most upvoted news, pictures and memes from a
+              particular day between 2010 and today.
             </p>
           </div>
-          <Row
-            gutter={16}
-            justify="center"
-            align="middle"
-            style={{ margin: "20px -20px 0", padding: "8px 0" }}
-          >
+          <Row gutter={16} justify="center" align="middle" style={{ margin: "20px -20px 0", padding: "8px 0" }}>
             <Col>
               <h4 style={{ margin: 0 }}>Select a date:</h4>
             </Col>
@@ -91,7 +71,9 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 format="MM-DD-YYYY"
                 onChange={(value) => setDate(value)}
                 size={buttonSize}
+                style={{ width: isMobile ? 130 : "inherit" }}
                 aria-label="date selector"
+                disabledDate={(date) => !date || date.isBefore("2010-01-01") || date.isAfter(new Date())}
               />
             </Col>
             <Col>
@@ -102,9 +84,9 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 size={buttonSize}
                 style={{ paddingLeft: 10, paddingRight: 10 }}
                 disabled={
-                  date?.isSame(showingDate, "day") ||
-                  justFinished ||
                   date === null ||
+                  justFinished ||
+                  date.isSame(showingDate, "day") ||
                   date.isBefore("2010-01-01") ||
                   date.isAfter(new Date())
                 }

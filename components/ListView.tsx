@@ -2,6 +2,8 @@ import React from "react";
 import { Avatar, Card, List, Skeleton } from "antd";
 import { Post } from "../types/Post";
 import ListTitle from "./ListTitle";
+import { sendLinkClickToGA } from "../utils/googleAnalytics";
+import useWindowDimensions from "../utils/useWindowDimensions";
 
 interface ListViewProps {
   title: string;
@@ -9,11 +11,23 @@ interface ListViewProps {
   loading: boolean;
 }
 
+const LinkWithAnalytics = (url: string, text: string, type: "reddit" | "external", fontSize?: number) => {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => sendLinkClickToGA(type, url)}
+      style={{ fontSize, color: "inherit" }}
+    >
+      {text}
+    </a>
+  );
+};
 const ListView: React.FC<ListViewProps> = (props) => {
+  const { isMobile } = useWindowDimensions();
   const { title, posts, loading } = props;
-  const LoadingListView = [0, 1, 2, 3, 4, 5].map((value, i) => (
-    <Skeleton key={i} active avatar />
-  ));
+  const LoadingListView = [0, 1, 2, 3, 4, 5].map((value, i) => <Skeleton key={i} active avatar />);
   return (
     <>
       <ListTitle>{title}</ListTitle>
@@ -25,19 +39,18 @@ const ListView: React.FC<ListViewProps> = (props) => {
           dataSource={posts}
           locale={{ emptyText: `No ${title} to show` }}
           renderItem={(item) => (
-            <a href={item.full_link} target="_blank" rel="noopener noreferrer">
-              <List.Item>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar shape="square" src={item.thumbnail} size="large" />
-                  }
-                  title={<a href={item.url}>{item.title}</a>}
-                  description={`r/${item.subreddit} · ${
-                    item.author
-                  } · ${item.score?.toString()} pts`}
-                />
-              </List.Item>
-            </a>
+            <List.Item>
+              <List.Item.Meta
+                avatar={<Avatar shape="square" src={item.thumbnail} size="large" />}
+                title={LinkWithAnalytics(item.url, item.title, "external", isMobile ? 12 : undefined)}
+                description={LinkWithAnalytics(
+                  item.full_link,
+                  `r/${item.subreddit} · ${item.author} · ${item.score?.toString()} pts`,
+                  "reddit",
+                  isMobile ? 10 : undefined
+                )}
+              />
+            </List.Item>
           )}
         />
       </Card>
