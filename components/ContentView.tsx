@@ -7,6 +7,7 @@ import dayjs, { Dayjs } from "dayjs";
 import ImageCard from "./ImageCard";
 import styles from "../styles/Home.module.css";
 import ListTitle from "./ListTitle";
+import Head from "next/head";
 
 interface ContentViewProps {}
 
@@ -45,6 +46,12 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
           .then((res) => {
             setPolitics(res.data.filter((x: Post) => x.subreddit === "politics").slice(0, 6));
             setNews(res.data.filter((x: Post) => x.subreddit === "news" || x.subreddit === "worldnews").slice(0, 8));
+          })
+          .catch(() => {
+            setPolitics([]);
+            setNews([]);
+          })
+          .finally(() => {
             setLoadingState((state) => {
               return { ...state, news: false };
             });
@@ -57,12 +64,28 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
             setLoadingState((state) => {
               return { ...state, memes: false };
             });
+          })
+          .catch(() => {
+            setMemes([]);
+          })
+          .finally(() => {
+            setLoadingState((state) => {
+              return { ...state, memes: false };
+            });
           });
 
         fetch(url + "pics")
           .then((response) => response.json())
           .then((res) => {
             setPics(res.data.slice(0, 7));
+            setLoadingState((state) => {
+              return { ...state, pics: false };
+            });
+          })
+          .catch(() => {
+            setPics([]);
+          })
+          .finally(() => {
             setLoadingState((state) => {
               return { ...state, pics: false };
             });
@@ -94,44 +117,55 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
 
   const LoadingImageCards = [0, 1, 2, 3, 4, 5].map((value, i) => <ImageCard key={i} post={undefined} />);
 
+  const shortDate = dateObj.format("M/D/YY");
   return (
-    <main className={styles.main}>
-      <div className={styles.content_view}>
-        <BackTop />
+    <div>
+      <Head>
+        <title>Reddit Time Machine - {shortDate}</title>
+      </Head>
+      <main className={styles.main}>
+        <div className={styles.content_view}>
+          <BackTop />
 
-        <DateSelectionView handleSubmit={dateChanged} showingDate={dateObj} />
+          <DateSelectionView handleSubmit={dateChanged} showingDate={dateObj} />
 
-        <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>
-          <Divider style={{ borderTopColor: "#636363" }}>
-            <h2>{stringDate}</h2>
-          </Divider>
+          <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>
+            <Divider style={{ borderTopColor: "#636363" }}>
+              <h2>{stringDate}</h2>
+            </Divider>
 
-          <Row gutter={16} justify="center">
-            <Col lg={8} span={24} sm={{ order: 1 }} xs={{ order: 3 }}>
-              <ListView title="News" posts={news} loading={loadingState.news} />
-              <br />
-              <ListView title="Predictions" posts={predictions} loading={loadingState.news} />
-              <br />
-              <ListView title="Politics" posts={politics} loading={loadingState.news} />
-            </Col>
+            <Row gutter={16} justify="center">
+              <Col lg={8} span={24} sm={{ order: 1 }} xs={{ order: 3 }}>
+                <ListView title={`News on ${shortDate}`} posts={news} loading={loadingState.news} />
+                <br />
+                {dateObj.isBefore(new Date().getFullYear().toString()) ? (
+                  <>
+                    <ListView title={`Predictions on ${shortDate}`} posts={predictions} loading={loadingState.news} />
+                    <br />
+                  </>
+                ) : null}
 
-            <Col lg={8} span={12} order={2} xs={{ order: 1 }}>
-              <ListTitle>Pictures</ListTitle>
-              {loadingState.pics
-                ? LoadingImageCards
-                : pics.filter((x) => x.url.length).map((item) => <ImageCard key={item.id} post={item} />)}
-            </Col>
+                <ListView title={`Politics on ${shortDate}`} posts={politics} loading={loadingState.news} />
+              </Col>
 
-            <Col lg={8} span={12} order={3} xs={{ order: 2 }}>
-              <ListTitle>Memes</ListTitle>
-              {loadingState.memes
-                ? LoadingImageCards
-                : memes.filter((x) => x.url.length).map((item) => <ImageCard key={item.id} post={item} />)}
-            </Col>
-          </Row>
+              <Col lg={8} span={12} order={2} xs={{ order: 1 }}>
+                <ListTitle>Pictures</ListTitle>
+                {loadingState.pics
+                  ? LoadingImageCards
+                  : pics.filter((x) => x.url.length).map((item) => <ImageCard key={item.id} post={item} />)}
+              </Col>
+
+              <Col lg={8} span={12} order={3} xs={{ order: 2 }}>
+                <ListTitle>Memes</ListTitle>
+                {loadingState.memes
+                  ? LoadingImageCards
+                  : memes.filter((x) => x.url.length).map((item) => <ImageCard key={item.id} post={item} />)}
+              </Col>
+            </Row>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 };
 

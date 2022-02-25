@@ -5,6 +5,7 @@ import dayjs, { Dayjs } from "dayjs";
 import getRandomDate from "./getRandomDate";
 import useWindowDimensions from "../../utils/useWindowDimensions";
 import { sendBtnClickToGA } from "../../utils/googleAnalytics";
+import styles from "../../styles/Home.module.css";
 
 interface DateSelectionProps {
   showingDate: Dayjs;
@@ -71,9 +72,10 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 format="MM-DD-YYYY"
                 onChange={(value) => setDate(value)}
                 size={buttonSize}
-                style={{ width: isMobile ? 130 : "inherit" }}
+                style={{ width: isMobile ? 124 : "inherit" }}
                 aria-label="date selector"
                 disabledDate={(date) => !date || date.isBefore("2010-01-01") || date.isAfter(new Date())}
+                className={styles.datepicker_calendar_wrapper}
               />
             </Col>
             <Col>
@@ -82,7 +84,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 htmlType="submit"
                 aria-label="Show results for this date"
                 size={buttonSize}
-                style={{ paddingLeft: 10, paddingRight: 10 }}
+                style={{ paddingLeft: isMobile ? 10 : 16, paddingRight: isMobile ? 10 : 16 }}
                 disabled={
                   date === null ||
                   justFinished ||

@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import ContentView from "../components/ContentView";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -16,7 +15,7 @@ const Home: NextPage = () => {
         <meta name="keywords" content="Reddit,news,politics,memes,history,internet" />
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#050505" />
 
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.reddit-time-machine.com" />
