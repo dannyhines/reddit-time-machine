@@ -14,7 +14,7 @@ interface DateSelectionProps {
 
 const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
   const { showingDate, handleSubmit } = props;
-  const { width, isMobile } = useWindowDimensions();
+  const { width, isDesktop, isMobile } = useWindowDimensions();
   const [date, setDate] = useState<Dayjs | null>(getRandomDate());
   // this variable makes sure they don't spam the 'Go' or 'Random' btns
   const [justFinished, setJustFinished] = useState(false);
@@ -49,7 +49,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
     submitDate(date);
   };
 
-  const buttonSize = width > 500 ? "large" : "middle";
+  const buttonSize = isDesktop ? "large" : isMobile ? "small" : "middle";
   const orDividerWidth = width < 500 ? "90%" : width > 800 ? "50%" : "70%";
   return (
     <Row justify="center">
