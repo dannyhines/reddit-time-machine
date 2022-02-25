@@ -61,7 +61,7 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
       style={{ maxWidth: 400, maxHeight: 540, margin: "16px 0" }}
       cover={
         <Image
-          alt="Failed to load image"
+          alt={post.title}
           // onError={(err) => console.log(err)}
           src={post.url}
           style={{ maxHeight: 420 }}

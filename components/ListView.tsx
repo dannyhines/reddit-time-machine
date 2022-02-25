@@ -41,7 +41,7 @@ const ListView: React.FC<ListViewProps> = (props) => {
           renderItem={(item) => (
             <List.Item>
               <List.Item.Meta
-                avatar={<Avatar shape="square" src={item.thumbnail} size="large" />}
+                avatar={<Avatar shape="square" src={item.thumbnail} size="large" alt={item.title} />}
                 title={LinkWithAnalytics(item.url, item.title, "external", isMobile ? 12 : undefined)}
                 description={LinkWithAnalytics(
                   item.full_link,
