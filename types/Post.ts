@@ -8,6 +8,8 @@ export interface Post {
   score: number;
   preview?: ImagePreview;
   thumbnail?: string;
+  thumbnail_height?: number;
+  thumbnail_width?: number;
   created_utc: number;
 }
 
