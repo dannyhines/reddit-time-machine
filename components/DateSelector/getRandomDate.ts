@@ -6,7 +6,7 @@ const between = (
   to: string | Date | Dayjs = dayjs().subtract(6, "month")
 ) => {
   let newDate = dayjs("2013");
-  while (newDate.year() === 2013) {
+  while (newDate.year() === 2013 || newDate.isAfter("2020")) {
     const fromMilli = dayjs(from).valueOf();
     const max = dayjs(to).valueOf() - fromMilli;
     const dateOffset = Math.floor(Math.random() * max + 1);

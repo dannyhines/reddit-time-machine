@@ -26,18 +26,34 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
     setLoadingState({ news: true, memes: true, pics: true });
   }
 
+  const dateObj: Dayjs = dayjs(startDate * 1000);
+
+  const stringDate = `${getWeekDay(dateObj)},  ${dateObj.format("MMM.")} ${getOrdinalNum(
+    dateObj.date()
+  )} ${dateObj.year()}`;
+
+  const shortDate = dateObj.format("M/D/YY");
+
   useEffect(() => {
     const endDate = (startDate || new Date().getTime()) + 86400; // 1 day
     const oneMonth = 2629743;
 
     const baseURl = "https://api.pushshift.io/reddit/search/submission/?sort_type=score&sort=desc&size=25";
     const url = baseURl + `&after=${startDate}&before=${endDate}&subreddit=`;
-    const predictionsUrl =
-      baseURl +
-      `&after=${startDate - oneMonth}&before=${
-        endDate + oneMonth
-      }&subreddit=futurology&q="by%202020"||"by%202021"||"by%202022"`;
+    let predictionsUrl =
+      baseURl + `&after=${startDate - oneMonth}&before=${endDate + oneMonth}&subreddit=futurology&q=`;
 
+    const thisYear = new Date().getFullYear();
+    const queryingYear = dateObj.year();
+    if (queryingYear > 1970) {
+      predictionsUrl += `"by%20${thisYear}`;
+      for (var i = queryingYear; i < thisYear + 1; i++) {
+        if (i + 3 < thisYear) {
+          predictionsUrl += `"||"by%20${i + 3}`;
+        }
+      }
+      predictionsUrl += '"';
+    }
     const fetchData = async () => {
       setLoadingState({ news: true, memes: true, pics: true });
       try {
@@ -110,14 +126,8 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
     }
   }, [startDate]);
 
-  const dateObj: Dayjs = dayjs(startDate * 1000);
-  const stringDate = `${getWeekDay(dateObj)},  ${dateObj.format("MMM.")} ${getOrdinalNum(
-    dateObj.date()
-  )} ${dateObj.year()}`;
-
   const LoadingImageCards = [0, 1, 2, 3, 4, 5].map((value, i) => <ImageCard key={i} post={undefined} />);
 
-  const shortDate = dateObj.format("M/D/YY");
   return (
     <div>
       <Head>
