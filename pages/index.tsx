@@ -16,6 +16,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#050505" />
+        <meta name="google-site-verification" content="gjIhXeExnAXrpzOM0Ck7qpYWPV6S7JuEC-gQ8RuHAOI" />
 
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.reddit-time-machine.com" />
