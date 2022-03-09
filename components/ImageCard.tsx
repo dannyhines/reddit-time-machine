@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Card, Image, Skeleton } from "antd";
 import { Post } from "../types/Post";
 import { useImage } from "../utils/useImage";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import { sendLinkClickToGA } from "../utils/googleAnalytics";
+import { url } from "inspector";
 // import Image from "next/image";
 const { Meta } = Card;
 
 interface CardViewProps {
   post?: Post;
+  maxWidth: number;
 }
 
 const LoadingCard = () => {
@@ -27,7 +29,7 @@ const LoadingCard = () => {
 
 const ImageCard: React.FC<CardViewProps> = (props) => {
   const { isMobile } = useWindowDimensions();
-  const { post } = props;
+  const { post, maxWidth } = props;
   const imgState = useImage(post ? post.url : undefined);
   if (!post) {
     return <LoadingCard />;
@@ -43,11 +45,11 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
   // }
 
   const titleStyle = (smallFont: number) => {
-    return { fontSize: isMobile ? smallFont : 16, margin: isMobile ? 0 : 4, color: "inherit" };
+    return { fontSize: maxWidth < 300 ? smallFont : 16, margin: maxWidth < 300 ? 0 : 4, color: "inherit" };
   };
 
   const subtitleStyle = (smallFont: number) => {
-    return { fontSize: isMobile ? smallFont : 13, margin: isMobile ? 0 : "0 0 0 8px", color: "inherit" };
+    return { fontSize: maxWidth < 300 ? smallFont : 13, margin: maxWidth < 300 ? 0 : "0 0 0 8px", color: "inherit" };
   };
 
   const imgResolutions = post.preview?.images.resolutions ?? [];
@@ -55,16 +57,16 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
   const biggestPreviewUrl =
     imgResolutions && imgResolutions.length ? imgResolutions[imgResolutions.length - 1].url : undefined;
   const placeholderUrl = biggestPreviewUrl ?? thumbnailUrl;
+
   return (
     <Card
       hoverable
-      style={{ maxWidth: 400, maxHeight: 540, margin: "16px 0" }}
+      style={{ maxWidth, maxHeight: 540, margin: "16px 0" }}
       cover={
         <Image
           alt={post.title}
-          // onError={(err) => console.log(err)}
-          src={post.url}
-          style={{ maxHeight: 420 }}
+          src={isMobile ? thumbnailUrl : post.url}
+          style={{ height: "auto", maxHeight: 420, width: "auto", maxWidth }}
           placeholder={
             placeholderUrl ? <Image preview={false} src={placeholderUrl} width="100%" height="100%" /> : null
           }

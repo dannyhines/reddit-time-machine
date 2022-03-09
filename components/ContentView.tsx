@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BackTop, Row, Col, Spin, Divider } from "antd";
 import DateSelectionView from "./DateSelector";
 import ListView from "./ListView";
@@ -126,7 +126,23 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
     }
   }, [startDate]);
 
-  const LoadingImageCards = [0, 1, 2, 3, 4, 5].map((value, i) => <ImageCard key={i} post={undefined} />);
+  // Card width stuff
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [cardWidth, setcardWidth] = useState(200);
+  useEffect(() => {
+    function handleResize() {
+      if (cardRef.current) {
+        setcardWidth(cardRef.current.offsetWidth);
+      }
+    }
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const LoadingImageCards = [0, 1, 2, 3, 4, 5].map((value, i) => (
+    <ImageCard key={i} post={undefined} maxWidth={cardWidth} />
+  ));
 
   return (
     <div>
@@ -150,7 +166,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
                 <br />
                 {dateObj.isBefore(new Date().getFullYear().toString()) ? (
                   <>
-                    <ListView title={`Predictions on ${shortDate}`} posts={predictions} loading={loadingState.news} />
+                    <ListView title={`Predictions`} posts={predictions} loading={loadingState.news} />
                     <br />
                   </>
                 ) : null}
@@ -159,17 +175,23 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
               </Col>
 
               <Col lg={8} span={12} order={2} xs={{ order: 1 }}>
-                <ListTitle>Pictures</ListTitle>
-                {loadingState.pics
-                  ? LoadingImageCards
-                  : pics.filter((x) => x.url.length).map((item) => <ImageCard key={item.id} post={item} />)}
+                <div ref={cardRef}>
+                  <ListTitle>Pictures</ListTitle>
+                  {loadingState.pics
+                    ? LoadingImageCards
+                    : pics
+                        .filter((x) => x.url.length)
+                        .map((item) => <ImageCard key={item.id} post={item} maxWidth={cardWidth} />)}
+                </div>
               </Col>
 
               <Col lg={8} span={12} order={3} xs={{ order: 2 }}>
                 <ListTitle>Memes</ListTitle>
                 {loadingState.memes
                   ? LoadingImageCards
-                  : memes.filter((x) => x.url.length).map((item) => <ImageCard key={item.id} post={item} />)}
+                  : memes
+                      .filter((x) => x.url.length)
+                      .map((item) => <ImageCard key={item.id} post={item} maxWidth={cardWidth} />)}
               </Col>
             </Row>
           </div>
