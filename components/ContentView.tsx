@@ -147,7 +147,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
   return (
     <div>
       <Head>
-        <title>Reddit Time Machine - {shortDate}</title>
+        <title>Reddit Time Machine</title>
       </Head>
       <main className={styles.main}>
         <div className={styles.content_view}>
