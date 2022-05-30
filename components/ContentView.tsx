@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import { BackTop, Row, Col, Spin, Divider } from "antd";
-import DateSelectionView from "./DateSelector";
-import ListView from "./ListView";
-import { Post } from "../types/Post";
-import dayjs, { Dayjs } from "dayjs";
-import ImageCard from "./ImageCard";
-import styles from "../styles/Home.module.css";
-import ListTitle from "./ListTitle";
-import Head from "next/head";
+import React, { useEffect, useRef, useState } from 'react';
+import { BackTop, Row, Col, Spin, Divider } from 'antd';
+import DateSelectionView from './DateSelector';
+import ListView from './ListView';
+import { Post } from '../types/Post';
+import dayjs, { Dayjs } from 'dayjs';
+import ImageCard from './ImageCard';
+import styles from '../styles/Home.module.css';
+import ListTitle from './ListTitle';
+import Head from 'next/head';
 
 interface ContentViewProps {}
 
@@ -28,17 +28,17 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
 
   const dateObj: Dayjs = dayjs(startDate * 1000);
 
-  const stringDate = `${getWeekDay(dateObj)},  ${dateObj.format("MMM.")} ${getOrdinalNum(
+  const stringDate = `${getWeekDay(dateObj)},  ${dateObj.format('MMM.')} ${getOrdinalNum(
     dateObj.date()
   )} ${dateObj.year()}`;
 
-  const shortDate = dateObj.format("M/D/YY");
+  const shortDate = dateObj.format('M/D/YY');
 
   useEffect(() => {
     const endDate = (startDate || new Date().getTime()) + 86400; // 1 day
     const oneMonth = 2629743;
 
-    const baseURl = "https://api.pushshift.io/reddit/search/submission/?sort_type=score&sort=desc&size=25";
+    const baseURl = 'https://api.pushshift.io/reddit/search/submission/?sort_type=score&sort=desc&size=25';
     const url = baseURl + `&after=${startDate}&before=${endDate}&subreddit=`;
     let predictionsUrl =
       baseURl + `&after=${startDate - oneMonth}&before=${endDate + oneMonth}&subreddit=futurology&q=`;
@@ -54,14 +54,15 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
       }
       predictionsUrl += '"';
     }
+
     const fetchData = async () => {
       setLoadingState({ news: true, memes: true, pics: true });
       try {
-        fetch(url + "news,worldnews,politics")
+        fetch(url + 'news,worldnews,politics')
           .then((response) => response.json())
           .then((res) => {
-            setPolitics(res.data.filter((x: Post) => x.subreddit === "politics").slice(0, 6));
-            setNews(res.data.filter((x: Post) => x.subreddit === "news" || x.subreddit === "worldnews").slice(0, 8));
+            setPolitics(res.data.filter((x: Post) => x.subreddit === 'politics').slice(0, 6));
+            setNews(res.data.filter((x: Post) => x.subreddit === 'news' || x.subreddit === 'worldnews').slice(0, 8));
           })
           .catch(() => {
             setPolitics([]);
@@ -73,7 +74,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
             });
           });
 
-        fetch(url + "memes,memeeconomy,dankmemes,adviceanimals")
+        fetch(url + 'memes,memeeconomy,dankmemes,adviceanimals')
           .then((response) => response.json())
           .then((res) => {
             setMemes(res.data.slice(0, 10));
@@ -90,7 +91,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
             });
           });
 
-        fetch(url + "pics")
+        fetch(url + 'pics')
           .then((response) => response.json())
           .then((res) => {
             setPics(res.data.slice(0, 7));
@@ -115,7 +116,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
           setPredictions(predictionsJson.data.slice(0, 6));
         }
       } catch (error) {
-        console.log("error fetching posts: ", error);
+        console.log('error fetching posts: ', error);
       } finally {
         setLoadingState({ news: false, memes: false, pics: false });
       }
@@ -135,9 +136,9 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
         setcardWidth(cardRef.current.offsetWidth);
       }
     }
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     handleResize();
-    return () => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const LoadingImageCards = [0, 1, 2, 3, 4, 5].map((value, i) => (
@@ -155,12 +156,12 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
 
           <DateSelectionView handleSubmit={dateChanged} showingDate={dateObj} />
 
-          <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>
-            <Divider style={{ borderTopColor: "#636363" }}>
+          <div style={{ textAlign: 'center', paddingTop: 16, minHeight: 500 }}>
+            <Divider style={{ borderTopColor: '#636363' }}>
               <h3>{stringDate}</h3>
             </Divider>
 
-            <Row gutter={16} justify="center">
+            <Row gutter={16} justify='center'>
               <Col lg={8} span={24} sm={{ order: 1 }} xs={{ order: 3 }}>
                 <ListView title={`News on ${shortDate}`} posts={news} loading={loadingState.news} />
                 <br />
@@ -202,12 +203,12 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
 };
 
 const getWeekDay = (date: Dayjs) => {
-  var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   return weekday[date.day()];
 };
 
 function getOrdinalNum(n: number) {
-  return n + (n > 0 ? ["th", "st", "nd", "rd"][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10] : "");
+  return n + (n > 0 ? ['th', 'st', 'nd', 'rd'][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10] : '');
 }
 
 export default ContentView;
