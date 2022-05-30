@@ -28,6 +28,14 @@ const ListView: React.FC<ListViewProps> = (props) => {
   const { isMobile } = useWindowDimensions();
   const { title, posts, loading } = props;
   const LoadingListView = [0, 1, 2, 3, 4, 5].map((value, i) => <Skeleton key={i} active avatar />);
+
+  const getThumbnail = (post: Post) => {
+    const imgResolutions = post.preview?.images.resolutions ?? [];
+    const thumbnailUrl = post.thumbnail && post.thumbnail !== 'default' ? post.thumbnail : undefined;
+    const previewUrl = imgResolutions && imgResolutions.length ? imgResolutions[0].url : undefined;
+    return thumbnailUrl ?? previewUrl ?? 'default_thumbnail.png';
+  };
+
   return (
     <>
       <ListTitle>{title}</ListTitle>
