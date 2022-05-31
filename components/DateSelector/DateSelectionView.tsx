@@ -52,6 +52,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
 
   const buttonSize = isDesktop ? 'large' : isMobile ? 'small' : 'middle';
   const orDividerWidth = width < 500 ? '90%' : width > 800 ? '50%' : '70%';
+
   return (
     <Row justify='center'>
       <Col lg={24} md={18}>
@@ -89,7 +90,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 disabled={
                   date === null ||
                   justFinished ||
-                  date.isSame(showingDate, 'day') ||
+                  date.unix() === showingDate ||
                   date.isBefore('2010-01-01') ||
                   date.isAfter(new Date())
                 }
