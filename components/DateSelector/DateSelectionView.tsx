@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Col, Divider, Row } from 'antd';
 import DatePicker from './DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
@@ -8,14 +8,14 @@ import { sendBtnClickToGA } from '../../utils/googleAnalytics';
 import styles from '../../styles/Home.module.css';
 
 interface DateSelectionProps {
-  showingDate: Dayjs;
+  showingDate: number;
   handleSubmit: (epoch: number) => void;
 }
 
 const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
   const { showingDate, handleSubmit } = props;
   const { width, isDesktop, isMobile } = useWindowDimensions();
-  const [date, setDate] = useState<Dayjs | null>(getRandomDate());
+  const [date, setDate] = useState<Dayjs | null>(dayjs(showingDate * 1000));
   // this variable makes sure they don't spam the 'Go' or 'Random' btns
   const [justFinished, setJustFinished] = useState(false);
 
@@ -38,11 +38,6 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
       sendBtnClickToGA('random', newDate?.format('YYYY-MM-DD') || '');
     }
   };
-
-  useEffect(() => {
-    // set random to start
-    submitDate(date);
-  }, []);
 
   const handleGo = () => {
     sendBtnClickToGA('go', date?.format('YYYY-MM-DD') || '');
