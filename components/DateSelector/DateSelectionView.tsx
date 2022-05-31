@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Divider, Row } from 'antd';
 import DatePicker from './DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
@@ -29,6 +29,12 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
       setJustFinished(true);
     }
   };
+
+  useEffect(() => {
+    if (showingDate) {
+      setDate(dayjs(showingDate * 1000));
+    }
+  }, [showingDate]);
 
   const handleRandom = () => {
     if (!justFinished) {

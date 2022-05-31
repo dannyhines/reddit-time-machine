@@ -32,15 +32,22 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
 
   useEffect(() => {
     // Either use the date from the 'd' url query param, or random
+    if (!props.initialDate) {
+      const newDate = getRandomDate().unix();
+      router.push(`/?d=${newDate}`, undefined, { shallow: true });
+      setStartDate(newDate);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Call the API whenever the startDate changes
     if (startDate) {
       fetchData();
-    } else {
-      router.push({ query: { d: getRandomDate().unix() } });
     }
   }, [startDate]);
 
   const handleDateChanged = (x: number) => {
-    router.push({ query: { d: x } });
+    router.push(`/?d=${x}`, undefined, { shallow: true });
     setStartDate(x);
   };
 
