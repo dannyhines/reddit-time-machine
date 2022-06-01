@@ -20,7 +20,6 @@ interface ContentViewProps {
 const ContentView: React.FC<ContentViewProps> = (props) => {
   const router = useRouter();
   const [loadingState, setLoadingState] = useState({ news: false, memes: false, pics: false });
-  // const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState<number>(props.initialDate);
   const [news, setNews] = useState<Post[]>([]);
   const [memes, setMemes] = useState<Post[]>([]);
@@ -159,7 +158,11 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
                 <br />
                 {dateObj.isBefore(new Date().getFullYear().toString()) ? (
                   <>
-                    <ListView title={`Predictions`} posts={predictions} loading={loadingState.news} />
+                    <ListView
+                      title={`Predictions${predictions.length ? ' on ' + shortDate : ''}`}
+                      posts={predictions}
+                      loading={loadingState.news}
+                    />
                     <br />
                   </>
                 ) : null}
