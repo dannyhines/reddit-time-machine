@@ -153,7 +153,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
             </Divider>
 
             <Row gutter={16} justify='center'>
-              <Col lg={8} span={24} sm={{ order: 1 }} xs={{ order: 3 }}>
+              <Col lg={{ span: 8, order: 1 }} span={24} order={1} xs={{ order: 3 }}>
                 <ListView title={`News on ${shortDate}`} posts={news} loading={loadingState.news} />
                 <br />
                 {dateObj.isBefore(new Date().getFullYear().toString()) ? (
