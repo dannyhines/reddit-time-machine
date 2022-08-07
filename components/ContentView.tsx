@@ -149,7 +149,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
 
           <div style={{ textAlign: 'center', paddingTop: 16, minHeight: 500 }}>
             <Divider style={{ borderTopColor: '#636363' }}>
-              <h3>{stringDate}</h3>
+              <h2>{stringDate}</h2>
             </Divider>
 
             <Row gutter={16} justify='center'>
