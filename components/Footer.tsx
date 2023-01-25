@@ -7,20 +7,16 @@ interface HeaderProps {}
 const Footer: React.FC<HeaderProps> = (props) => {
   return (
     <footer className={styles.footer_container}>
-      <Row justify="center" align="middle" style={{ padding: "1rem 0" }}>
+      <Row justify='center' align='middle' style={{ padding: "1rem 0" }}>
         <Col span={24}>
           <p className={styles.footer_text}>
-            Reddit Time Machine © 2022 · Created by Danny Hines
+            Reddit Time Machine © 2022 · Created by <a href='https://www.dannyhines.io'>Danny Hines</a>
           </p>
         </Col>
         <Col span={24}>
           <p className={styles.footer_subtitle}>
             Data comes from{" "}
-            <a
-              href="https://pushshift.io"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href='https://pushshift.io' target='_blank' rel='noopener noreferrer'>
               pushshift.io
             </a>
           </p>
