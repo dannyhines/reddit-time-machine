@@ -1,11 +1,11 @@
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
-export const getPushshiftUrls = (startDate: number) => {
-  console.log('startDate', startDate);
+export const getApiUrls = (startDate: number) => {
+  console.log("startDate", startDate);
   const endDate = (startDate || new Date().getTime() / 1000) + 86400; // 1 day
   const oneMonth = 2629743;
   const dateObj = dayjs(startDate * 1000);
-  const baseURl = 'https://api.pushshift.io/reddit/search/submission/?sort_type=score&sort=desc&size=25';
+  const baseURl = "https://api.pullpush.io/reddit/search/submission/?sort_type=score&sort=desc&size=25";
   const url = baseURl + `&after=${startDate}&before=${endDate}&subreddit=`;
   let predictionsUrl = baseURl + `&after=${startDate - oneMonth}&before=${endDate + oneMonth}&subreddit=futurology&q=`;
 

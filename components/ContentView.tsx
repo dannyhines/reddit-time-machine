@@ -8,7 +8,7 @@ import ImageCard from './ImageCard';
 import styles from '../styles/Home.module.css';
 import ListTitle from './ListTitle';
 import Head from 'next/head';
-import { getPushshiftUrls } from '../utils/getPredictionsUrl';
+import { getApiUrls } from '../utils/getApiUrls';
 import { useRouter } from 'next/router';
 import getRandomDate from './DateSelector/getRandomDate';
 import { getDates } from '../utils/getDates';
@@ -52,9 +52,9 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
 
   const fetchData = async () => {
     setLoadingState({ news: true, memes: true, pics: true });
-    const { url, predictionsUrl } = getPushshiftUrls(startDate);
+    const { url, predictionsUrl } = getApiUrls(startDate);
     try {
-      fetch(url + 'news,worldnews,politics')
+      fetch(url + 'news')
         .then((response) => response.json())
         .then((res) => {
           setPolitics(res.data.filter((x: Post) => x.subreddit === 'politics').slice(0, 6));
@@ -70,7 +70,8 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
           });
         });
 
-      fetch(url + 'memes,memeeconomy,dankmemes,adviceanimals')
+      const memeSubreddits = 'memes,memeeconomy,dankmemes,adviceanimals';
+      fetch(url + 'memes')
         .then((response) => response.json())
         .then((res) => {
           setMemes(res.data.slice(0, 10));

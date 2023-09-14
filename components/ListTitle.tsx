@@ -1,7 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import useWindowDimensions from "../utils/useWindowDimensions";
 
-const ListTitle: React.FC<{}> = (props) => {
+interface Props {
+  children: ReactNode;
+}
+
+const ListTitle: React.FC<Props> = (props) => {
   const { isMobile } = useWindowDimensions();
   return (
     <div style={{ textAlign: "left" }}>
