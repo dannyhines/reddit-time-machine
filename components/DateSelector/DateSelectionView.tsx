@@ -57,7 +57,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
       <Col lg={24} md={18}>
         <Card bordered={false} headStyle={{ borderBottom: 0 }} style={{ width: '100%' }}>
           <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
-            <p style={{ marginBottom: '1rem', color: 'rgb(210, 210, 210)', fontSize: isDesktop ? 15 : 13 }}>
+            <p style={{ marginBottom: '1rem', color: 'rgb(210, 210, 210)', fontSize: 15 }}>
               Choose a date or click <strong>Random</strong> to see the most upvoted news, pictures and memes on a day
               in Reddit history (from 1/1/2010 to today)
             </p>
