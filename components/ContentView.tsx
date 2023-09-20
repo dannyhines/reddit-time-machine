@@ -51,6 +51,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
         fetch(url)
           .then((response) => response.json())
           .then((res: Post[]) => {
+            console.log("got this back from the API:", res);
             setMemes(res.filter((x: Post) => x.post_type === "meme").slice(0, 8));
             setPolitics(res.filter((x: Post) => x.post_type === "politics").slice(0, 8));
             setNews(res.filter((x: Post) => x.post_type === "news").slice(0, 8));
