@@ -6,23 +6,24 @@ import getRandomDate from './getRandomDate';
 import useWindowDimensions from '../../utils/useWindowDimensions';
 import { sendBtnClickToGA } from '../../utils/googleAnalytics';
 import styles from '../../styles/Home.module.css';
+import { LAST_AVAILABLE_DATE } from '../../utils/constants';
 
 interface DateSelectionProps {
-  showingDate: number;
-  handleSubmit: (epoch: number) => void;
+  showingDate: string;
+  handleSubmit: (dateStr: string) => void;
 }
 
 const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
   const { showingDate, handleSubmit } = props;
   const { width, isDesktop, isMobile } = useWindowDimensions();
-  const [date, setDate] = useState<Dayjs | null>(dayjs(showingDate * 1000));
+  const [date, setDate] = useState<Dayjs | null>(dayjs(showingDate));
   // this variable makes sure they don't spam the 'Go' or 'Random' btns
   const [justFinished, setJustFinished] = useState(false);
 
   const submitDate = (date: Dayjs | null) => {
     if (date && !justFinished) {
       // Update the parent date which calls the api
-      handleSubmit(date.startOf('day').unix());
+      handleSubmit(date.startOf('day').format('YYYY-MM-DD'));
       setTimeout(() => {
         setJustFinished(false);
       }, 2000);
@@ -32,7 +33,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
 
   useEffect(() => {
     if (showingDate) {
-      setDate(dayjs(showingDate * 1000));
+      setDate(dayjs(showingDate));
     }
   }, [showingDate]);
 
@@ -41,7 +42,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
       const newDate = getRandomDate();
       setDate(newDate);
       submitDate(newDate);
-      sendBtnClickToGA('random', newDate?.format('YYYY-MM-DD') || '');
+      sendBtnClickToGA('random', newDate.format('YYYY-MM-DD') || '');
     }
   };
 
@@ -66,9 +67,11 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
             gutter={[16, 20]}
             justify='center'
             align={isMobile ? 'bottom' : 'middle'}
-            style={{ margin: '20px -20px 0', padding: '8px 0' }}
+            style={{ marginTop: 20, marginBottom: 0, margin: '20px -20px 0', padding: '8px 0' }}
           >
-            {!isMobile ? <h4 style={{ fontSize: '1rem', margin: '0 8px 0 0' }}>Select a date:</h4> : null}
+            {!isMobile ? (
+              <h4 style={{ fontSize: '1rem', marginRight: 8, marginTop: 0, marginBottom: 0 }}>Select a date:</h4>
+            ) : null}
 
             <Col>
               {isMobile ? <h4 style={{ fontSize: '1rem' }}>Select a date:</h4> : null}
@@ -78,7 +81,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 onChange={(value) => setDate(value)}
                 style={{ width: isMobile ? 130 : 'inherit' }}
                 aria-label='date selector'
-                disabledDate={(date) => !date || date.isBefore('2010-01-01') || date.isAfter(new Date())}
+                disabledDate={(date) => !date || date.isBefore('2010-01-01') || date.isAfter(LAST_AVAILABLE_DATE)}
                 className={styles.datepicker_calendar_wrapper}
               />
             </Col>
@@ -91,9 +94,9 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 disabled={
                   date === null ||
                   justFinished ||
-                  date.unix() === showingDate ||
+                  date.format('YYYY-MM-DD') === showingDate ||
                   date.isBefore('2010-01-01') ||
-                  date.isAfter(new Date())
+                  date.isAfter(LAST_AVAILABLE_DATE)
                 }
                 onClick={handleGo}
               >

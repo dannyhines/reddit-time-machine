@@ -4,7 +4,7 @@ import { Post } from "../types/Post";
 import { useImage } from "../utils/useImage";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import { sendLinkClickToGA } from "../utils/googleAnalytics";
-import { REDDIT_BASE_URL } from "../utils/constants";
+import { DEFAULT_THUMBNAIL, REDDIT_BASE_URL } from "../utils/constants";
 import { getImageUrls } from "../utils/getImageUrls";
 
 const { Meta } = Card;
@@ -18,7 +18,7 @@ interface CardViewProps {
 const LoadingCard = () => {
   const { isDesktop } = useWindowDimensions();
   const imgWidth = isDesktop ? 300 : 140;
-  const imgHeight = isDesktop ? 240 : 120;
+  const imgHeight = isDesktop ? 200 : 120;
   return (
     <Card style={{ maxWidth: 400, margin: "16px 0" }} bodyStyle={{ padding: 12 }}>
       <div style={{ width: "100%", opacity: 0.7 }}>
@@ -69,12 +69,10 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
             imgUrlSmall ? (
               <Image
                 preview={false}
-                src={imgUrlSmall ?? "default"}
-                // width={post.thumbnail_width + "px"}
+                src={thumbnailUrl ?? DEFAULT_THUMBNAIL}
                 width='100%'
-                // height={imgSource.height + "px"}
-                // height='100%'
-                alt='Image'
+                height={200}
+                alt='Loading...'
               />
             ) : null
           }
