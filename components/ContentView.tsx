@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BackTop, Row, Col, Spin, Divider } from "antd";
 import DateSelectionView from "./DateSelector";
 import ListView from "./ListView";
@@ -18,7 +18,7 @@ interface ContentViewProps {
 
 const ContentView: React.FC<ContentViewProps> = (props) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   // const [loadingState, setLoadingState] = useState({ news: false, memes: false, pics: false });
   const [startDate, setStartDate] = useState<number>(props.initialDate);
   const [news, setNews] = useState<Post[]>([]);
@@ -26,7 +26,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
   const [pics, setPics] = useState<Post[]>([]);
   const [politics, setPolitics] = useState<Post[]>([]);
   const [predictions, setPredictions] = useState<Post[]>([]);
-
+  const [science, setScience] = useState<Post[]>([]);
   const { dateObj, stringDate, shortDate } = getDates(startDate);
 
   useEffect(() => {
@@ -38,39 +38,31 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
     }
   }, []);
 
-  const handleDateChanged = (x: number) => {
-    router.push(`/?d=${x}`, undefined, { shallow: true });
-    setStartDate(x);
-  };
+  const handleDateChanged = useCallback(
+    (x: number) => {
+      router.push(`/?d=${x}`, undefined, { shallow: true });
+      setStartDate(x);
+    },
+    [router]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const { url, predictionsUrl } = getApiUrls(startDate);
       try {
-        fetch(url)
-          .then((response) => response.json())
-          .then((res: Post[]) => {
-            console.log("got this back from the API:", res);
-            setMemes(res.filter((x: Post) => x.post_type === "meme").slice(0, 8));
-            setPolitics(res.filter((x: Post) => x.post_type === "politics").slice(0, 8));
-            setNews(res.filter((x: Post) => x.post_type === "news").slice(0, 8));
-            setPics(res.filter((x: Post) => x.post_type === "pics").slice(0, 8));
-            setPredictions(res.filter((x: Post) => x.post_type === "science").slice(0, 8));
-            setLoading(false);
-          })
-          .catch((err) => {
-            console.log("ERROR fetching posts:", err);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
+        const response = await fetch(url);
+        const data: Post[] = await response.json();
+        setMemes(data.filter((x) => x.post_type === "meme").slice(0, 8));
+        setPolitics(data.filter((x) => x.post_type === "politics").slice(0, 8));
+        setNews(data.filter((x) => x.post_type === "news").slice(0, 8));
+        setPics(data.filter((x) => x.post_type === "pics").slice(0, 8));
+        setScience(data.filter((x) => x.post_type === "science").slice(0, 8));
 
         // Only fetch predictions if posts are 2+ years old
-        // const twoYears = 63113852;
-        // if (startDate + twoYears < new Date().getTime()) {
-        //   const predicitonsResponse = await fetch(predictionsUrl);
-        //   const predictionsJson = await predicitonsResponse.json();
+        // if (startDate + TWO_YEARS_IN_SECONDS < new Date().getTime()) {
+        //   const predictionsResponse = await fetch(predictionsUrl);
+        //   const predictionsJson = await predictionsResponse.json();
         //   setPredictions(predictionsJson.data.slice(0, 6));
         // }
       } catch (error) {
@@ -100,9 +92,13 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const LoadingImageCards = [0, 1, 2, 3, 4, 5].map((value, i) => (
-    <ImageCard key={i} post={undefined} maxWidth={cardWidth} loading={loading} />
-  ));
+  const LoadingImageCards = useMemo(
+    () =>
+      [0, 1, 2, 3, 4, 5].map((value, i) => (
+        <ImageCard key={i} post={undefined} maxWidth={cardWidth} loading={loading} />
+      )),
+    [cardWidth, loading]
+  );
 
   return (
     <div>
@@ -119,12 +115,11 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
             <Divider style={{ borderTopColor: "#636363" }}>
               <h2>{stringDate}</h2>
             </Divider>
-
             <Row gutter={16} justify='center'>
               <Col lg={{ span: 8, order: 1 }} span={24} order={1} xs={{ order: 3 }}>
                 <ListView title={`News on ${shortDate}`} posts={news} loading={loading} />
                 <br />
-                {dateObj.isBefore(new Date().getFullYear().toString()) ? (
+                {/* {dateObj.isBefore(new Date().getFullYear().toString()) ? (
                   <>
                     <ListView
                       title={`Predictions${predictions.length ? " on " + shortDate : ""}`}
@@ -133,9 +128,12 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
                     />
                     <br />
                   </>
-                ) : null}
+                ) : null} */}
 
                 <ListView title={`Politics on ${shortDate}`} posts={politics} loading={loading} />
+                <br />
+
+                <ListView title={`Science on ${shortDate}`} posts={science} loading={loading} />
               </Col>
 
               <Col lg={8} span={12} order={2} xs={{ order: 1 }}>
