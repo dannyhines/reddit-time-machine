@@ -13,14 +13,14 @@ import getRandomDate from "./DateSelector/getRandomDate";
 import { getDates } from "../utils/getDates";
 
 interface ContentViewProps {
-  initialDate: number;
+  initialDate?: string;
 }
 
 const ContentView: React.FC<ContentViewProps> = (props) => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   // const [loadingState, setLoadingState] = useState({ news: false, memes: false, pics: false });
-  const [startDate, setStartDate] = useState<number>(props.initialDate);
+  const [startDate, setStartDate] = useState<string>(props.initialDate ?? getRandomDate().format("YYYY-MM-DD"));
   const [news, setNews] = useState<Post[]>([]);
   const [memes, setMemes] = useState<Post[]>([]);
   const [pics, setPics] = useState<Post[]>([]);
@@ -32,15 +32,15 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
   useEffect(() => {
     // Either use the date from the 'd' url query param, or random
     if (!props.initialDate) {
-      const newDate = getRandomDate().unix();
-      router.push(`/?d=${newDate}`, undefined, { shallow: true });
+      const newDate = getRandomDate().format("YYYY-MM-DD");
+      router.push(`/${newDate}`, undefined, { shallow: true });
       setStartDate(newDate);
     }
   }, []);
 
   const handleDateChanged = useCallback(
-    (x: number) => {
-      router.push(`/?d=${x}`, undefined, { shallow: true });
+    (x: string) => {
+      router.push(`/${x}`, undefined, { shallow: true });
       setStartDate(x);
     },
     [router]
@@ -54,10 +54,10 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
         const response = await fetch(url);
         const data: Post[] = await response.json();
         setMemes(data.filter((x) => x.post_type === "meme").slice(0, 8));
-        setPolitics(data.filter((x) => x.post_type === "politics").slice(0, 8));
+        setPolitics(data.filter((x) => x.post_type === "politics").slice(0, 6));
         setNews(data.filter((x) => x.post_type === "news").slice(0, 8));
         setPics(data.filter((x) => x.post_type === "pics").slice(0, 8));
-        setScience(data.filter((x) => x.post_type === "science").slice(0, 8));
+        setScience(data.filter((x) => x.post_type === "science").slice(0, 6));
 
         // Only fetch predictions if posts are 2+ years old
         // if (startDate + TWO_YEARS_IN_SECONDS < new Date().getTime()) {

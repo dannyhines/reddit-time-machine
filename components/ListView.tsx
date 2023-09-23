@@ -23,7 +23,8 @@ const ListView = React.memo(({ title, posts, loading }: ListViewProps) => {
   const getThumbnail = React.useMemo(
     () => (post: Post) => {
       const imgResolutions = post.preview?.images[0].resolutions ?? [];
-      const thumbnailUrl = post.thumbnail && post.thumbnail !== "default" ? post.thumbnail : undefined;
+      const thumbnailUrl =
+        post.thumbnail && post.thumbnail !== "default" ? post.thumbnail.replace("http://", "https://") : undefined;
       const previewUrl = imgResolutions && imgResolutions.length ? imgResolutions[0].url : undefined;
       return thumbnailUrl ?? previewUrl ?? "default_thumbnail.png";
     },

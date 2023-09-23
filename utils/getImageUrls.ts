@@ -1,4 +1,4 @@
-import { Post } from "../types/Post";
+import { Post } from '../types/Post';
 
 const getAspectRatio = (width: number | null, height: number | null) => {
   return width && height ? width / height : undefined;
@@ -11,12 +11,12 @@ const getAspectRatio = (width: number | null, height: number | null) => {
  * // TODO: use is_video, is_reddit_media_domain, preview.variants?
  */
 export function getImageUrls(post?: Post) {
-  if (!post || !post.url) return { src: "" };
+  if (!post || !post.url) return { src: '' };
   let { url, thumbnail, preview, thumbnail_width, thumbnail_height } = post;
   let aspectRatio = getAspectRatio(thumbnail_width, thumbnail_height);
 
-  thumbnail = thumbnail && thumbnail !== "default" ? thumbnail : null; // most are 'default'
-  let imgUrl = url.replace("http://", "https://") ?? "";
+  thumbnail = thumbnail && thumbnail !== 'default' ? thumbnail.replace('http://', 'https://') : null; // most are 'default'
+  let imgUrl = url.replace('http://', 'https://') ?? '';
   let smallestPreviewUrl = null; // tried to set to thumbnail, but it's too small
 
   if (preview) {
@@ -30,7 +30,7 @@ export function getImageUrls(post?: Post) {
 
   return {
     imgUrl,
-    thumbnailUrl: thumbnail ?? "default_thumbnail.png",
+    thumbnailUrl: thumbnail ?? 'default_thumbnail.png',
     imgUrlSmall: smallestPreviewUrl,
     aspectRatio,
   };

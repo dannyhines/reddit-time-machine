@@ -1,16 +1,16 @@
-import type { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import Header from '../components/Header';
 import ContentView from '../components/ContentView';
 import Footer from '../components/Footer';
-import Header from '../components/Header';
 import getRandomDate from '../components/DateSelector/getRandomDate';
-// import { getShortDateString } from '../utils/getDates';
+import { GetServerSidePropsContext } from 'next';
 
 interface Props {
-  initialDate: string;
+  date: string;
 }
 
-const Home: NextPage = (props: any) => {
+const DatePage = (props: Props) => {
   const description = 'View the most popular news, pictures and memes from a day in Reddit history.';
   // TODO: Change title to display date using getShortDateString()
   return (
@@ -40,15 +40,19 @@ const Home: NextPage = (props: any) => {
       </Head>
 
       <Header />
-      <ContentView initialDate={props.initialDate} />
+      <ContentView initialDate={props.date} />
       <Footer />
     </div>
   );
 };
 
+// Either passes the date as a prop if it's valid, or redirects to a random date's page
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  // If there's no date in the URL, redirect to the date page
-  if (!context.params?.date) {
+  const date = context.params?.date ?? '';
+  const dateRegex = new RegExp(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/);
+  const isValid = typeof date === 'string' ? dateRegex.test(date) : false;
+
+  if (!isValid) {
     return {
       redirect: {
         destination: `/${getRandomDate().format('YYYY-MM-DD')}`,
@@ -58,8 +62,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: { date: context.params?.date },
+    props: { date: date },
   };
 }
 
-export default Home;
+export default DatePage;
