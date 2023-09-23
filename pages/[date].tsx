@@ -5,7 +5,7 @@ import ContentView from '../components/ContentView';
 import Footer from '../components/Footer';
 import getRandomDate from '../components/DateSelector/getRandomDate';
 import { GetServerSidePropsContext } from 'next';
-import { getShortDateString } from '../utils/getDates';
+import { getMonthDayYear, getShortDateString } from '../utils/getDates';
 import dayjs from 'dayjs';
 
 interface Props {
@@ -13,9 +13,9 @@ interface Props {
 }
 
 const DatePage = (props: Props) => {
-  const fullDate = getShortDateString(dayjs(props.date));
-  const title = `Reddit Time Machine | ${fullDate}`;
-  const description = `View the most popular news, pictures and memes from Reddit on ${fullDate}.`;
+  const date = dayjs(props.date);
+  const title = `Reddit Time Machine | ${getShortDateString(date)}`;
+  const description = `View the most popular news, pictures and memes from ${getMonthDayYear(date)}.`;
   const url = `https://www.reddit-time-machine.com/${props.date}`;
   return (
     <div>
