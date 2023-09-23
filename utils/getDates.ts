@@ -22,3 +22,8 @@ export const getShortDateString = (dateObj: Dayjs) => {
   )} ${dateObj.year()}`;
   return stringDate;
 };
+
+export const getMonthDayYear = (dateObj: Dayjs) => {
+  const stringDate = `${dateObj.format('MMMM')} ${getOrdinalNum(dateObj.date())}, ${dateObj.year()}`;
+  return stringDate;
+};
