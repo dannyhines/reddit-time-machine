@@ -1,6 +1,7 @@
 import { Col, Row } from "antd";
 import React from "react";
 import styles from "../styles/Home.module.css";
+import { LinkWithAnalytics } from "./LinkWithAnalytics";
 
 interface HeaderProps {}
 
@@ -13,7 +14,8 @@ const Footer: React.FC<HeaderProps> = (props) => {
         </Col>
         <Col span={24}>
           <p className={styles.footer_subtitle}>
-            Created by <a href='https://www.dannyhines.io'>Danny Hines</a>
+            Created by{" "}
+            <LinkWithAnalytics url='https://www.dannyhines.io' text='Danny Hines' type='external' color='#61dafb' />
           </p>
         </Col>
       </Row>
