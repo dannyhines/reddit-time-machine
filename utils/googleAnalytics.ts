@@ -1,16 +1,22 @@
+declare global {
+  interface Window {
+    gtag: any;
+  }
+}
+
 // log the pageview with their URL
-export const pageview = (url) => {
+export const pageview = (url: string) => {
   window.gtag("config", process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS, {
     page_path: url,
   });
 };
 
 // log specific events happening.
-export const event = ({ action, params }) => {
+export const event = ({ action, params }: { action: string; params: any }) => {
   window.gtag("event", action, params);
 };
 
-export const sendBtnClickToGA = (btnName, dateStr) => {
+export const sendBtnClickToGA = (btnName: string, dateStr: string) => {
   event({
     action: "btn_click",
     params: {
@@ -20,7 +26,7 @@ export const sendBtnClickToGA = (btnName, dateStr) => {
   });
 };
 
-export const sendLinkClickToGA = (type, url) => {
+export const sendLinkClickToGA = (type: "reddit" | "external", url: string) => {
   event({
     action: "link_click",
     params: {

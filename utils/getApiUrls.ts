@@ -5,8 +5,8 @@ export const getApiUrls = (startDate: number) => {
   const endDate = (startDate || new Date().getTime() / 1000) + 86400; // 1 day
   const oneMonth = 2629743;
   const dateObj = dayjs(startDate * 1000);
-  const baseURl = "https://api.pullpush.io/reddit/search/submission/?sort_type=score&sort=desc&size=25";
-  const url = baseURl + `&after=${startDate}&before=${endDate}&subreddit=`;
+  const baseURl = "/api/posts";
+  const url = baseURl + `?date=${dateObj.format("YYYY-MM-DD")}`;
   let predictionsUrl = baseURl + `&after=${startDate - oneMonth}&before=${endDate + oneMonth}&subreddit=futurology&q=`;
 
   const thisYear = new Date().getFullYear();

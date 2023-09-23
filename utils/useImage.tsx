@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 
 export const useImage = (src?: string) => {
-  if (!src) return { hasLoaded: false, hasError: false, hasStartedInitialFetch: false };
-
   const [hasLoaded, setHasLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [hasStartedInitialFetch, setHasStartedInitialFetch] = useState(false);
@@ -14,7 +12,7 @@ export const useImage = (src?: string) => {
 
     // Here's where the magic happens.
     const image = new Image();
-    image.src = src;
+    image.src = src ?? "";
 
     const handleError = () => {
       setHasError(true);
@@ -34,5 +32,6 @@ export const useImage = (src?: string) => {
     };
   }, [src]);
 
+  if (!src) return { hasLoaded: false, hasError: false, hasStartedInitialFetch: false };
   return { hasLoaded, hasError, hasStartedInitialFetch };
 };

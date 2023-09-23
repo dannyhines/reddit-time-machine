@@ -2,6 +2,7 @@
   max-width: 1250px;
   margin: 0 auto;
   padding: 10px;
+  min-height: 86vh;
 }
 
 /* Header */
@@ -13,7 +14,7 @@
 }
 
 .app_header {
-  min-height: 10vh;
+  min-height: 8vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,12 +29,13 @@
 
 .footer_text {
   margin: 0;
-  font-size: calc(7px + 1vmin);
+  font-size: calc(8px + 0.5vmin);
+  color: #dddddd;
 }
 
 .footer_subtitle {
-  font-size: calc(5px + 1vmin);
-  color: #bbbbbb;
+  font-size: calc(6px + 0.5vmin);
+  color: #999999;
   margin: 5px 0 0;
 }
 
