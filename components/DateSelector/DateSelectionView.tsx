@@ -6,15 +6,16 @@ import getRandomDate from './getRandomDate';
 import useWindowDimensions from '../../utils/useWindowDimensions';
 import { sendBtnClickToGA } from '../../utils/googleAnalytics';
 import styles from '../../styles/Home.module.css';
-import { LAST_AVAILABLE_DATE } from '../../utils/constants';
+import { FIRST_AVAILABLE_DATE, LAST_AVAILABLE_DATE } from '../../utils/constants';
 
 interface DateSelectionProps {
   showingDate: string;
   handleSubmit: (dateStr: string) => void;
+  onHomePage?: boolean;
 }
 
 const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
-  const { showingDate, handleSubmit } = props;
+  const { showingDate, handleSubmit, onHomePage } = props;
   const { width, isDesktop, isMobile } = useWindowDimensions();
   const [date, setDate] = useState<Dayjs | null>(dayjs(showingDate));
   // this variable makes sure they don't spam the 'Go' or 'Random' btns
@@ -81,7 +82,9 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 onChange={(value) => setDate(value)}
                 style={{ width: isMobile ? 130 : 'inherit' }}
                 aria-label='date selector'
-                disabledDate={(date) => !date || date.isBefore('2010-01-01') || date.isAfter(LAST_AVAILABLE_DATE)}
+                disabledDate={(date) =>
+                  !date || date.isBefore(FIRST_AVAILABLE_DATE) || date.isAfter(LAST_AVAILABLE_DATE)
+                }
                 className={styles.datepicker_calendar_wrapper}
               />
             </Col>
@@ -90,12 +93,13 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 type='primary'
                 htmlType='submit'
                 aria-label='Show results for this date'
+                title='Show results for this date'
                 style={{ paddingLeft: isMobile ? 10 : 16, paddingRight: isMobile ? 10 : 16 }}
                 disabled={
                   date === null ||
                   justFinished ||
-                  date.format('YYYY-MM-DD') === showingDate ||
-                  date.isBefore('2010-01-01') ||
+                  (date.format('YYYY-MM-DD') === showingDate && !onHomePage) ||
+                  date.isBefore(FIRST_AVAILABLE_DATE) ||
                   date.isAfter(LAST_AVAILABLE_DATE)
                 }
                 onClick={handleGo}
