@@ -1,42 +1,29 @@
-# Reddit Time Capsule
+# Reddit Time Machine
+
+Check it out: [reddit-time-machine.com](https://reddit-time-machine.com/)
 
 ### See what the internet was talking about on a random day in the past decade.
 
-```
-This is the sequel to 'Reddit Time Capsule', this time using NextJS and deployed with Vercel.
-```
+> This is the sequel to 'Reddit Time Capsule', this time using NextJS and deployed with Vercel.
 
-[Check it out](https://reddit-time-machine.com/)
-
-Shoutout to Jason Baumgartner ([pushshift.io](https://pushshift.io/)) for creating a public API for fetching Reddit history.
+To see how I built this website, read [the blog post](https://www.dannyhines.io/blog/reddit-time-machine) on building the Reddit Time Machine.
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Running locally
 
-First, run the development server:
+This is a NextJS project. First install dependencies with `yarn install` then run the development server:
 
 ```bash
-npm run dev
-# or
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. It'll update as you make changes.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Acknowledgements
 
-## Learn More
+Originally I used Jason Baumgartner's free API on ([pushshift.io](https://pushshift.io/)) for fetching Reddit history. Unfortunately, the project died in 2023 in the wake of Reddit's changes to their API pricing.
 
-To learn more about Next.js, take a look at the following resources:
+I instead found [this archive](https://academictorrents.com/details/c398a571976c78d346c325bd75c47b82edf6124e) of Reddit posts by subreddit, did a little ETL and put the most popular posts in a database which I can query via an API (also hosted on Vercel).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+I appreciate feedback! Please leave an issue if there are any enhancements you'd like to see.
