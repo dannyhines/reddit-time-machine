@@ -48,13 +48,14 @@ const Home: NextPage = () => {
       <Header />
 
       <main className={styles.main}>
-        <DateSelectionView
-          showingDate={getRandomDate().format("YYYY-MM-DD")}
-          handleSubmit={handleDateSelection}
-          onHomePage
-        />
+        <div className={styles.content_view}>
+          <DateSelectionView
+            showingDate={getRandomDate().format("YYYY-MM-DD")}
+            handleSubmit={handleDateSelection}
+            onHomePage
+          />
+        </div>
       </main>
-
       <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
         <Footer />
       </div>
