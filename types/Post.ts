@@ -1,18 +1,3 @@
-// export interface Post {
-//   id: string;
-//   title: string;
-//   author: string;
-//   full_link: string;
-//   url: string;
-//   subreddit: string;
-//   score: number;
-//   preview?: ImagePreview;
-//   thumbnail?: string;
-//   thumbnail_height?: number;
-//   thumbnail_width?: number;
-//   created_utc: number;
-// }
-
 export interface Post {
   id: string;
   title: string;

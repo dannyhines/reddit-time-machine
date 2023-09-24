@@ -1,20 +1,20 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import ContentView from '../components/ContentView';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
-import getRandomDate from '../components/DateSelector/getRandomDate';
-import DateSelectionView from '../components/DateSelector';
-import router from 'next/router';
-import dayjs from 'dayjs';
+import type { NextPage } from "next";
+import Head from "next/head";
+import ContentView from "../components/ContentView";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import getRandomDate from "../components/DateSelector/getRandomDate";
+import DateSelectionView from "../components/DateSelector";
+import router from "next/router";
+import dayjs from "dayjs";
 
 const Home: NextPage = () => {
-  const title = 'Reddit Time Machine';
-  const description = 'View the most popular news, pictures and memes from a day in Reddit history.';
-  const url = 'https://www.reddit-time-machine.com';
+  const title = "Reddit Time Machine";
+  const description = "View the most popular news, pictures and memes from a day in Reddit history.";
+  const url = "https://www.reddit-time-machine.com";
 
   const handleDateSelection = (dateStr: string) => {
-    const newDate = dayjs(dateStr).format('YYYY-MM-DD');
+    const newDate = dayjs(dateStr).format("YYYY-MM-DD");
     router.push(`/${newDate}`, undefined, { shallow: true });
   };
 
@@ -47,12 +47,12 @@ const Home: NextPage = () => {
       <Header />
 
       <DateSelectionView
-        showingDate={getRandomDate().format('YYYY-MM-DD')}
+        showingDate={getRandomDate().format("YYYY-MM-DD")}
         handleSubmit={handleDateSelection}
         onHomePage
       />
 
-      <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
+      <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
         <Footer />
       </div>
     </div>

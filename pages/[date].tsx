@@ -1,12 +1,11 @@
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import Header from '../components/Header';
-import ContentView from '../components/ContentView';
-import Footer from '../components/Footer';
-import getRandomDate from '../components/DateSelector/getRandomDate';
-import { GetServerSidePropsContext } from 'next';
-import { getMonthDayYear, getShortDateString } from '../utils/getDates';
-import dayjs from 'dayjs';
+import Head from "next/head";
+import Header from "../components/Header";
+import ContentView from "../components/ContentView";
+import Footer from "../components/Footer";
+import getRandomDate from "../components/DateSelector/getRandomDate";
+import { GetServerSidePropsContext } from "next";
+import { getMonthDayYear, getShortDateString } from "../utils/getDates";
+import dayjs from "dayjs";
 
 interface Props {
   date: string;
@@ -52,14 +51,14 @@ const DatePage = (props: Props) => {
 
 // Either passes the date as a prop if it's valid, or redirects to a random date's page
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const date = context.params?.date ?? '';
+  const date = context.params?.date ?? "";
   const dateRegex = new RegExp(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/);
-  const isValid = typeof date === 'string' ? dateRegex.test(date) : false;
+  const isValid = typeof date === "string" ? dateRegex.test(date) : false;
 
   if (!isValid) {
     return {
       redirect: {
-        destination: `/${getRandomDate().format('YYYY-MM-DD')}`,
+        destination: `/${getRandomDate().format("YYYY-MM-DD")}`,
         permanent: false,
       },
     };

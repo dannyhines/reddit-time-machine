@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, Divider, Row } from 'antd';
-import DatePicker from './DatePicker';
-import dayjs, { Dayjs } from 'dayjs';
-import getRandomDate from './getRandomDate';
-import useWindowDimensions from '../../utils/useWindowDimensions';
-import { sendBtnClickToGA } from '../../utils/googleAnalytics';
-import styles from '../../styles/Home.module.css';
-import { FIRST_AVAILABLE_DATE, LAST_AVAILABLE_DATE } from '../../utils/constants';
+import React, { useEffect, useState } from "react";
+import { Button, Card, Col, Divider, Row } from "antd";
+import DatePicker from "./DatePicker";
+import dayjs, { Dayjs } from "dayjs";
+import getRandomDate from "./getRandomDate";
+import useWindowDimensions from "../../utils/useWindowDimensions";
+import { sendBtnClickToGA } from "../../utils/googleAnalytics";
+import styles from "../../styles/Home.module.css";
+import { FIRST_AVAILABLE_DATE, LAST_AVAILABLE_DATE } from "../../utils/constants";
 
 interface DateSelectionProps {
   showingDate: string;
@@ -24,7 +24,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
   const submitDate = (date: Dayjs | null) => {
     if (date && !justFinished) {
       // Update the parent date which calls the api
-      handleSubmit(date.startOf('day').format('YYYY-MM-DD'));
+      handleSubmit(date.startOf("day").format("YYYY-MM-DD"));
       setTimeout(() => {
         setJustFinished(false);
       }, 2000);
@@ -43,23 +43,23 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
       const newDate = getRandomDate();
       setDate(newDate);
       submitDate(newDate);
-      sendBtnClickToGA('random', newDate.format('YYYY-MM-DD') || '');
+      sendBtnClickToGA("random", newDate.format("YYYY-MM-DD") || "");
     }
   };
 
   const handleGo = () => {
-    sendBtnClickToGA('go', date?.format('YYYY-MM-DD') || '');
+    sendBtnClickToGA("go", date?.format("YYYY-MM-DD") || "");
     submitDate(date);
   };
 
-  const orDividerWidth = width < 500 ? '90%' : width > 800 ? '50%' : '70%';
+  const orDividerWidth = width < 500 ? "90%" : width > 800 ? "50%" : "70%";
 
   return (
     <Row justify='center'>
       <Col lg={24} md={18}>
-        <Card bordered={false} headStyle={{ borderBottom: 0 }} style={{ width: '100%' }}>
-          <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
-            <p style={{ marginBottom: '1rem', color: 'rgb(210, 210, 210)', fontSize: 15 }}>
+        <Card bordered={false} headStyle={{ borderBottom: 0 }} style={{ width: "100%" }}>
+          <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
+            <p style={{ marginBottom: "1rem", color: "rgb(210, 210, 210)", fontSize: 15 }}>
               Choose a date or click <strong>Random</strong> to see the most upvoted news, pictures and memes on a day
               in Reddit history (from 1/1/2010 to today)
             </p>
@@ -67,20 +67,20 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
           <Row
             gutter={[16, 20]}
             justify='center'
-            align={isMobile ? 'bottom' : 'middle'}
-            style={{ marginTop: 20, marginBottom: 0, margin: '20px -20px 0', padding: '8px 0' }}
+            align={isMobile ? "bottom" : "middle"}
+            style={{ marginTop: 20, marginBottom: 0, margin: "20px -20px 0", padding: "8px 0" }}
           >
             {!isMobile ? (
-              <h4 style={{ fontSize: '1rem', marginRight: 8, marginTop: 0, marginBottom: 0 }}>Select a date:</h4>
+              <h4 style={{ fontSize: "1rem", marginRight: 8, marginTop: 0, marginBottom: 0 }}>Select a date:</h4>
             ) : null}
 
             <Col>
-              {isMobile ? <h4 style={{ fontSize: '1rem' }}>Select a date:</h4> : null}
+              {isMobile ? <h4 style={{ fontSize: "1rem" }}>Select a date:</h4> : null}
               <DatePicker
                 value={date}
                 format='MM-DD-YYYY'
                 onChange={(value) => setDate(value)}
-                style={{ width: isMobile ? 130 : 'inherit' }}
+                style={{ width: isMobile ? 130 : "inherit" }}
                 aria-label='date selector'
                 disabledDate={(date) =>
                   !date || date.isBefore(FIRST_AVAILABLE_DATE) || date.isAfter(LAST_AVAILABLE_DATE)
@@ -98,7 +98,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 disabled={
                   date === null ||
                   justFinished ||
-                  (date.format('YYYY-MM-DD') === showingDate && !onHomePage) ||
+                  (date.format("YYYY-MM-DD") === showingDate && !onHomePage) ||
                   date.isBefore(FIRST_AVAILABLE_DATE) ||
                   date.isAfter(LAST_AVAILABLE_DATE)
                 }
@@ -126,7 +126,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
               size='large'
               aria-label='View posts from a random date'
               disabled={justFinished}
-              style={{ backgroundColor: 'black', padding: '0 20px' }}
+              style={{ backgroundColor: "black", padding: "0 20px" }}
             >
               Random
             </Button>
