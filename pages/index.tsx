@@ -7,6 +7,7 @@ import getRandomDate from "../components/DateSelector/getRandomDate";
 import DateSelectionView from "../components/DateSelector";
 import router from "next/router";
 import dayjs from "dayjs";
+import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
   const title = "Reddit Time Machine";
@@ -46,11 +47,13 @@ const Home: NextPage = () => {
 
       <Header />
 
-      <DateSelectionView
-        showingDate={getRandomDate().format("YYYY-MM-DD")}
-        handleSubmit={handleDateSelection}
-        onHomePage
-      />
+      <main className={styles.main}>
+        <DateSelectionView
+          showingDate={getRandomDate().format("YYYY-MM-DD")}
+          handleSubmit={handleDateSelection}
+          onHomePage
+        />
+      </main>
 
       <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
         <Footer />
