@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { BackTop, Row, Col, Divider } from "antd";
+import { BackTop, Row, Col, Divider, Spin } from "antd";
 import DateSelectionView from "./DateSelector";
 import ListView from "./ListView";
 import { Post } from "../types/Post";
@@ -78,7 +78,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
 
   // Card width stuff
   const cardRef = useRef<HTMLDivElement>(null);
-  const [cardWidth, setcardWidth] = useState(200);
+  const [cardWidth, setcardWidth] = useState(400);
 
   useEffect(() => {
     function handleResize() {
@@ -100,17 +100,20 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
   );
 
   return (
-    <div>
-      <main className={styles.main}>
-        <div className={styles.content_view}>
-          <BackTop />
+    <main className={styles.main}>
+      <div className={styles.content_view}>
+        <BackTop />
 
-          <DateSelectionView handleSubmit={handleDateChanged} showingDate={startDate} />
+        <DateSelectionView handleSubmit={handleDateChanged} showingDate={startDate} />
 
-          <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>
-            <Divider style={{ borderTopColor: "#636363" }}>
-              <h2>{stringDate}</h2>
-            </Divider>
+        <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>
+          <Divider style={{ borderTopColor: "#636363" }}>
+            <h2>{stringDate}</h2>
+          </Divider>
+
+          {loading ? (
+            <Spin size='large' spinning={true} />
+          ) : (
             <Row gutter={16} justify='center'>
               <Col lg={{ span: 8, order: 1 }} span={24} order={1} xs={{ order: 3 }}>
                 <ListView title={`News on ${shortDate}`} posts={news} loading={loading} />
@@ -152,10 +155,10 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
                       .map((item) => <ImageCard key={item.id} post={item} maxWidth={cardWidth} loading={loading} />)}
               </Col>
             </Row>
-          </div>
+          )}
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 };
 
