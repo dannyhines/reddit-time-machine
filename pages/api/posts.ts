@@ -1,5 +1,3 @@
-// pages/api/posts.ts
-
 import { NextApiRequest, NextApiResponse } from "next";
 import { Pool } from "pg";
 import { Post } from "../../types/Post";
@@ -21,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const result = await pool.query<Post[]>(`SELECT * FROM top_posts WHERE created_date = $1;`, [date]);
     res.status(200).json(result.rows);
   } catch (error: any) {
-    console.log("error from DB call:", error);
+    console.log("Error in handler for GET /posts:", error);
     res.status(500).json({ error: error.message });
   }
 };

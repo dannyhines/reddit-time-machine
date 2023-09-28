@@ -21,7 +21,7 @@ export interface Post {
   thumbnail_height: number | null;
   thumbnail_width: number | null;
   created_date: string; // YYYY-MM-DD
-  post_type: "meme" | "news" | "politics" | "sports" | "science" | "pics";
+  post_type: "meme" | "news" | "politics" | "sports" | "science" | "pics" | "prediction";
 }
 
 interface Preview {

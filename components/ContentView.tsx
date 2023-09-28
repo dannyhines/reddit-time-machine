@@ -9,7 +9,8 @@ import ListTitle from "./ListTitle";
 import { getApiUrls } from "../utils/getApiUrls";
 import { useRouter } from "next/router";
 import getRandomDate from "./DateSelector/getRandomDate";
-import { getDates } from "../utils/getDates";
+import { getDates, getMonthAndYear } from "../utils/date-util";
+import dayjs from "dayjs";
 
 interface ContentViewProps {
   initialDate?: string;
@@ -24,17 +25,10 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
   const [pics, setPics] = useState<Post[]>([]);
   const [politics, setPolitics] = useState<Post[]>([]);
   const [predictions, setPredictions] = useState<Post[]>([]);
-  const [science, setScience] = useState<Post[]>([]);
-  const { dateObj, stringDate, shortDate } = getDates(startDate);
+  // const [science, setScience] = useState<Post[]>([]);
+  const [sports, setSports] = useState<Post[]>([]);
 
-  useEffect(() => {
-    // Either use the date from the 'date' path parameter, or random
-    if (!props.initialDate) {
-      const newDate = getRandomDate().format("YYYY-MM-DD");
-      router.push(`/${newDate}`, undefined, { shallow: true });
-      setStartDate(newDate);
-    }
-  }, []);
+  const { dateObj, stringDate, shortDate } = getDates(startDate);
 
   const handleDateChanged = useCallback(
     (x: string) => {
@@ -47,22 +41,24 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const { url, predictionsUrl } = getApiUrls(startDate);
       try {
-        const response = await fetch(url);
+        const response = await fetch(`/api/posts?date=${startDate}`);
         const data: Post[] = await response.json();
-        setMemes(data.filter((x) => x.post_type === "meme").slice(0, 8));
-        setPolitics(data.filter((x) => x.post_type === "politics").slice(0, 6));
+        setMemes(data.filter((x) => x.post_type === "meme").slice(0, 10));
+        setPolitics(data.filter((x) => x.post_type === "politics").slice(0, 5));
         setNews(data.filter((x) => x.post_type === "news").slice(0, 8));
-        setPics(data.filter((x) => x.post_type === "pics").slice(0, 8));
-        setScience(data.filter((x) => x.post_type === "science").slice(0, 6));
+        setPics(data.filter((x) => x.post_type === "pics").slice(0, 9));
+        // setScience(data.filter((x) => x.post_type === "science").slice(0, 6));
+        setSports(data.filter((x) => x.post_type === "sports").slice(0, 5));
 
         // Only fetch predictions if posts are 2+ years old
-        // if (startDate + TWO_YEARS_IN_SECONDS < new Date().getTime()) {
-        //   const predictionsResponse = await fetch(predictionsUrl);
-        //   const predictionsJson = await predictionsResponse.json();
-        //   setPredictions(predictionsJson.data.slice(0, 6));
-        // }
+        if (dateObj.add(2, "year").isBefore(dayjs())) {
+          const from = dateObj.subtract(1, "week").format("YYYY-MM-DD");
+          const to = dateObj.add(1, "week").format("YYYY-MM-DD");
+          const predictionsResponse = await fetch(`/api/predictions?from=${from}&to=${to}`);
+          const predictionPosts = await predictionsResponse.json();
+          setPredictions(predictionPosts.slice(0, 6));
+        }
       } catch (error) {
         console.log("error fetching posts: ", error);
       } finally {
@@ -118,21 +114,21 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
               <Col lg={{ span: 8, order: 1 }} span={24} order={1} xs={{ order: 3 }}>
                 <ListView title={`News on ${shortDate}`} posts={news} loading={loading} />
                 <br />
-                {/* {dateObj.isBefore(new Date().getFullYear().toString()) ? (
+                {predictions.length ? (
                   <>
                     <ListView
-                      title={`Predictions${predictions.length ? " on " + shortDate : ""}`}
+                      title={`Predictions in ${getMonthAndYear(dateObj)}`}
                       posts={predictions}
                       loading={loading}
                     />
                     <br />
                   </>
-                ) : null} */}
+                ) : null}
 
                 <ListView title={`Politics on ${shortDate}`} posts={politics} loading={loading} />
                 <br />
 
-                <ListView title={`Science on ${shortDate}`} posts={science} loading={loading} />
+                <ListView title={`Sports on ${shortDate}`} posts={sports} loading={loading} />
               </Col>
 
               <Col lg={8} span={12} order={2} xs={{ order: 1 }}>
