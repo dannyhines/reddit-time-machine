@@ -53,8 +53,8 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
 
         // Only fetch predictions if posts are 2+ years old
         if (dateObj.add(2, "year").isBefore(dayjs())) {
-          const from = dateObj.subtract(1, "week").format("YYYY-MM-DD");
-          const to = dateObj.add(1, "week").format("YYYY-MM-DD");
+          const from = dateObj.startOf("month").format("YYYY-MM-DD");
+          const to = dateObj.add(1, "month").startOf("month").format("YYYY-MM-DD");
           const predictionsResponse = await fetch(`/api/predictions?from=${from}&to=${to}`);
           const predictionPosts = await predictionsResponse.json();
           setPredictions(predictionPosts.slice(0, 6));
