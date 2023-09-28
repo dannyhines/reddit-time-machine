@@ -4,7 +4,7 @@ import ContentView from "../components/ContentView";
 import Footer from "../components/Footer";
 import getRandomDate from "../components/DateSelector/getRandomDate";
 import { GetServerSidePropsContext } from "next";
-import { getMonthDayYear, getShortDateString } from "../utils/getDates";
+import { getMonthDayYear, getShortDateString, isDateInRange, isValidDate } from "../utils/date-util";
 import dayjs from "dayjs";
 
 interface Props {
@@ -52,10 +52,7 @@ const DatePage = (props: Props) => {
 // Either passes the date as a prop if it's valid, or redirects to a random date's page
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const date = context.params?.date ?? "";
-  const dateRegex = new RegExp(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/);
-  const isValid = typeof date === "string" ? dateRegex.test(date) : false;
-
-  if (!isValid) {
+  if (!isDateInRange(date)) {
     return {
       redirect: {
         destination: `/${getRandomDate().format("YYYY-MM-DD")}`,
