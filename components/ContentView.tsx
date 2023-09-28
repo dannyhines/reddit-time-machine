@@ -6,7 +6,6 @@ import { Post } from "../types/Post";
 import ImageCard from "./ImageCard";
 import styles from "../styles/Home.module.css";
 import ListTitle from "./ListTitle";
-import { getApiUrls } from "../utils/getApiUrls";
 import { useRouter } from "next/router";
 import getRandomDate from "./DateSelector/getRandomDate";
 import { getDates, getMonthAndYear } from "../utils/date-util";
@@ -50,6 +49,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
         setPics(data.filter((x) => x.post_type === "pics").slice(0, 9));
         // setScience(data.filter((x) => x.post_type === "science").slice(0, 6));
         setSports(data.filter((x) => x.post_type === "sports").slice(0, 5));
+        setLoading(false);
 
         // Only fetch predictions if posts are 2+ years old
         if (dateObj.add(2, "year").isBefore(dayjs())) {
