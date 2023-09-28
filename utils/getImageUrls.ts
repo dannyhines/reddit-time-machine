@@ -1,9 +1,21 @@
-import { Post } from "../types/Post";
+import { Post, Resolution } from "../types/Post";
 
 const getAspectRatio = (width: number | null, height: number | null) => {
   return width && height ? width / height : undefined;
 };
-
+const getMobileImage = (resolutions: Resolution[], imgUrl: string) => {
+  let res = imgUrl;
+  if (resolutions && resolutions.length) {
+    for (let i = 0; i < resolutions.length; i++) {
+      if (resolutions[i].width > 360) {
+        res = resolutions[i].url;
+        break;
+      }
+      res = resolutions[i].url; // if all images are smaller than 360px wide
+    }
+  }
+  return res;
+};
 /*
  *
  * returns the image urls, calculates w/h (aspect ratio)
@@ -17,21 +29,21 @@ export function getImageUrls(post?: Post) {
 
   thumbnail = thumbnail && thumbnail !== "default" ? thumbnail.replace("http://", "https://") : null; // most are 'default'
   let imgUrl = url.replace("http://", "https://") ?? "";
-  let smallestPreviewUrl = null; // tried to set to thumbnail, but it's too small
+  let mobileImgUrl;
 
+  // If there's a 'preview' field, use that bc Reddit maintains those images
   if (preview) {
-    // If there's a 'preview' field, use that
     const imgObject = preview.images[0];
     const { source, resolutions } = imgObject;
     imgUrl = source ? source.url : imgUrl;
     aspectRatio = getAspectRatio(source.width, source.height) ?? aspectRatio;
-    smallestPreviewUrl = resolutions && resolutions.length ? resolutions[0].url : null;
+    mobileImgUrl = getMobileImage(resolutions, imgUrl);
   }
 
   return {
     imgUrl,
     thumbnailUrl: thumbnail ?? "default_thumbnail.png",
-    imgUrlSmall: smallestPreviewUrl,
+    mobileImgUrl,
     aspectRatio,
   };
 }

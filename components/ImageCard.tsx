@@ -34,7 +34,7 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
   const { post, maxWidth, loading } = props;
   const { isMobile } = useWindowDimensions();
 
-  const { imgUrl, thumbnailUrl, imgUrlSmall, aspectRatio } = getImageUrls(post);
+  const { imgUrl, thumbnailUrl, mobileImgUrl, aspectRatio } = getImageUrls(post);
   const imgState = useImage(post ? imgUrl : undefined);
 
   if (!post || loading) {
@@ -60,22 +60,20 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
       cover={
         <Image
           alt={post.title}
-          src={isMobile ? imgUrlSmall ?? imgUrl : imgUrl}
+          src={isMobile ? mobileImgUrl ?? imgUrl : imgUrl}
           style={{ maxWidth, aspectRatio }}
           width='100%'
           // height={Math.min(imgSource.height, 420)}
           // height='100%'
-          placeholder={
-            imgUrlSmall ? (
-              <Image
-                preview={false}
-                src={thumbnailUrl ?? DEFAULT_THUMBNAIL}
-                width='100%'
-                height={200}
-                alt='Loading...'
-              />
-            ) : null
-          }
+          // placeholder={
+          //   <Image
+          //     preview={false}
+          //     src={mobileImgUrl ?? thumbnailUrl ?? DEFAULT_THUMBNAIL}
+          //     width='100%'
+          //     height='auto'
+          //     alt='Loading...'
+          //   />
+          // }
           preview={{ src: imgUrl }}
         />
       }

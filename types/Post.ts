@@ -35,7 +35,7 @@ interface PreviewImage {
   variants?: { [variant: string]: PreviewImage[] }[];
 }
 
-interface Resolution {
+export interface Resolution {
   height: number;
   width: number;
   url: string;
