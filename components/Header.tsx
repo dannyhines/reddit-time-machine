@@ -8,7 +8,7 @@ const Header: React.FC<HeaderProps> = (props) => {
   return (
     <header className={styles.app_header}>
       <div className={styles.app_logo}>
-        <Image src='/reddit-icon.png' height={45} width={45} alt='Logo' />
+        <Image src='/reddit-icon.png' height={40} width={40} alt='Logo' />
       </div>
       <h1 style={{ fontSize: 24, margin: 0 }}>Reddit Time Machine</h1>
     </header>
