@@ -22,6 +22,8 @@ export const useFetchPredictions = (date: string): UseFetchPredictionsResult => 
           const predictionsResponse = await fetch(`/api/predictions?from=${from}&to=${to}`);
           const predictionPosts = await predictionsResponse.json();
           setPredictions(predictionPosts.slice(0, 6));
+        } else {
+          setPredictions([]);
         }
       } catch (error: any) {
         console.log("Error fetching predictions:", error);
