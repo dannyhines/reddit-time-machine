@@ -35,7 +35,7 @@ const ListView = React.memo(({ title, posts, loading }: ListViewProps) => {
     <React.Fragment>
       <ListTitle>{title}</ListTitle>
 
-      <Card style={{ textAlign: "left" }}>
+      <Card style={{ textAlign: "left" }} bodyStyle={{ padding: 12 }}>
         {loading && LoadingListView}
         <List
           itemLayout='horizontal'

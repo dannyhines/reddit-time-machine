@@ -35,3 +35,11 @@ a {
 .ant-card-meta-title {
   white-space: normal;
 }
+
+.ant-list-item:first-child {
+  padding-top: 0.25rem;
+}
+
+.ant-list-item:last-child {
+  padding-bottom: 0.25rem;
+}
