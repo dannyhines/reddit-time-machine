@@ -1,10 +1,10 @@
 import React from "react";
 import { Card, Image, Skeleton } from "antd";
 import { Post } from "../types/Post";
-import { useImage } from "../utils/useImage";
+import { useImage } from "../hooks/useImage";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import { sendLinkClickToGA } from "../utils/googleAnalytics";
-import { DEFAULT_THUMBNAIL, REDDIT_BASE_URL } from "../utils/constants";
+import { REDDIT_BASE_URL } from "../utils/constants";
 import { getImageUrls } from "../utils/getImageUrls";
 
 const { Meta } = Card;
@@ -63,17 +63,14 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
           src={isMobile ? mobileImgUrl ?? imgUrl : imgUrl}
           style={{ maxWidth, aspectRatio }}
           width='100%'
-          // height={Math.min(imgSource.height, 420)}
-          // height='100%'
-          // placeholder={
-          //   <Image
-          //     preview={false}
-          //     src={mobileImgUrl ?? thumbnailUrl ?? DEFAULT_THUMBNAIL}
-          //     width='100%'
-          //     height='auto'
-          //     alt='Loading...'
-          //   />
-          // }
+          placeholder={
+            <Image
+              preview={false}
+              src={mobileImgUrl ?? thumbnailUrl}
+              style={{ maxWidth, aspectRatio }}
+              alt='Loading...'
+            />
+          }
           preview={{ src: imgUrl }}
         />
       }
