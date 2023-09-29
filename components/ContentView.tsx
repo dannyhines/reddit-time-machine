@@ -1,91 +1,28 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo } from "react";
 import { BackTop, Row, Col, Divider, Spin } from "antd";
 import DateSelectionView from "./DateSelector";
 import ListView from "./ListView";
-import { Post } from "../types/Post";
 import ImageCard from "./ImageCard";
 import styles from "../styles/Home.module.css";
 import ListTitle from "./ListTitle";
-import { useRouter } from "next/router";
-import getRandomDate from "./DateSelector/getRandomDate";
 import { getDates, getMonthAndYear } from "../utils/date-util";
-import dayjs from "dayjs";
+import { useFetchPosts } from "../hooks/useFetchPosts";
+import { useFetchPredictions } from "../hooks/useFetchPredictions";
+import { useDateSelection } from "../hooks/useDateSelection";
+import { useCardWidth } from "../hooks/useCardWith";
 
 interface ContentViewProps {
   initialDate?: string;
 }
 
 const ContentView: React.FC<ContentViewProps> = (props) => {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [startDate, setStartDate] = useState<string>(props.initialDate ?? getRandomDate().format("YYYY-MM-DD"));
-  const [news, setNews] = useState<Post[]>([]);
-  const [memes, setMemes] = useState<Post[]>([]);
-  const [pics, setPics] = useState<Post[]>([]);
-  const [politics, setPolitics] = useState<Post[]>([]);
-  const [predictions, setPredictions] = useState<Post[]>([]);
-  // const [science, setScience] = useState<Post[]>([]);
-  const [sports, setSports] = useState<Post[]>([]);
+  const { date, handleDateChanged } = useDateSelection(props.initialDate);
+  const { dateObj, stringDate, shortDate } = getDates(date);
 
-  const { dateObj, stringDate, shortDate } = getDates(startDate);
+  const { loading, error, memes, politics, news, pics, sports } = useFetchPosts(date);
+  const { predictions } = useFetchPredictions(date);
 
-  const handleDateChanged = useCallback(
-    (x: string) => {
-      router.push(`/${x}`, undefined, { shallow: true });
-      setStartDate(x);
-    },
-    [router]
-  );
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`/api/posts?date=${startDate}`);
-        const data: Post[] = await response.json();
-        setMemes(data.filter((x) => x.post_type === "meme").slice(0, 10));
-        setPolitics(data.filter((x) => x.post_type === "politics").slice(0, 5));
-        setNews(data.filter((x) => x.post_type === "news").slice(0, 8));
-        setPics(data.filter((x) => x.post_type === "pics").slice(0, 9));
-        // setScience(data.filter((x) => x.post_type === "science").slice(0, 6));
-        setSports(data.filter((x) => x.post_type === "sports").slice(0, 5));
-        setLoading(false);
-
-        // Only fetch predictions if posts are 2+ years old
-        if (dateObj.add(2, "year").isBefore(dayjs())) {
-          const from = dateObj.startOf("month").format("YYYY-MM-DD");
-          const to = dateObj.add(1, "month").startOf("month").format("YYYY-MM-DD");
-          const predictionsResponse = await fetch(`/api/predictions?from=${from}&to=${to}`);
-          const predictionPosts = await predictionsResponse.json();
-          setPredictions(predictionPosts.slice(0, 6));
-        }
-      } catch (error) {
-        console.log("error fetching posts: ", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Call the API whenever the startDate changes
-    if (startDate) {
-      fetchData();
-    }
-  }, [startDate]);
-
-  // Card width stuff
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [cardWidth, setcardWidth] = useState(400);
-
-  useEffect(() => {
-    function handleResize() {
-      if (cardRef.current) {
-        setcardWidth(cardRef.current.offsetWidth);
-      }
-    }
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const { cardRef, cardWidth } = useCardWidth();
 
   const LoadingImageCards = useMemo(
     () =>
@@ -100,7 +37,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
       <div className={styles.content_view}>
         <BackTop />
 
-        <DateSelectionView handleSubmit={handleDateChanged} showingDate={startDate} />
+        <DateSelectionView handleSubmit={handleDateChanged} showingDate={date} />
 
         <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>
           <Divider style={{ borderTopColor: "#636363" }}>
