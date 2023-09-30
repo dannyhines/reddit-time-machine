@@ -7,19 +7,19 @@ export interface Post {
   domain: string;
   hidden: boolean;
   score: number;
-  ups: number | null;
-  downs: number | null;
+  ups?: number;
+  downs?: number;
   is_reddit_media_domain: boolean;
   is_video: boolean;
   num_comments: number;
-  num_crossposts: number | null;
+  num_crossposts?: number;
   permalink: string;
   preview: Preview;
   subreddit: string;
   subreddit_id: string;
-  thumbnail: string | null;
-  thumbnail_height: number | null;
-  thumbnail_width: number | null;
+  thumbnail?: string;
+  thumbnail_height?: number;
+  thumbnail_width?: number;
   created_date: string; // YYYY-MM-DD
   post_type: "meme" | "news" | "politics" | "sports" | "science" | "pics" | "prediction";
 }
@@ -29,10 +29,12 @@ interface Preview {
   images: PreviewImage[];
 }
 
+type VariantType = "png" | "gif" | "mp4" | "nsfw" | "obfuscated";
+
 interface PreviewImage {
   resolutions: Resolution[];
   source: Resolution;
-  variants?: { [variant: string]: PreviewImage[] }[];
+  variants?: { [K in VariantType]: PreviewImage };
 }
 
 export interface Resolution {

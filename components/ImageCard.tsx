@@ -1,11 +1,11 @@
 import React from "react";
-import { Card, Image, Skeleton } from "antd";
+import { Card, Image } from "antd";
 import { Post } from "../types/Post";
 import { useImage } from "../hooks/useImage";
-import useWindowDimensions from "../utils/useWindowDimensions";
 import { sendLinkClickToGA } from "../utils/googleAnalytics";
 import { REDDIT_BASE_URL } from "../utils/constants";
 import { getImageUrls } from "../utils/getImageUrls";
+import { LoadingCard } from "./LoadingCard";
 
 const { Meta } = Card;
 
@@ -15,63 +15,46 @@ interface CardViewProps {
   loading: boolean;
 }
 
-const LoadingCard = () => {
-  const { isDesktop } = useWindowDimensions();
-  const imgWidth = isDesktop ? 300 : 140;
-  const imgHeight = isDesktop ? 200 : 120;
-  return (
-    <Card style={{ maxWidth: 400, margin: "16px 0" }} bodyStyle={{ padding: 12 }}>
-      <div style={{ width: "100%", opacity: 0.7 }}>
-        <Skeleton.Image style={{ width: imgWidth, height: imgHeight }} />
-      </div>
-      <br />
-      <Meta description={<Skeleton active />} />
-    </Card>
-  );
-};
-
 const ImageCard: React.FC<CardViewProps> = (props) => {
   const { post, maxWidth, loading } = props;
-  const { isMobile } = useWindowDimensions();
 
-  const { imgUrl, thumbnailUrl, mobileImgUrl, aspectRatio } = getImageUrls(post);
-  const imgState = useImage(post ? imgUrl : undefined);
+  const { aspectRatio, imgSrc, thumbnail, placeholder, srcSet, previewUrl } = getImageUrls(post);
+  const { imgHasError } = useImage(imgSrc, srcSet);
 
-  if (!post || loading) {
-    return <LoadingCard />;
-  }
-
-  if (imgState.hasError) {
-    return null;
-  }
+  if (!post || loading) return <LoadingCard />;
+  if (imgHasError) return;
 
   const titleStyle = (smallFont: number) => {
     return { fontSize: maxWidth < 300 ? smallFont : 14, margin: maxWidth < 300 ? 0 : 4, color: "inherit" };
   };
-
   const subtitleStyle = (smallFont: number) => {
     return { fontSize: maxWidth < 300 ? smallFont : 12, margin: maxWidth < 300 ? 0 : "0 0 0 8px", color: "inherit" };
   };
 
   return (
     <Card
-      hoverable
       style={{ maxWidth, margin: "16px 0" }}
       cover={
         <Image
           alt={post.title}
-          src={isMobile ? mobileImgUrl ?? imgUrl : imgUrl}
-          style={{ maxWidth, aspectRatio }}
+          src={imgSrc ?? thumbnail}
+          srcSet={srcSet}
+          style={{ maxWidth, maxHeight: 550, objectFit: "cover", aspectRatio }}
           width='100%'
+          height='auto'
           placeholder={
             <Image
               preview={false}
-              src={mobileImgUrl ?? thumbnailUrl}
-              style={{ maxWidth, aspectRatio }}
+              src={placeholder ?? thumbnail}
+              style={{ maxWidth, aspectRatio, filter: "blur(5px)" }}
               alt='Loading...'
+              width='100%'
+              height='auto'
             />
           }
-          preview={{ src: imgUrl }}
+          preview={{ src: previewUrl }}
+          // onLoad={() => console.log("loading ", post.title)}
+          // onError={() => console.log("error ", post.title)}
         />
       }
       bodyStyle={{ padding: "12px 0" }}
