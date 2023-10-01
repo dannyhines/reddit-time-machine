@@ -1,5 +1,4 @@
 import { Post, Resolution } from "../types/Post";
-import { getMobileImage } from "./getMobileImage";
 
 const getAspectRatio = (width?: number, height?: number) => {
   return width && height ? width / height : undefined;
