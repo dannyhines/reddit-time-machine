@@ -8,13 +8,20 @@ import DateSelectionView from "../components/DateSelector";
 import router from "next/router";
 import dayjs from "dayjs";
 import styles from "../styles/Home.module.css";
+import { useState } from "react";
+import { Divider, Spin } from "antd";
+import { getShortDateString } from "../utils/date-util";
 
 const Home: NextPage = () => {
   const title = "Reddit Time Machine";
   const description = "View the most popular news, pictures and memes from a day in Reddit history.";
   const url = "https://www.reddit-time-machine.com";
+  const [loading, setloading] = useState(false);
+  const [dateStr, setdateStr] = useState<string>();
 
   const handleDateSelection = (dateStr: string) => {
+    setloading(true);
+    setdateStr(dateStr);
     const newDate = dayjs(dateStr).format("YYYY-MM-DD");
     router.push(`/${newDate}`, undefined, { shallow: true });
   };
@@ -54,6 +61,15 @@ const Home: NextPage = () => {
             handleSubmit={handleDateSelection}
             onHomePage
           />
+
+          {loading && (
+            <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>
+              <Divider style={{ borderTopColor: "#636363" }}>
+                <h2>{getShortDateString(dayjs(dateStr))}</h2>
+              </Divider>
+              <Spin spinning={loading} />
+            </div>
+          )}
         </div>
       </main>
       <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
