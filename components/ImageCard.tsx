@@ -22,7 +22,7 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
   const { imgHasError } = useImage(imgSrc, srcSet);
 
   if (!post || loading) return <LoadingCard />;
-  if (imgHasError) return;
+  if (imgHasError) return null;
 
   const titleStyle = (smallFont: number) => {
     return { fontSize: maxWidth < 300 ? smallFont : 14, margin: maxWidth < 300 ? 0 : 4, color: "inherit" };
@@ -53,8 +53,6 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
             />
           }
           preview={{ src: previewUrl }}
-          // onLoad={() => console.log("loading ", post.title)}
-          // onError={() => console.log("error ", post.title)}
         />
       }
       bodyStyle={{ padding: "12px 0" }}

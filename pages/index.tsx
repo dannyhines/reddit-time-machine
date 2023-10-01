@@ -67,7 +67,7 @@ const Home: NextPage = () => {
               <Divider style={{ borderTopColor: "#636363" }}>
                 <h2>{getShortDateString(dayjs(dateStr))}</h2>
               </Divider>
-              <Spin spinning={loading} />
+              <Spin spinning={loading} size='large' />
             </div>
           )}
         </div>
