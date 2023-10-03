@@ -14,11 +14,14 @@ export const useImage = (src?: string, srcset?: string) => {
     const image = new Image();
     if (srcset) {
       image.srcset = srcset;
-    } else {
+    } else if (src) {
       image.src = src ?? "";
+    } else {
+      setHasLoaded(true);
     }
 
     const handleError = () => {
+      setHasLoaded(true);
       setHasError(true);
     };
 
