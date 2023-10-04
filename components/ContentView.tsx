@@ -10,6 +10,8 @@ import { useFetchPosts } from "../hooks/useFetchPosts";
 import { useFetchPredictions } from "../hooks/useFetchPredictions";
 import { useDateSelection } from "../hooks/useDateSelection";
 import { useCardWidth } from "../hooks/useCardWith";
+import useWindowDimensions from "../utils/useWindowDimensions";
+import ListViewItem from "./ListViewItem";
 
 interface ContentViewProps {
   initialDate?: string;
@@ -18,19 +20,10 @@ interface ContentViewProps {
 const ContentView: React.FC<ContentViewProps> = (props) => {
   const { date, handleDateChanged } = useDateSelection(props.initialDate);
   const { dateObj, stringDate, shortDate } = getDates(date);
-
-  const { loading, error, memes, politics, news, pics, sports } = useFetchPosts(date);
+  const { loading, memes, politics, news, pics, sports, allPosts } = useFetchPosts(date);
   const { predictions } = useFetchPredictions(date);
-
   const { cardRef, cardWidth } = useCardWidth();
-
-  const LoadingImageCards = useMemo(
-    () =>
-      [0, 1, 2, 3, 4, 5].map((value, i) => (
-        <ImageCard key={i} post={undefined} maxWidth={cardWidth} loading={loading} />
-      )),
-    [cardWidth, loading]
-  );
+  const { isMobile } = useWindowDimensions();
 
   return (
     <main className={styles.main}>
@@ -48,45 +41,59 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
             <Spin size='large' spinning={true} />
           ) : (
             <Row gutter={16} justify='center'>
-              <Col lg={{ span: 8, order: 1 }} span={24} order={1} xs={{ order: 3 }}>
-                <ListView title={`News on ${shortDate}`} posts={news} loading={loading} />
-                <br />
-                {predictions.length ? (
-                  <>
-                    <ListView
-                      title={`Predictions in ${getMonthAndYear(dateObj)}`}
-                      posts={predictions}
-                      loading={loading}
-                    />
+              {isMobile ? (
+                <Col span={24}>
+                  {allPosts.map((p) =>
+                    p.post_type === "pics" || p.post_type == "meme" || p.preview ? (
+                      <ImageCard key={p.id} post={p} maxWidth={cardWidth} loading={loading} />
+                    ) : (
+                      <ListViewItem key={p.id} post={p} />
+                    )
+                  )}
+                </Col>
+              ) : (
+                <>
+                  <Col lg={{ span: 8, order: 1 }} span={24} order={1}>
+                    <ListView title={`News on ${shortDate}`} posts={news} loading={loading} />
                     <br />
-                  </>
-                ) : null}
+                    {predictions.length ? (
+                      <>
+                        <ListView
+                          title={`Predictions in ${getMonthAndYear(dateObj)}`}
+                          posts={predictions}
+                          loading={loading}
+                        />
+                        <br />
+                      </>
+                    ) : null}
 
-                <ListView title={`Politics on ${shortDate}`} posts={politics} loading={loading} />
-                <br />
+                    <ListView title={`Politics on ${shortDate}`} posts={politics} loading={loading} />
+                    <br />
 
-                <ListView title={`Sports on ${shortDate}`} posts={sports} loading={loading} />
-              </Col>
+                    <ListView title={`Sports on ${shortDate}`} posts={sports} loading={loading} />
+                  </Col>
 
-              <Col lg={8} span={12} order={2} xs={{ order: 1 }}>
-                <div ref={cardRef}>
-                  <ListTitle>Pictures</ListTitle>
-                  {loading
-                    ? LoadingImageCards
-                    : pics
+                  <Col lg={8} span={12} order={2}>
+                    <div ref={cardRef}>
+                      <ListTitle>Pictures</ListTitle>
+                      {pics
                         .filter((x) => x.url.length)
-                        .map((item) => <ImageCard key={item.id} post={item} maxWidth={cardWidth} loading={loading} />)}
-                </div>
-              </Col>
+                        .map((item) => (
+                          <ImageCard key={item.id} post={item} maxWidth={cardWidth} loading={loading} />
+                        ))}
+                    </div>
+                  </Col>
 
-              <Col lg={8} span={12} order={3} xs={{ order: 2 }}>
-                <ListTitle>Memes</ListTitle>
-                {loading
-                  ? LoadingImageCards
-                  : memes
+                  <Col lg={8} span={12} order={3}>
+                    <ListTitle>Memes</ListTitle>
+                    {memes
                       .filter((x) => x.url.length)
-                      .map((item) => <ImageCard key={item.id} post={item} maxWidth={cardWidth} loading={loading} />)}
-              </Col>
+                      .map((item) => (
+                        <ImageCard key={item.id} post={item} maxWidth={cardWidth} loading={loading} />
+                      ))}
+                  </Col>
+                </>
+              )}
             </Row>
           )}
         </div>

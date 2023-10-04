@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Post } from "../types/Post";
-import dayjs from "dayjs";
 
 interface UseFetchPostsResult {
   loading: boolean;
@@ -10,11 +9,13 @@ interface UseFetchPostsResult {
   news: Post[];
   pics: Post[];
   sports: Post[];
+  allPosts: Post[];
 }
 
 export const useFetchPosts = (date: string): UseFetchPostsResult => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [memes, setMemes] = useState<Post[]>([]);
   const [politics, setPolitics] = useState<Post[]>([]);
   const [news, setNews] = useState<Post[]>([]);
@@ -27,6 +28,7 @@ export const useFetchPosts = (date: string): UseFetchPostsResult => {
       try {
         const response = await fetch(`/api/posts?date=${date}`);
         const data: Post[] = await response.json();
+        setPosts(data);
         setMemes(data.filter((x) => x.post_type === "meme").slice(0, 8));
         setPolitics(data.filter((x) => x.post_type === "politics").slice(0, 5));
         setNews(data.filter((x) => x.post_type === "news").slice(0, 8));
@@ -42,5 +44,5 @@ export const useFetchPosts = (date: string): UseFetchPostsResult => {
     fetchData();
   }, [date]);
 
-  return { loading, error, memes, politics, news, pics, sports };
+  return { loading, error, memes, politics, news, pics, sports, allPosts: posts };
 };

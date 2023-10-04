@@ -19,7 +19,7 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
   const { post, maxWidth, loading } = props;
 
   const { aspectRatio, imgSrc, thumbnail, placeholder, srcSet, previewUrl } = getImageUrls(post);
-  const { imgHasError, hasLoaded, hasStartedInitialFetch } = useImage(imgSrc, srcSet);
+  const { imgHasError, imgHasLoaded, hasStartedInitialFetch } = useImage(imgSrc, srcSet);
 
   if (!post || loading) return <LoadingCard />;
   if (imgHasError) return null;
@@ -30,8 +30,9 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
   const subtitleStyle = (smallFont: number) => {
     return { fontSize: maxWidth < 300 ? smallFont : 12, margin: maxWidth < 300 ? 0 : "0 0 0 8px", color: "inherit" };
   };
-  if (hasStartedInitialFetch && !hasLoaded)
+  if (hasStartedInitialFetch && !imgHasLoaded) {
     return <LoadingImage post={post} maxWidth={maxWidth} titleStyle={titleStyle} subtitleStyle={subtitleStyle} />;
+  }
 
   return (
     <Card

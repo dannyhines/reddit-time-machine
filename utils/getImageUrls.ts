@@ -29,7 +29,7 @@ export function getImageUrls(post?: Post) {
     previewUrl_Gif = variants?.gif?.source?.url;
     aspectRatio = getAspectRatio(source.width, source.height) ?? aspectRatio;
     // placeholder = getMobileImage(resolutions, postUrl);
-    placeholder = resolutions[0].url;
+    placeholder = resolutions[0]?.url;
     srcSet = getSrcSet(resolutions);
     if (variants?.gif?.resolutions) {
       srcSet_Gif = variants.gif.resolutions.map((res) => `${res.url} ${res.width}w`).join(", ");
