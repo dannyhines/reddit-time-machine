@@ -10,7 +10,7 @@ import { useFetchPosts } from "../hooks/useFetchPosts";
 import { useFetchPredictions } from "../hooks/useFetchPredictions";
 import { useDateSelection } from "../hooks/useDateSelection";
 import { useCardWidth } from "../hooks/useCardWith";
-import useWindowDimensions from "../utils/useWindowDimensions";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 import ListViewItem from "./ListViewItem";
 
 interface ContentViewProps {
@@ -30,7 +30,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
       <div className={styles.content_view}>
         <BackTop />
 
-        <DateSelectionView handleSubmit={handleDateChanged} showingDate={date} />
+        <DateSelectionView handleSubmit={handleDateChanged} showingDate={date} loading={loading} />
 
         <div style={{ textAlign: "center", paddingTop: 16, minHeight: 100 }}>
           <div style={{ backgroundColor: "#000", position: "sticky", top: 0, zIndex: 1000 }}>

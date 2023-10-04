@@ -3,7 +3,7 @@ import { Button, Card, Col, Divider, Row } from "antd";
 import DatePicker from "./DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import getRandomDate from "./getRandomDate";
-import useWindowDimensions from "../../utils/useWindowDimensions";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { sendBtnClickToGA } from "../../utils/googleAnalytics";
 import styles from "../../styles/Home.module.css";
 import { FIRST_AVAILABLE_DATE, LAST_AVAILABLE_DATE } from "../../utils/constants";
@@ -11,11 +11,12 @@ import { FIRST_AVAILABLE_DATE, LAST_AVAILABLE_DATE } from "../../utils/constants
 interface DateSelectionProps {
   showingDate: string;
   handleSubmit: (dateStr: string) => void;
+  loading?: boolean;
   onHomePage?: boolean;
 }
 
 const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
-  const { showingDate, handleSubmit, onHomePage } = props;
+  const { showingDate, handleSubmit, loading, onHomePage } = props;
   const { width, isDesktop, isMobile } = useWindowDimensions();
   const [date, setDate] = useState<Dayjs | null>(dayjs(showingDate));
   // this variable makes sure they don't spam the 'Go' or 'Random' btns
@@ -85,6 +86,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 disabledDate={(date) =>
                   !date || date.isBefore(FIRST_AVAILABLE_DATE) || date.isAfter(LAST_AVAILABLE_DATE)
                 }
+                disabled={loading}
                 className={styles.datepicker_calendar_wrapper}
               />
             </Col>
@@ -97,6 +99,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 style={{ paddingLeft: isMobile ? 10 : 16, paddingRight: isMobile ? 10 : 16 }}
                 disabled={
                   date === null ||
+                  loading ||
                   justFinished ||
                   (date.format("YYYY-MM-DD") === showingDate && !onHomePage) ||
                   date.isBefore(FIRST_AVAILABLE_DATE) ||
@@ -125,7 +128,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
               onClick={handleRandom}
               size='large'
               aria-label='View posts from a random date'
-              disabled={justFinished}
+              disabled={justFinished || loading}
               style={{ backgroundColor: "black", padding: "0 20px" }}
             >
               Random
