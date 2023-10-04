@@ -25,7 +25,7 @@ const ListView = React.memo(({ title, posts, loading }: ListViewProps) => {
           itemLayout='horizontal'
           dataSource={posts}
           locale={{ emptyText: `No ${title} to show` }}
-          renderItem={(post) => <ListViewItem post={post} />}
+          renderItem={(post) => <ListViewItem post={post} contentOnly={true} />}
         />
       </Card>
     </React.Fragment>

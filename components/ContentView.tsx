@@ -32,10 +32,12 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
 
         <DateSelectionView handleSubmit={handleDateChanged} showingDate={date} />
 
-        <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>
-          <Divider style={{ borderTopColor: "#636363" }}>
-            <h2>{stringDate}</h2>
-          </Divider>
+        <div style={{ textAlign: "center", paddingTop: 16, minHeight: 100 }}>
+          <div style={{ backgroundColor: "#000", position: "sticky", top: 0, zIndex: 1000 }}>
+            <Divider style={{ borderTopColor: "#636363" }}>
+              <h2>{stringDate}</h2>
+            </Divider>
+          </div>
 
           {loading ? (
             <Spin size='large' spinning={true} />
