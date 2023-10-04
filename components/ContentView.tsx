@@ -25,6 +25,13 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
   const { cardRef, cardWidth } = useCardWidth();
   const { isMobile } = useWindowDimensions();
 
+  const Predictions = predictions.length ? (
+    <>
+      <ListView title={`Predictions in ${getMonthAndYear(dateObj)}`} posts={predictions} loading={loading} />
+      <br />
+    </>
+  ) : null;
+
   return (
     <main className={styles.main}>
       <div className={styles.content_view}>
@@ -52,22 +59,14 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
                       <ListViewItem key={p.id} post={p} />
                     )
                   )}
+                  {Predictions}
                 </Col>
               ) : (
                 <>
                   <Col lg={{ span: 8, order: 1 }} span={24} order={1}>
                     <ListView title={`News on ${shortDate}`} posts={news} loading={loading} />
                     <br />
-                    {predictions.length ? (
-                      <>
-                        <ListView
-                          title={`Predictions in ${getMonthAndYear(dateObj)}`}
-                          posts={predictions}
-                          loading={loading}
-                        />
-                        <br />
-                      </>
-                    ) : null}
+                    {Predictions}
 
                     <ListView title={`Politics on ${shortDate}`} posts={politics} loading={loading} />
                     <br />

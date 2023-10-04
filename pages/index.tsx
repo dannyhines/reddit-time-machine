@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import ContentView from "../components/ContentView";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import getRandomDate from "../components/DateSelector/getRandomDate";

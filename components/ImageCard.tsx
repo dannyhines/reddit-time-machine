@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Image, Skeleton } from "antd";
+import { Card, Image } from "antd";
 import { Post } from "../types/Post";
 import { useImage } from "../hooks/useImage";
 import { sendLinkClickToGA } from "../utils/googleAnalytics";
