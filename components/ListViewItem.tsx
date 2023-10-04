@@ -4,7 +4,7 @@ import React from "react";
 import { REDDIT_BASE_URL } from "../utils/constants";
 import { LinkWithAnalytics } from "./LinkWithAnalytics";
 import { Post } from "../types/Post";
-import useWindowDimensions from "../utils/useWindowDimensions";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 
 const ListViewItem: React.FC<{ post: Post; contentOnly?: boolean }> = ({ post, contentOnly }) => {
   const { isMobile } = useWindowDimensions();

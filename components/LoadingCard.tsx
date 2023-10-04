@@ -1,6 +1,6 @@
 import { Card, Skeleton } from "antd";
 import Meta from "antd/lib/card/Meta";
-import useWindowDimensions from "../utils/useWindowDimensions";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 import { REDDIT_BASE_URL } from "../utils/constants";
 import { sendLinkClickToGA } from "../utils/googleAnalytics";
 import { Post } from "../types/Post";

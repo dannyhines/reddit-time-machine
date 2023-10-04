@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import useWindowDimensions from "../utils/useWindowDimensions";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 
 interface Props {
   children: ReactNode;
