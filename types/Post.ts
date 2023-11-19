@@ -36,7 +36,7 @@ interface PreviewImage {
   id?: string;
   resolutions: Resolution[];
   source: Resolution;
-  variants?: null | { [K in VariantType]: PreviewImage } | {};
+  variants?: null | { [K in VariantType]?: PreviewImage };
 }
 
 export interface Resolution {

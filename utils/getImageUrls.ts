@@ -1,6 +1,6 @@
 import { Post, Resolution } from "../types/Post";
 
-const getAspectRatio = (width?: number, height?: number) => {
+const getAspectRatio = (width?: number | null, height?: number | null) => {
   return width && height ? width / height : undefined;
 };
 
