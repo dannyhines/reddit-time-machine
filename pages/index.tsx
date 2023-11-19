@@ -82,20 +82,22 @@ const Home: NextPage = () => {
             </div>
           )}
 
-          <div style={{ paddingTop: 20 }}>
-            <ListTitle>Top memes of all time</ListTitle>
+          {!loading && (
+            <div style={{ paddingTop: 20 }}>
+              <ListTitle>Top memes of all time</ListTitle>
 
-            <Masonry
-              breakpointCols={isMobile ? 2 : 3}
-              className='my-masonry-grid'
-              columnClassName='my-masonry-grid_column'
-              style={{ textAlign: "center" }}
-            >
-              {BEST_MEMES.filter((x) => x && x.url.length).map((item) => (
-                <ImageCard key={item.id} post={item} maxWidth={400} loading={loading} showDate />
-              ))}
-            </Masonry>
-          </div>
+              <Masonry
+                breakpointCols={isMobile ? 2 : 3}
+                className='my-masonry-grid'
+                columnClassName='my-masonry-grid_column'
+                style={{ textAlign: "center" }}
+              >
+                {BEST_MEMES.filter((x) => x && x.url.length).map((item) => (
+                  <ImageCard key={item.id} post={item} maxWidth={400} loading={loading} showDate />
+                ))}
+              </Masonry>
+            </div>
+          )}
         </div>
       </main>
       {/* <div style={{ position: "absolute", bottom: 0, width: "100%" }}> */}
