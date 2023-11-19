@@ -10,11 +10,8 @@ import styles from "../styles/Home.module.css";
 import { useState } from "react";
 import { Divider, Spin } from "antd";
 import { getShortDateString } from "../utils/date-util";
-
-const Home: NextPage = () => {
-  const title = "Reddit Time Machine";
-  const description = "View the most popular news, pictures and memes from a day in Reddit history.";
-  const url = "https://www.reddit-time-machine.com";
+import FeaturedDates from "../components/FeaturedDates";
+import ListTitle from "../components/ListTitle";
   const [loading, setloading] = useState(false);
   const [dateStr, setdateStr] = useState<string>();
 
@@ -28,10 +25,13 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Reddit Time Machine</title>
+        <title>{title}</title>
         <meta name='title' content={title} />
         <meta name='description' content={description} />
-        <meta name='keywords' content='Reddit,news,politics,memes,history,internet' />
+        <meta
+          name='keywords'
+          content='Reddit Archive,Reddit Time Machine,Reddit,news,politics,memes,history,internet'
+        />
         <link rel='icon' href='/favicon.ico' />
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
         <meta name='theme-color' content='#050505' />
@@ -60,6 +60,7 @@ const Home: NextPage = () => {
             handleSubmit={handleDateSelection}
             onHomePage
           />
+          {!loading && <FeaturedDates handleDateSelection={handleDateSelection} />}
 
           {loading && (
             <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>

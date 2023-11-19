@@ -9,7 +9,7 @@ const ListTitle: React.FC<Props> = (props) => {
   const { isMobile } = useWindowDimensions();
   return (
     <div style={{ textAlign: "left" }}>
-      <h2 style={{ color: "#8c8c8c", fontSize: isMobile ? 14 : 18 }}>{props.children}</h2>
+      <h2 style={{ color: "#c8c8c8", fontSize: isMobile ? 14 : 18 }}>{props.children}</h2>
     </div>
   );
 };
