@@ -14,14 +14,14 @@
 }
 
 .app_header {
-  min-height: 8vh;
+  display: flex;
+  justify-content: center;
 }
 
 .app_header_link {
-  min-height: 8vh;
   display: flex;
   align-items: center;
-  justify-content: center;
+  min-height: 8vh;
   font-size: calc(8px + 2vmin);
 }
 

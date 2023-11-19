@@ -35,7 +35,11 @@ export const getMonthDayYear = (dateObj: Dayjs) => {
   return stringDate;
 };
 
+/*
+  Returns "November 2018"
+*/
 export const getMonthAndYear = (d: Dayjs) => `${d.format("MMMM")} ${d.year()}`;
+
 /*
 Checks that the date is in YYY-MM-DD format
 */

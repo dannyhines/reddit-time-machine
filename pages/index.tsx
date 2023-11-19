@@ -12,8 +12,19 @@ import { Divider, Spin } from "antd";
 import { getShortDateString } from "../utils/date-util";
 import FeaturedDates from "../components/FeaturedDates";
 import ListTitle from "../components/ListTitle";
+import { BEST_MEMES } from "../utils/best-memes";
+import ImageCard from "../components/ImageCard";
+import Masonry from "react-masonry-css";
+import useWindowDimensions from "../hooks/useWindowDimensions";
+
+const title = "Reddit Time Machine";
+const description = "View the most popular news, pictures and memes from a day in Reddit history.";
+const url = "https://www.reddit-time-machine.com";
+
+const Home: NextPage = () => {
   const [loading, setloading] = useState(false);
   const [dateStr, setdateStr] = useState<string>();
+  const { isMobile } = useWindowDimensions();
 
   const handleDateSelection = (dateStr: string) => {
     setloading(true);
@@ -70,11 +81,26 @@ import ListTitle from "../components/ListTitle";
               <Spin spinning={loading} size='large' />
             </div>
           )}
+
+          <div style={{ paddingTop: 20 }}>
+            <ListTitle>Top memes of all time</ListTitle>
+
+            <Masonry
+              breakpointCols={isMobile ? 2 : 3}
+              className='my-masonry-grid'
+              columnClassName='my-masonry-grid_column'
+              style={{ textAlign: "center" }}
+            >
+              {BEST_MEMES.filter((x) => x && x.url.length).map((item) => (
+                <ImageCard key={item.id} post={item} maxWidth={400} loading={loading} showDate />
+              ))}
+            </Masonry>
+          </div>
         </div>
       </main>
-      <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
-        <Footer />
-      </div>
+      {/* <div style={{ position: "absolute", bottom: 0, width: "100%" }}> */}
+      <Footer />
+      {/* </div> */}
     </div>
   );
 };

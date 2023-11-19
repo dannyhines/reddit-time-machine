@@ -6,17 +6,18 @@ import { sendLinkClickToGA } from "../utils/googleAnalytics";
 import { REDDIT_BASE_URL } from "../utils/constants";
 import { getImageUrls } from "../utils/getImageUrls";
 import { LoadingCard, LoadingImage } from "./LoadingCard";
-
+import dayjs from "dayjs";
 const { Meta } = Card;
 
 interface CardViewProps {
   post?: Post;
   maxWidth: number;
   loading: boolean;
+  showDate?: boolean;
 }
 
 const ImageCard: React.FC<CardViewProps> = (props) => {
-  const { post, maxWidth, loading } = props;
+  const { post, maxWidth, loading, showDate } = props;
 
   const { aspectRatio, imgSrc, thumbnail, placeholder, srcSet, previewUrl } = getImageUrls(post);
   const { imgHasError, imgHasLoaded, hasStartedInitialFetch } = useImage(imgSrc, srcSet);
@@ -25,10 +26,10 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
   if (imgHasError) return null;
 
   const titleStyle = (smallFont: number) => {
-    return { fontSize: maxWidth < 300 ? smallFont : 14, margin: maxWidth < 300 ? 0 : 4, color: "inherit" };
+    return { fontSize: maxWidth < 300 ? smallFont : 16, margin: maxWidth < 300 ? 0 : 4, color: "inherit" };
   };
   const subtitleStyle = (smallFont: number) => {
-    return { fontSize: maxWidth < 300 ? smallFont : 12, margin: maxWidth < 300 ? 0 : "0 0 0 8px", color: "inherit" };
+    return { fontSize: maxWidth < 300 ? smallFont : 12, color: "inherit" };
   };
   if (hasStartedInitialFetch && !imgHasLoaded) {
     return <LoadingImage post={post} maxWidth={maxWidth} titleStyle={titleStyle} subtitleStyle={subtitleStyle} />;
@@ -36,13 +37,26 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
 
   return (
     <Card
-      style={{ maxWidth, margin: "16px 0" }}
+      style={{
+        maxWidth,
+        margin: "16px 0",
+        border: "1px solid #2d2d2d",
+        padding: 1,
+        borderRadius: "8px",
+      }}
       cover={
         <Image
           alt={post.title}
           src={imgSrc ?? thumbnail}
           srcSet={srcSet}
-          style={{ maxWidth, maxHeight: 550, objectFit: "cover", aspectRatio }}
+          style={{
+            maxWidth,
+            borderTopLeftRadius: 8,
+            borderTopRightRadius: 8,
+            maxHeight: 550,
+            objectFit: "cover",
+            aspectRatio,
+          }}
           width='100%'
           height='auto'
           placeholder={
@@ -67,8 +81,13 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
         onClick={() => sendLinkClickToGA("reddit", REDDIT_BASE_URL + post.permalink)}
       >
         <Meta
+          style={{ padding: 8 }}
           title={<p style={titleStyle(10)}>{post.title}</p>}
-          description={<p style={subtitleStyle(8)}>{`r/${post.subreddit} · ${post.score} pts`}</p>}
+          description={
+            <p style={subtitleStyle(8)}>{`r/${post.subreddit} · ${post.score} pts ${
+              showDate ? " · " + dayjs(post.created_date).format("M/D/YY") : ""
+            }`}</p>
+          }
         />
       </a>
     </Card>
