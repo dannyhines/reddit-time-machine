@@ -4,7 +4,7 @@ import Masonry from "react-masonry-css";
 import ImageCard from "./ImageCard";
 import ListTitle from "./ListTitle";
 import useWindowDimensions from "../hooks/useWindowDimensions";
-
+const SORTED_MEMES = BEST_MEMES.sort((a, b) => b.created_utc - a.created_utc);
 interface Props {
   loading: boolean;
 }
@@ -25,7 +25,7 @@ const BestMemes: React.FC<Props> = (props: Props) => {
         columnClassName='my-masonry-grid_column'
         style={{ textAlign: "center" }}
       >
-        {BEST_MEMES.filter((x) => x && x.url.length).map((item) => (
+        {SORTED_MEMES.filter((x) => x && x.url.length).map((item) => (
           <ImageCard key={item.id} post={item} maxWidth={400} loading={loading} showDate />
         ))}
       </Masonry>

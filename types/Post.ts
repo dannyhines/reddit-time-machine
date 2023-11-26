@@ -25,7 +25,7 @@ export interface Post {
 }
 
 interface Preview {
-  enabled: boolean;
+  enabled?: boolean;
   images: PreviewImage[];
   reddit_video_preview?: RedditVideoPreview;
 }
