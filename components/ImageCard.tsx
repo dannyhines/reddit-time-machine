@@ -7,6 +7,8 @@ import { REDDIT_BASE_URL } from "../utils/constants";
 import { getImageUrls } from "../utils/getImageUrls";
 import { LoadingCard, LoadingImage } from "./LoadingCard";
 import dayjs from "dayjs";
+import { formatScore } from "../utils/postHelpers";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 const { Meta } = Card;
 
 interface CardViewProps {
@@ -21,15 +23,16 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
 
   const { aspectRatio, imgSrc, thumbnail, placeholder, srcSet, previewUrl } = getImageUrls(post);
   const { imgHasError, imgHasLoaded, hasStartedInitialFetch } = useImage(imgSrc, srcSet);
+  const { isMobile } = useWindowDimensions();
 
   if (!post || loading) return <LoadingCard />;
   if (imgHasError) return null;
 
   const titleStyle = (smallFont: number) => {
-    return { fontSize: maxWidth < 300 ? smallFont : 16, margin: maxWidth < 300 ? 0 : 4, color: "inherit" };
+    return { fontSize: isMobile ? smallFont : 16, margin: isMobile ? 0 : 4, color: "inherit" };
   };
   const subtitleStyle = (smallFont: number) => {
-    return { fontSize: maxWidth < 300 ? smallFont : 12, color: "inherit" };
+    return { fontSize: isMobile ? smallFont : 12, color: "inherit" };
   };
   if (hasStartedInitialFetch && !imgHasLoaded) {
     return <LoadingImage post={post} maxWidth={maxWidth} titleStyle={titleStyle} subtitleStyle={subtitleStyle} />;
@@ -82,10 +85,10 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
         onClick={() => sendLinkClickToGA("reddit", REDDIT_BASE_URL + post.permalink)}
       >
         <Meta
-          style={{ padding: 8 }}
-          title={<p style={titleStyle(10)}>{post.title}</p>}
+          style={{ padding: isMobile ? 0 : 8 }}
+          title={<p style={titleStyle(12)}>{post.title}</p>}
           description={
-            <p style={subtitleStyle(8)}>{`r/${post.subreddit} · ${post.score} pts ${
+            <p style={subtitleStyle(10)}>{`r/${post.subreddit} · ${formatScore(post.score)} pts ${
               showDate ? " · " + dayjs(post.created_date).format("M/D/YY") : ""
             }`}</p>
           }

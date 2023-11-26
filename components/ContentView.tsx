@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { BackTop, Row, Col, Divider, Spin } from "antd";
 import DateSelectionView from "./DateSelector";
 import ListView from "./ListView";
@@ -49,7 +49,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
           {loading ? (
             <Spin size='large' spinning={true} />
           ) : (
-            <Row gutter={16} justify='center'>
+            <Row gutter={16} justify='center' ref={cardRef}>
               {isMobile ? (
                 <Col span={24}>
                   {allPosts.map((p) =>
@@ -75,7 +75,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
                   </Col>
 
                   <Col lg={8} span={12} order={2}>
-                    <div ref={cardRef}>
+                    <div>
                       <ListTitle>Pictures</ListTitle>
                       {pics
                         .filter((x) => x.url.length)
