@@ -129,62 +129,6 @@ export const BEST_MEMES: Post[] = [
     post_type: "meme",
   },
   {
-    id: "mxogvd",
-    title: "They DID It ! They actually did it ! Battle of Josh",
-    url: "https://i.redd.it/4h3qdfnyn5v61.jpg",
-    created_utc: 1619284961,
-    author: "LordPunisher",
-    domain: "i.redd.it",
-    score: 246720,
-    permalink: "/r/memes/comments/mxogvd/they_did_it_they_actually_did_it_battle_of_josh/",
-    preview: {
-      enabled: true,
-      images: [
-        {
-          id: "VY_GgJz_SxA1xjs30v7JKZUAin_VzfPPFcqaL1VD13U",
-          resolutions: [
-            {
-              height: 58,
-              url: "https://preview.redd.it/4h3qdfnyn5v61.jpg?width=108&crop=smart&auto=webp&s=b7470ccd5fbaa7cadace6cc7b77f19f83ebb4b3a",
-              width: 108,
-            },
-            {
-              height: 116,
-              url: "https://preview.redd.it/4h3qdfnyn5v61.jpg?width=216&crop=smart&auto=webp&s=3d15122d0740b6d181cef8de198d9728ba0e68a4",
-              width: 216,
-            },
-            {
-              height: 172,
-              url: "https://preview.redd.it/4h3qdfnyn5v61.jpg?width=320&crop=smart&auto=webp&s=7c99e694c0c5cac4582a02560377189c9dc989e7",
-              width: 320,
-            },
-            {
-              height: 344,
-              url: "https://preview.redd.it/4h3qdfnyn5v61.jpg?width=640&crop=smart&auto=webp&s=72a104ff49578100d1193c5d0dfe7ed47bb9265b",
-              width: 640,
-            },
-            {
-              height: 516,
-              url: "https://preview.redd.it/4h3qdfnyn5v61.jpg?width=960&crop=smart&auto=webp&s=74d32ced37a80e77f09d7feb12c1cfcbe2937de7",
-              width: 960,
-            },
-          ],
-          source: {
-            height: 580,
-            url: "https://preview.redd.it/4h3qdfnyn5v61.jpg?auto=webp&s=fc03108ec2ce21038c0121bd3b54907e6c3918d7",
-            width: 1078,
-          },
-        },
-      ],
-    },
-    subreddit: "memes",
-    thumbnail: "https://b.thumbs.redditmedia.com/viufWpLnUrWBqIVEkFg9rPn7ywOjDoYOQXHuLxxqFMw.jpg",
-    thumbnail_height: 75,
-    thumbnail_width: 140,
-    created_date: "2021-04-24T04:00:00.000Z",
-    post_type: "meme",
-  },
-  {
     id: "gi8l07",
     title: "They what???",
     url: "https://i.imgur.com/KpwIuSO.png",
