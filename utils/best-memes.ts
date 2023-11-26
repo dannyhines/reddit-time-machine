@@ -206,7 +206,6 @@ export const BEST_MEMES: Post[] = [
     author: "ItsnotBatman",
     domain: "imgflip.com",
     score: 52131,
-    is_video: null,
     permalink: "/r/AdviceAnimals/comments/5bzx4g/as_a_stunned_liberal_voter_right_now/",
     preview: {
       images: [
@@ -253,7 +252,6 @@ export const BEST_MEMES: Post[] = [
     author: "MattBaster",
     domain: "i.imgur.com",
     score: 38066,
-    is_video: null,
     permalink: "/r/AdviceAnimals/comments/5awx56/good_guy_chicago/",
     preview: {
       images: [
@@ -301,7 +299,6 @@ export const BEST_MEMES: Post[] = [
     author: "NikiTosThePleb",
     domain: "i.redd.it",
     score: 56415,
-    is_video: false,
     permalink: "/r/dankmemes/comments/6we7gp/500/",
     preview: {
       enabled: true,
@@ -354,7 +351,6 @@ export const BEST_MEMES: Post[] = [
     author: "Gktejus",
     domain: "i.redd.it",
     score: 56144,
-    is_video: false,
     permalink: "/r/dankmemes/comments/7c0rtt/understandable/",
     preview: null,
     subreddit: "dankmemes",
@@ -372,7 +368,6 @@ export const BEST_MEMES: Post[] = [
     author: "way_fairy",
     domain: "imgur.com",
     score: 50968,
-    is_video: false,
     permalink: "/r/AdviceAnimals/comments/7c0vw4/heres_hoping/",
     preview: {
       enabled: false,
@@ -420,7 +415,6 @@ export const BEST_MEMES: Post[] = [
     author: "Eucatari",
     domain: "imgur.com",
     score: 51395,
-    is_video: false,
     permalink: "/r/AdviceAnimals/comments/6zp0jn/we_just_moved_in_i_had_no_idea_she_lived_there/",
     preview: {
       enabled: false,
@@ -468,7 +462,6 @@ export const BEST_MEMES: Post[] = [
     author: "Drumdevil86",
     domain: "i.redd.it",
     score: 117203,
-    is_video: false,
     permalink: "/r/memes/comments/a98ok5/guess_who/",
     preview: {
       enabled: true,
@@ -551,7 +544,6 @@ export const BEST_MEMES: Post[] = [
     author: "1000MothsInAManSuit",
     domain: "i.redd.it",
     score: 80604,
-    is_video: false,
     permalink: "/r/memes/comments/a4zi5o/high_effort_aquameme/",
     preview: {
       enabled: true,
@@ -604,7 +596,6 @@ export const BEST_MEMES: Post[] = [
     author: "Dr_Spaghetti_Jones",
     domain: "i.redd.it",
     score: 75499,
-    is_video: false,
     permalink: "/r/dankmemes/comments/9vphui/hes_a_good_boy/",
     preview: {
       enabled: true,
@@ -657,7 +648,6 @@ export const BEST_MEMES: Post[] = [
     author: "MaBoerbroer",
     domain: "i.redd.it",
     score: 71630,
-    is_video: false,
     permalink: "/r/memes/comments/a0j1g5/flat_earth_boiz/",
     preview: {
       enabled: true,
@@ -710,7 +700,6 @@ export const BEST_MEMES: Post[] = [
     author: "vicky436",
     domain: "i.imgur.com",
     score: 67724,
-    is_video: false,
     permalink: "/r/memes/comments/9h4685/too_accurate/",
     preview: {
       enabled: true,
