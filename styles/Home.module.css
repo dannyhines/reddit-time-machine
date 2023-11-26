@@ -16,6 +16,8 @@
 .app_header {
   display: flex;
   justify-content: center;
+  height: calc(50px + 2vh);
+
 }
 
 .app_header_link {

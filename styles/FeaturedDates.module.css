@@ -18,13 +18,13 @@
   justify-content: space-between;
   cursor:pointer;
   border-radius: 8px;
-  border: 1px solid #575757;
+  border: 1px solid #262626;
 }
 
 .featured_post_card > div {
   padding: 0;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .featured_post_card:hover {
@@ -37,6 +37,6 @@
 
 .card_image {
   object-fit: cover;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }

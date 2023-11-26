@@ -40,7 +40,7 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
       style={{
         maxWidth,
         margin: "16px 0",
-        border: "1px solid #2d2d2d",
+        border: "1px solid #262626",
         padding: 1,
         borderRadius: "8px",
       }}
@@ -56,6 +56,7 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
             maxHeight: 550,
             objectFit: "cover",
             aspectRatio,
+            border: "1px solid #262626",
           }}
           width='100%'
           height='auto'
@@ -72,7 +73,7 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
           preview={{ src: previewUrl }}
         />
       }
-      bodyStyle={{ padding: "12px 0" }}
+      bodyStyle={{ padding: "12px 0", borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
     >
       <a
         href={REDDIT_BASE_URL + post.permalink}

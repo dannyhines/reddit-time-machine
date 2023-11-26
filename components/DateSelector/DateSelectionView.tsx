@@ -61,7 +61,7 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
         <Card
           bordered={false}
           headStyle={{ borderBottom: 0 }}
-          style={{ width: "100%", backgroundColor: "#32353a", borderRadius: 16, border: "1px solid #464646" }}
+          style={{ width: "100%", backgroundColor: "#111111", borderRadius: 16, border: "1px solid #2b2b2b" }}
         >
           <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
             <p style={{ marginBottom: "1rem", color: "rgb(210, 210, 210)", fontSize: 15 }}>
