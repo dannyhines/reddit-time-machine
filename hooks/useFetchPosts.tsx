@@ -46,3 +46,12 @@ export const useFetchPosts = (date: string): UseFetchPostsResult => {
 
   return { loading, error, memes, politics, news, pics, sports, allPosts: posts };
 };
+
+export const filterPosts = (posts: Post[]) => {
+  const memes = posts.filter((x) => x.post_type === "meme").slice(0, 8);
+  const politics = posts.filter((x) => x.post_type === "politics").slice(0, 5);
+  const news = posts.filter((x) => x.post_type === "news").slice(0, 8);
+  const pics = posts.filter((x) => x.post_type === "pics").slice(0, 6);
+  const sports = posts.filter((x) => x.post_type === "sports").slice(0, 5);
+  return { memes, politics, news, pics, sports, allPosts: posts };
+};
