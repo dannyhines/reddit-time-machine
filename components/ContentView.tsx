@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BackTop, Row, Col, Divider, Spin } from "antd";
 import DateSelectionView from "./DateSelector";
 import ListView from "./ListView";
@@ -12,25 +12,31 @@ import { useDateSelection } from "../hooks/useDateSelection";
 import { useCardWidth } from "../hooks/useCardWith";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import ListViewItem from "./ListViewItem";
+import { Post } from "../types/Post";
 
 interface ContentViewProps {
   initialDate?: string;
+  posts: Post[];
 }
 
 const ContentView: React.FC<ContentViewProps> = (props) => {
-  const { date, handleDateChanged } = useDateSelection(props.initialDate);
+  const { initialDate, posts } = props;
+  console.log("[ContentView render] posts count:", posts?.length);
+  const { date, handleDateChanged } = useDateSelection(initialDate);
   const { dateObj, stringDate, shortDate } = getDates(date);
-  const { loading, memes, politics, news, pics, sports, allPosts } = useFetchPosts(date);
+  const { loading, memes, politics, news, pics, sports, allPosts } = useFetchPosts(date, posts);
+
   const { predictions } = useFetchPredictions(date);
   const { cardRef, cardWidth } = useCardWidth();
   const { isMobile } = useWindowDimensions();
 
-  const Predictions = predictions.length ? (
-    <>
-      <ListView title={`Predictions in ${getMonthAndYear(dateObj)}`} posts={predictions} loading={loading} />
-      <br />
-    </>
-  ) : null;
+  const Predictions =
+    predictions.length === 0 ? null : (
+      <>
+        <ListView title={`Predictions in ${getMonthAndYear(dateObj)}`} posts={predictions} loading={loading} />
+        <br />
+      </>
+    );
 
   return (
     <main className={styles.main}>
@@ -78,7 +84,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
                     <div>
                       <ListTitle>Pictures</ListTitle>
                       {pics
-                        .filter((x) => x.url.length)
+                        .filter((x) => !!x.url && x.url.length)
                         .map((item) => (
                           <ImageCard key={item.id} post={item} maxWidth={cardWidth} loading={loading} />
                         ))}
@@ -88,7 +94,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
                   <Col lg={8} span={12} order={3}>
                     <ListTitle>Memes</ListTitle>
                     {memes
-                      .filter((x) => x.url.length)
+                      .filter((x) => !!x.url && x.url.length)
                       .map((item) => (
                         <ImageCard key={item.id} post={item} maxWidth={cardWidth} loading={loading} />
                       ))}
