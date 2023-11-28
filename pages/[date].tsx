@@ -83,9 +83,20 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const date = context.params?.date ?? "";
+  const date = typeof context.params?.date === "string" ? context.params?.date : "";
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    console.log("[getStaticProps] date is invalid, returning null");
+
+    return { props: { date, posts: null } };
+  }
+
   const response = await fetch(`https://www.reddit-time-machine.com/api/posts?date=${date}`);
+  if (!response.ok) {
+    console.error("API error:", response.statusText);
+    return { props: { date, posts: [] } }; // Return an empty array if there's an API error
+  }
   const posts: Post[] = await response.json();
+  console.log("[getStaticProps] number of posts:", posts.length, "for date:", date);
   return {
     props: { date: date, posts },
   };
