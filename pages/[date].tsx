@@ -2,8 +2,6 @@ import Head from "next/head";
 import Header from "../components/Header";
 import ContentView from "../components/ContentView";
 import Footer from "../components/Footer";
-import getRandomDate from "../components/DateSelector/getRandomDate";
-import { GetServerSidePropsContext } from "next";
 import { getMonthDayYear, getShortDateString, isDateInRange, isValidDate } from "../utils/date-util";
 import dayjs from "dayjs";
 import { GetStaticProps, GetStaticPaths } from "next";
@@ -54,23 +52,6 @@ const DatePage = (props: Props) => {
   );
 };
 
-// Either passes the date as a prop if it's valid, or redirects to a random date's page
-// export async function getServerSideProps(context: GetServerSidePropsContext) {
-//   const date = context.params?.date ?? "";
-//   if (!isDateInRange(date)) {
-//     return {
-//       redirect: {
-//         destination: `/${getRandomDate().format("YYYY-MM-DD")}`,
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return {
-//     props: { date: date },
-//   };
-// }
-
 export const getStaticPaths: GetStaticPaths = async () => {
   const allDates = generateDateStrings("2009-01-01", "2022-12-27");
   const devDates = FEATURED_DATES_POSTS.flatMap((x) => x.date);
@@ -78,25 +59,21 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const datesToGenerate = process.env.NODE_ENV === "production" ? allDates : devDates;
   const paths = datesToGenerate.map((date) => ({ params: { date } }));
 
-  console.log("Generating " + paths.length + " paths");
+  console.log("[getStaticPaths] Generating " + paths.length + " paths");
   return { paths, fallback: "blocking" };
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const date = typeof context.params?.date === "string" ? context.params?.date : "";
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    console.log("[getStaticProps] date is invalid, returning null");
-
     return { props: { date, posts: null } };
   }
 
   const response = await fetch(`https://www.reddit-time-machine.com/api/posts?date=${date}`);
   if (!response.ok) {
-    console.error("API error:", response.statusText);
-    return { props: { date, posts: [] } }; // Return an empty array if there's an API error
+    return { props: { date, posts: [] } };
   }
   const posts: Post[] = await response.json();
-  console.log("[getStaticProps] number of posts:", posts.length, "for date:", date);
   return {
     props: { date: date, posts },
   };

@@ -21,7 +21,6 @@ interface ContentViewProps {
 
 const ContentView: React.FC<ContentViewProps> = (props) => {
   const { initialDate, posts } = props;
-  console.log("[ContentView render] posts count:", posts?.length);
   const { date, handleDateChanged } = useDateSelection(initialDate);
   const { dateObj, stringDate, shortDate } = getDates(date);
   const { loading, memes, politics, news, pics, sports, allPosts } = useFetchPosts(date, posts);
