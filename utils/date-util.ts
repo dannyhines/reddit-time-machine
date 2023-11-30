@@ -10,6 +10,9 @@ const getOrdinalNum = (n: number) => {
   return n + (n > 0 ? ["th", "st", "nd", "rd"][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10] : "");
 };
 
+/**
+ * returns dayjs object and long & short date strings
+ */
 export const getDates = (startDate: string) => {
   const dateObj: Dayjs = dayjs(startDate);
   const stringDate = getShortDateString(dateObj);
@@ -17,7 +20,7 @@ export const getDates = (startDate: string) => {
   return { dateObj, stringDate, shortDate };
 };
 
-/*
+/** 
   Returns "Monday, Nov. 14th 2018"
 */
 export const getShortDateString = (dateObj: Dayjs) => {
@@ -27,7 +30,7 @@ export const getShortDateString = (dateObj: Dayjs) => {
   return stringDate;
 };
 
-/*
+/**
   Returns "November 14th 2018"
 */
 export const getMonthDayYear = (dateObj: Dayjs) => {
@@ -35,12 +38,12 @@ export const getMonthDayYear = (dateObj: Dayjs) => {
   return stringDate;
 };
 
-/*
+/**
   Returns "November 2018"
 */
 export const getMonthAndYear = (d: Dayjs) => `${d.format("MMMM")} ${d.year()}`;
 
-/*
+/**
 Checks that the date is in YYY-MM-DD format
 */
 export const isValidDate = (dateStr?: string | string[]) => {
@@ -48,6 +51,9 @@ export const isValidDate = (dateStr?: string | string[]) => {
   return typeof dateStr === "string" ? dateRegex.test(dateStr) : false;
 };
 
+/**
+ * Returns true if between FIRST_AVAILABLE_DATE and LAST_AVAILABLE_DATE
+ */
 export const isDateInRange = (dateStr?: string | string[]) => {
   if (!isValidDate(dateStr)) return false;
   const d = dayjs(dateStr as string);

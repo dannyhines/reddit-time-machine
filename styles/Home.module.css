@@ -16,14 +16,12 @@
 .app_header {
   display: flex;
   justify-content: center;
-  height: calc(50px + 2vh);
-
+  height: calc(40px + 3vh);
 }
 
 .app_header_link {
   display: flex;
   align-items: center;
-  min-height: 8vh;
   font-size: calc(8px + 2vmin);
 }
 

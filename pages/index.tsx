@@ -7,26 +7,26 @@ import DateSelectionView from "../components/DateSelector";
 import router from "next/router";
 import dayjs from "dayjs";
 import styles from "../styles/Home.module.css";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Divider, Spin } from "antd";
 import { getShortDateString } from "../utils/date-util";
 import FeaturedDates from "../components/FeaturedDates";
 import BestMemes from "../components/BestMemes";
 
-const title = "Reddit Time Machine";
-const description = "View the most popular news, pictures and memes from a day in Reddit history.";
+const title = "Reddit Time Machine - Explore a day in internet history";
+const description = `Explore Reddit history with Reddit Time Machine. See the most up-voted news, pictures, and memes on any day in the Reddit archive.`;
 const url = "https://www.reddit-time-machine.com";
 
 const Home: NextPage = () => {
   const [loading, setloading] = useState(false);
   const [dateStr, setdateStr] = useState<string>();
 
-  const handleDateSelection = (dateStr: string) => {
+  const handleDateSelection = useCallback((dateStr: string) => {
     setloading(true);
     setdateStr(dateStr);
     const newDate = dayjs(dateStr).format("YYYY-MM-DD");
-    router.push(`/${newDate}`, undefined, { shallow: true });
-  };
+    router.push(`/${newDate}`);
+  }, []);
 
   return (
     <div>
@@ -36,7 +36,7 @@ const Home: NextPage = () => {
         <meta name='description' content={description} />
         <meta
           name='keywords'
-          content='Reddit Archive,Reddit Time Machine,Reddit,news,politics,memes,history,internet'
+          content='Reddit Archive,Reddit Time Machine,Reddit,news,politics,memes,history,predictions,internet history'
         />
         <link rel='icon' href='/favicon.ico' />
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />

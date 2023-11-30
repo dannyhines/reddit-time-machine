@@ -16,16 +16,21 @@ interface Props {
 
 const DatePage = (props: Props) => {
   const date = dayjs(props.date);
-  const title = `Reddit Time Machine | ${getShortDateString(date)}`;
-  const description = `View the most popular news, pictures and memes from ${getMonthDayYear(date)}.`;
+  const title = `Top Reddit Posts on ${getMonthDayYear(date)} - Reddit Time Machine`;
+  const description = `Explore Reddit history with Reddit Time Machine. See the most up-voted news, pictures, and memes on this day, ${getMonthDayYear(
+    date
+  )}, from the Reddit archive.`;
   const url = `https://www.reddit-time-machine.com/${props.date}`;
   return (
     <div>
       <Head>
-        <title>Reddit Time Machine</title>
+        <title>{title}</title>
         <meta name='title' content={title} />
         <meta name='description' content={description} />
-        <meta name='keywords' content='Reddit,news,politics,memes,history,internet' />
+        <meta
+          name='keywords'
+          content='Reddit Archive,Reddit Time Machine,Reddit,news,politics,memes,history,predictions,internet history'
+        />
         <link rel='icon' href='/favicon.ico' />
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
         <meta name='theme-color' content='#050505' />
