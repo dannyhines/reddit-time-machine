@@ -46,7 +46,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
 
         <div style={{ textAlign: "center", paddingTop: 16, minHeight: 100 }}>
           <div style={{ backgroundColor: "#000", position: "sticky", top: 0, zIndex: 1000 }}>
-            <Divider style={{ borderTopColor: "#636363" }}>
+            <Divider style={{ borderTopColor: "#636363", background: "#050505" }}>
               <h2>{stringDate}</h2>
             </Divider>
           </div>
