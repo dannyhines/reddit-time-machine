@@ -6,10 +6,13 @@ export const useDateSelection = (initialDate?: string) => {
   const router = useRouter();
   const [date, setDate] = useState<string>(initialDate ?? getRandomDate().format("YYYY-MM-DD"));
 
-  const handleDateChanged = (x: string) => {
-    router.push(`/${x}`, undefined, { shallow: true });
-    setDate(x);
-  };
+  const handleDateChanged = useCallback(
+    (x: string) => {
+      router.push(`/${x}`); // triggers a page refresh
+      setDate(x);
+    },
+    [router]
+  );
 
   return { date, handleDateChanged };
 };
