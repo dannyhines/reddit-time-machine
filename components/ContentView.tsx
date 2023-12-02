@@ -13,6 +13,7 @@ import { useCardWidth } from "../hooks/useCardWith";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import ListViewItem from "./ListViewItem";
 import { Post } from "../types/Post";
+import Masonry from "react-masonry-css";
 
 interface ContentViewProps {
   initialDate?: string;
@@ -23,7 +24,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
   const { initialDate, posts } = props;
   const { date, handleDateChanged } = useDateSelection(initialDate);
   const { dateObj, stringDate, shortDate } = getDates(date);
-  const { loading, memes, politics, news, pics, sports, allPosts } = useFetchPosts(date, posts);
+  const { loading, politics, news, sports, picsAndMemes, allPosts } = useFetchPosts(date, posts);
 
   const { predictions } = useFetchPredictions(date);
   const { cardRef, cardWidth } = useCardWidth();
@@ -79,24 +80,21 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
                     <ListView title={`Sports on ${shortDate}`} posts={sports} loading={loading} />
                   </Col>
 
-                  <Col lg={8} span={12} order={2}>
-                    <div>
-                      <ListTitle>Pictures</ListTitle>
-                      {pics
-                        .filter((x) => !!x.url && x.url.length)
+                  <Col lg={16} span={24} order={2}>
+                    <ListTitle>Top memes of all time</ListTitle>
+
+                    <Masonry
+                      breakpointCols={2}
+                      className='my-masonry-grid'
+                      columnClassName='my-masonry-grid_column'
+                      style={{ textAlign: "center" }}
+                    >
+                      {picsAndMemes
+                        .filter((x) => !!x && x.url.length)
                         .map((item) => (
                           <ImageCard key={item.id} post={item} maxWidth={cardWidth} loading={loading} />
                         ))}
-                    </div>
-                  </Col>
-
-                  <Col lg={8} span={12} order={3}>
-                    <ListTitle>Memes</ListTitle>
-                    {memes
-                      .filter((x) => !!x.url && x.url.length)
-                      .map((item) => (
-                        <ImageCard key={item.id} post={item} maxWidth={cardWidth} loading={loading} />
-                      ))}
+                    </Masonry>
                   </Col>
                 </>
               )}

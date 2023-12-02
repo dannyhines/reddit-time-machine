@@ -4,10 +4,9 @@ import { Post } from "../types/Post";
 interface UseFetchPostsResult {
   loading: boolean;
   error: any;
-  memes: Post[];
   politics: Post[];
   news: Post[];
-  pics: Post[];
+  picsAndMemes: Post[];
   sports: Post[];
   allPosts: Post[];
 }
@@ -16,11 +15,10 @@ export const useFetchPosts = (date: string, posts?: Post[]): UseFetchPostsResult
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [allPosts, setAllPosts] = useState<Post[]>([]);
-  const [memes, setMemes] = useState<Post[]>([]);
   const [politics, setPolitics] = useState<Post[]>([]);
   const [news, setNews] = useState<Post[]>([]);
-  const [pics, setPics] = useState<Post[]>([]);
   const [sports, setSports] = useState<Post[]>([]);
+  const [picsAndMemes, setPicsAndMemes] = useState<Post[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,11 +34,13 @@ export const useFetchPosts = (date: string, posts?: Post[]): UseFetchPostsResult
           data = await response.json();
         }
         setAllPosts(data);
-        setMemes(data.filter((x) => x.post_type === "meme").slice(0, 8));
         setPolitics(data.filter((x) => x.post_type === "politics").slice(0, 5));
         setNews(data.filter((x) => x.post_type === "news").slice(0, 8));
-        setPics(data.filter((x) => x.post_type === "pics").slice(0, 6));
         setSports(data.filter((x) => x.post_type === "sports").slice(0, 5));
+
+        const memes = data.filter((x) => x.post_type === "meme").slice(0, 10);
+        const pics = data.filter((x) => x.post_type === "pics").slice(0, 8);
+        setPicsAndMemes([...pics, ...memes].sort((a, b) => b.score - a.score));
       } catch (error: any) {
         setError(error);
       } finally {
@@ -51,5 +51,5 @@ export const useFetchPosts = (date: string, posts?: Post[]): UseFetchPostsResult
     fetchData();
   }, [date, posts]);
 
-  return { loading, error, memes, politics, news, pics, sports, allPosts };
+  return { loading, error, picsAndMemes, politics, news, sports, allPosts };
 };
