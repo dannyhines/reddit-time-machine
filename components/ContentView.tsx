@@ -81,7 +81,7 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
                   </Col>
 
                   <Col lg={16} span={24} order={2}>
-                    <ListTitle>Top memes of all time</ListTitle>
+                    <ListTitle>Pictures and Memes</ListTitle>
 
                     <Masonry
                       breakpointCols={2}
