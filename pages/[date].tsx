@@ -70,18 +70,23 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const date = typeof context.params?.date === "string" ? context.params?.date : "";
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    return { props: { date, posts: null } };
+  if (!isValidDate(date) || !isDateInRange(date)) {
+    return { notFound: true };
   }
 
-  const response = await fetch(`https://www.reddit-time-machine.com/api/posts?date=${date}`);
-  if (!response.ok) {
+  try {
+    const response = await fetch(`https://www.reddit-time-machine.com/api/posts?date=${date}`);
+    if (!response.ok) {
+      return { props: { date, posts: [] } };
+    }
+    const posts: Post[] = await response.json();
+    return {
+      props: { date, posts },
+    };
+  } catch (error) {
+    console.error(`[getStaticProps] Unable to load posts for ${date}`, error);
     return { props: { date, posts: [] } };
   }
-  const posts: Post[] = await response.json();
-  return {
-    props: { date: date, posts },
-  };
 };
 
 export default DatePage;

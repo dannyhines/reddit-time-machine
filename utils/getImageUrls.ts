@@ -1,47 +1,89 @@
 import { Post, Resolution } from "../types/Post";
 
+export interface ImageCandidate {
+  src: string;
+  srcSet?: string;
+  previewUrl?: string;
+  aspectRatio?: number;
+}
+
 const getAspectRatio = (width?: number | null, height?: number | null) => {
   return width && height ? width / height : undefined;
 };
 
-const getSrcSet = (resolutions: Resolution[]) => {
-  return resolutions.map((res) => `${res.url} ${res.width}w`).join(", ");
+/** Reddit's API commonly stores query strings with HTML-escaped ampersands. */
+export const normalizeRedditImageUrl = (url?: string | null) => {
+  if (!url) return undefined;
+
+  return url
+    .replace(/&amp;|&#0*38;|&#x0*26;/gi, "&")
+    .replace(/^http:\/\//i, "https://");
 };
 
-/*
- * returns the image urls, calculates w/h (aspect ratio)
- * older posts don't contain a 'preview' field, thumbnail width & height
- * // TODO: use is_video, is_reddit_media_domain, preview.variants?
+const getSrcSet = (resolutions?: Resolution[]) => {
+  const entries = (resolutions ?? [])
+    .map((resolution) => {
+      const url = normalizeRedditImageUrl(resolution.url);
+      return url ? `${url} ${resolution.width}w` : undefined;
+    })
+    .filter((entry): entry is string => Boolean(entry));
+
+  return entries.length ? entries.join(", ") : undefined;
+};
+
+/**
+ * Builds an ordered fallback chain. Preview media is preferred because article
+ * URLs are often HTML pages rather than images; the original URL and thumbnail
+ * remain useful fallbacks for older records that do not contain preview data.
  */
-export function getImageUrls(post?: Post) {
-  if (!post || !post.url) return { src: "" };
-  let { url, thumbnail, preview, thumbnail_width, thumbnail_height } = post;
-  let aspectRatio = getAspectRatio(thumbnail_width, thumbnail_height);
+export function getImageCandidates(post?: Post): ImageCandidate[] {
+  if (!post) return [];
 
-  thumbnail = thumbnail && thumbnail !== "default" ? thumbnail.replace("http://", "https://") : undefined; // most are 'default'
-  let postUrl = url.replace("http://", "https://") ?? undefined;
-  let placeholder, srcSet, srcSet_Gif, previewUrl, previewUrl_Gif;
+  const candidates: ImageCandidate[] = [];
+  const previewImage = post.preview?.images?.[0];
+  const gifPreview = previewImage?.variants?.gif;
 
-  // If there's a 'preview' field, use that bc Reddit maintains those images
-  if (preview) {
-    const { source, resolutions, variants } = preview.images[0];
-    previewUrl = source ? source.url : postUrl;
-    previewUrl_Gif = variants?.gif?.source?.url;
-    aspectRatio = getAspectRatio(source.width, source.height) ?? aspectRatio;
-    // placeholder = getMobileImage(resolutions, postUrl);
-    placeholder = resolutions[0]?.url;
-    srcSet = getSrcSet(resolutions);
-    if (variants?.gif?.resolutions) {
-      srcSet_Gif = variants.gif.resolutions.map((res) => `${res.url} ${res.width}w`).join(", ");
-    }
+  const addCandidate = (
+    src?: string | null,
+    resolutions?: Resolution[],
+    width?: number | null,
+    height?: number | null,
+    previewUrl?: string | null
+  ) => {
+    const normalizedSrc = normalizeRedditImageUrl(src);
+    if (!normalizedSrc) return;
+
+    candidates.push({
+      src: normalizedSrc,
+      srcSet: getSrcSet(resolutions),
+      previewUrl: normalizeRedditImageUrl(previewUrl) ?? normalizedSrc,
+      aspectRatio: getAspectRatio(width, height),
+    });
+  };
+
+  addCandidate(
+    gifPreview?.source?.url,
+    gifPreview?.resolutions,
+    gifPreview?.source?.width,
+    gifPreview?.source?.height,
+    gifPreview?.source?.url
+  );
+  addCandidate(
+    previewImage?.source?.url,
+    previewImage?.resolutions,
+    previewImage?.source?.width,
+    previewImage?.source?.height,
+    previewImage?.source?.url
+  );
+  addCandidate(post.url, undefined, post.thumbnail_width, post.thumbnail_height, previewImage?.source?.url);
+
+  if (post.thumbnail !== "default" && post.thumbnail !== "self" && post.thumbnail !== "nsfw") {
+    addCandidate(post.thumbnail, undefined, post.thumbnail_width, post.thumbnail_height);
   }
 
-  return {
-    aspectRatio,
-    imgSrc: !srcSet ? postUrl : undefined,
-    thumbnail,
-    placeholder,
-    srcSet: srcSet_Gif ?? srcSet,
-    previewUrl: previewUrl_Gif ?? previewUrl,
-  };
+  // The same URL can occur in several Reddit fields. Trying it repeatedly only
+  // delays the text-only fallback and causes duplicate network requests.
+  return candidates.filter(
+    (candidate, index) => candidates.findIndex((other) => other.src === candidate.src) === index
+  );
 }

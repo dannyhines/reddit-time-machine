@@ -48,7 +48,7 @@ Checks that the date is in YYY-MM-DD format
 */
 export const isValidDate = (dateStr?: string | string[]) => {
   const dateRegex = new RegExp(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/);
-  return typeof dateStr === "string" ? dateRegex.test(dateStr) : false;
+  return typeof dateStr === "string" && dateRegex.test(dateStr) && dayjs(dateStr).format("YYYY-MM-DD") === dateStr;
 };
 
 /**
@@ -57,5 +57,5 @@ export const isValidDate = (dateStr?: string | string[]) => {
 export const isDateInRange = (dateStr?: string | string[]) => {
   if (!isValidDate(dateStr)) return false;
   const d = dayjs(dateStr as string);
-  return d.isAfter(FIRST_AVAILABLE_DATE) && d.isBefore(LAST_AVAILABLE_DATE);
+  return !d.isBefore(FIRST_AVAILABLE_DATE, "day") && !d.isAfter(LAST_AVAILABLE_DATE, "day");
 };

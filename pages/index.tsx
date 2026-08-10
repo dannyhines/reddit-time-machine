@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -17,7 +17,11 @@ const title = "Reddit Time Machine - Explore a day in internet history";
 const description = `Explore Reddit history with Reddit Time Machine. See the most up-voted news, pictures, and memes on any day in the Reddit archive.`;
 const url = "https://www.reddit-time-machine.com";
 
-const Home: NextPage = () => {
+interface HomeProps {
+  initialDate: string;
+}
+
+const Home: NextPage<HomeProps> = ({ initialDate }) => {
   const [loading, setloading] = useState(false);
   const [dateStr, setdateStr] = useState<string>();
 
@@ -62,7 +66,7 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <div className={styles.content_view}>
           <DateSelectionView
-            showingDate={getRandomDate().format("YYYY-MM-DD")}
+            showingDate={initialDate}
             handleSubmit={handleDateSelection}
             onHomePage
           />
@@ -85,5 +89,11 @@ const Home: NextPage = () => {
     </div>
   );
 };
+
+// Serialize the initial random date into the page so the browser hydrates the
+// exact markup produced at build time.
+export const getStaticProps: GetStaticProps<HomeProps> = async () => ({
+  props: { initialDate: getRandomDate().format("YYYY-MM-DD") },
+});
 
 export default Home;
