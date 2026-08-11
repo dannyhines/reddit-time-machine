@@ -16,9 +16,7 @@ const NotFoundPage: NextPage = () => (
       <div className={styles.content_view} style={{ minHeight: "65vh", textAlign: "center", paddingTop: 80 }}>
         <h2>This date is outside the archive</h2>
         <p>Choose a date between 2009 and 2022 to continue exploring Reddit history.</p>
-        <Link href='/'>
-          <a>Choose another date</a>
-        </Link>
+        <Link href='/'>Choose another date</Link>
       </div>
     </main>
     <Footer />
