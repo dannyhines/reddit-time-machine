@@ -20,6 +20,12 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. It'll update as you make changes.
 
+## Database maintenance
+
+Schema changes and materialized-view refresh instructions live in
+[`database/README.md`](database/README.md). Database migrations are applied
+manually and are not part of the Vercel build.
+
 ## Acknowledgements
 
 Originally I used Jason Baumgartner's free API on ([pushshift.io](https://pushshift.io/)) for fetching Reddit history. Unfortunately, the project died in 2023 in the wake of Reddit's changes to their API pricing.
