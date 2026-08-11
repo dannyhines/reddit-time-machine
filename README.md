@@ -12,13 +12,27 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Running locally
 
-This is a NextJS project. First install dependencies with `yarn install` then run the development server:
+This project runs on Next.js 16 and requires Node.js 20.9 or newer. The production runtime should use an actively supported Node.js LTS release that satisfies that requirement. Install dependencies with Yarn 1, then run the development server:
 
 ```bash
 yarn dev
 ```
 
+Before opening a pull request, run the local validation commands:
+
+```bash
+yarn lint
+yarn typecheck
+yarn build
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. It'll update as you make changes.
+
+## Database maintenance
+
+Schema changes and materialized-view refresh instructions live in
+[`database/README.md`](database/README.md). Database migrations are applied
+manually and are not part of the Vercel build.
 
 ## Acknowledgements
 
