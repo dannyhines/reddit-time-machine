@@ -25,7 +25,7 @@ const BestMemes: React.FC<Props> = (props: Props) => {
         columnClassName='my-masonry-grid_column'
         style={{ textAlign: "center" }}
       >
-        {SORTED_MEMES.filter((x) => x && x.url.length).map((item) => (
+        {SORTED_MEMES.map((item) => (
           <ImageCard key={item.id} post={item} maxWidth={400} loading={loading} showDate />
         ))}
       </Masonry>

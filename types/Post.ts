@@ -1,7 +1,7 @@
 export interface Post {
   id: string;
   title: string;
-  url: string;
+  url: string | null;
   created_utc: number;
   author: string;
   domain: string;

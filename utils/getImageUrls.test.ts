@@ -47,4 +47,13 @@ describe("getImageCandidates", () => {
     ]);
     expect(candidates[0].srcSet).toBe("https://preview.redd.it/image.jpg?width=320&crop=smart 320w");
   });
+
+  it("keeps preview and thumbnail fallbacks when the archived URL is null", () => {
+    const candidates = getImageCandidates({ ...post, url: null });
+
+    expect(candidates.map(({ src }) => src)).toEqual([
+      "https://preview.redd.it/image.jpg?width=1080&crop=smart",
+      "https://b.thumbs.redditmedia.com/thumb.jpg",
+    ]);
+  });
 });

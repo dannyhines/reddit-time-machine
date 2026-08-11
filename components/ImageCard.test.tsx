@@ -38,7 +38,7 @@ describe("ImageCard", () => {
     );
 
     fireEvent.error(screen.getByRole("img", { name: post.title }));
-    expect(screen.getByRole("img", { name: post.title })).toHaveAttribute("src", post.url);
+    expect(screen.getByRole("img", { name: post.title })).toHaveAttribute("src", "https://i.redd.it/original.jpg");
 
     fireEvent.error(screen.getByRole("img", { name: post.title }));
     expect(screen.getByRole("img", { name: post.title })).toHaveAttribute("src", post.thumbnail);
