@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+const SERVER_DIMENSIONS = { width: 1024, height: 1000 };
+
 function getWindowDimensions() {
   if (typeof window !== "undefined") {
     const { innerWidth: width, innerHeight: height } = window;
@@ -8,12 +10,14 @@ function getWindowDimensions() {
       height,
     };
   } else {
-    return { width: 1024, height: 1000 };
+    return SERVER_DIMENSIONS;
   }
 }
 
 export default function useWindowDimensions() {
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+  // Use the same first render on the server and client. Reading window during
+  // the state initializer produces different markup and hydration failures.
+  const [windowDimensions, setWindowDimensions] = useState(SERVER_DIMENSIONS);
 
   useEffect(() => {
     function handleResize() {
@@ -21,6 +25,7 @@ export default function useWindowDimensions() {
     }
 
     window.addEventListener("resize", handleResize);
+    handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 

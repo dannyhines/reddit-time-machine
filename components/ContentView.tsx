@@ -89,11 +89,9 @@ const ContentView: React.FC<ContentViewProps> = (props) => {
                       columnClassName='my-masonry-grid_column'
                       style={{ textAlign: "center" }}
                     >
-                      {picsAndMemes
-                        .filter((x) => !!x && x.url.length)
-                        .map((item) => (
-                          <ImageCard key={item.id} post={item} maxWidth={cardWidth} loading={loading} />
-                        ))}
+                      {picsAndMemes.map((item) => (
+                        <ImageCard key={item.id} post={item} maxWidth={cardWidth} loading={loading} />
+                      ))}
                     </Masonry>
                   </Col>
                 </>
