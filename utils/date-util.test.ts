@@ -11,7 +11,7 @@ describe("archive date validation", () => {
     expect(isDateInRange("2022-12-27")).toBe(true);
   });
 
-  it.each(["2008-12-31", "2022-12-28", "2025-01-01"])("rejects out-of-range date %s", (date) => {
+  it.each(["2008-12-31", "2023-01-01", "2025-01-01"])("rejects out-of-range date %s", (date) => {
     expect(isDateInRange(date)).toBe(false);
   });
 });

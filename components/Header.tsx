@@ -12,7 +12,7 @@ const Header: React.FC<HeaderProps> = (props) => {
         <div className={styles.app_logo}>
           <Image src='/reddit-icon.png' height={40} width={40} alt='Logo' />
         </div>
-        <h1 style={{ fontSize: 24, margin: 0 }}>Reddit Time Machine</h1>
+        <span className={styles.app_title}>Reddit Time Machine</span>
       </Link>
     </header>
   );
