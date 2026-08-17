@@ -8,37 +8,39 @@ const trimDescription = (description: string, maxLength = 160) => {
   return `${description.slice(0, maxLength - 1).trimEnd()}…`;
 };
 
-const trimTitle = (title: string, maxLength = 120) => {
-  const trimmedTitle = title.trim();
-  if (trimmedTitle.length <= maxLength) return trimmedTitle;
-  return `${trimmedTitle.slice(0, maxLength - 1).trimEnd()}…`;
+const POST_CATEGORY_LABELS: Array<[Post["post_type"], string]> = [
+  ["news", "news"],
+  ["politics", "politics"],
+  ["sports", "sports"],
+  ["science", "science"],
+  ["pics", "pictures"],
+  ["meme", "memes"],
+  ["prediction", "predictions"],
+];
+
+const getCategoryList = (posts: Post[]) => {
+  const categories = POST_CATEGORY_LABELS.filter(([postType]) => posts.some((post) => post.post_type === postType)).map(
+    ([, label]) => label
+  );
+
+  return new Intl.ListFormat("en", { style: "long", type: "conjunction" }).format(categories);
 };
 
 export const getDateMetaDescription = (date: string, posts: Post[]) => {
   const readableDate = getReadableDate(date);
-  const notableTitles = posts
-    .slice(0, 2)
-    .map((post) => trimTitle(post.title))
-    .filter(Boolean);
-  const notableText = notableTitles.length ? ` Top posts included ${notableTitles.join(" and ")}.` : "";
+  const categories = getCategoryList(posts);
+  const archiveDetails = categories ? `, with ${posts.length} archived posts featuring ${categories}` : "";
 
-  return trimDescription(`See what Reddit's front page looked like on ${readableDate}.${notableText}`);
+  return trimDescription(`See what Reddit's front page looked like on ${readableDate}${archiveDetails}.`);
 };
 
 export const getDateSummary = (date: string, posts: Post[]) => {
   const readableDate = getReadableDate(date);
-  const titles = posts
-    .slice(0, 3)
-    .map((post) => trimTitle(post.title))
-    .filter(Boolean);
+  const categories = getCategoryList(posts);
 
-  if (!titles.length) {
+  if (!categories) {
     return `Explore Reddit's archived front page from ${readableDate}.`;
   }
 
-  const discussionList = new Intl.ListFormat("en", { style: "long", type: "conjunction" }).format(
-    titles.map((title) => `“${title}”`)
-  );
-
-  return `This archive preserves ${posts.length} posts from Reddit on ${readableDate}. Popular discussions included ${discussionList}.`;
+  return `This archive preserves Reddit's front page from ${readableDate}, with ${posts.length} posts featuring ${categories}.`;
 };
