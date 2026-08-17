@@ -19,9 +19,23 @@ const DateArchiveIntro = ({ date, posts }: DateArchiveIntroProps) => {
       <h1>Reddit on {getReadableDate(date)}</h1>
       <p>{getDateSummary(date, posts)}</p>
       <nav className={styles.date_navigation} aria-label='Browse the Reddit archive by date'>
-        {previous ? <Link href={`/${previous}`}>← {getReadableDate(previous)}</Link> : <span />}
-        <Link href={monthArchiveUrl}>Browse {dayjs(date).format("MMMM YYYY")}</Link>
-        {next ? <Link href={`/${next}`}>{getReadableDate(next)} →</Link> : <span />}
+        {previous ? (
+          <Link href={`/${previous}`} aria-label={`Previous day: ${getReadableDate(previous)}`}>
+            ← {dayjs(previous).format("MMM D")}
+          </Link>
+        ) : (
+          <span />
+        )}
+        <Link href={monthArchiveUrl} aria-label={`Browse the ${dayjs(date).format("MMMM YYYY")} archive`}>
+          {dayjs(date).format("MMM YYYY")}
+        </Link>
+        {next ? (
+          <Link href={`/${next}`} aria-label={`Next day: ${getReadableDate(next)}`}>
+            {dayjs(next).format("MMM D")} →
+          </Link>
+        ) : (
+          <span />
+        )}
       </nav>
     </section>
   );

@@ -59,6 +59,9 @@ describe("date page routing", () => {
     expect(html).toContain("An archived Reddit post");
     expect(html).toContain("https://example.com");
     expect(html).not.toContain("No News on 7/4/14 to show");
+    expect(html).not.toContain("Choose a date or click");
+    expect(html).toContain("aria-label=\"Previous day: July 3, 2014\"");
+    expect(html).toContain("aria-label=\"Next day: July 5, 2014\"");
   });
 
   it("replaces archive content when navigating to another date", () => {

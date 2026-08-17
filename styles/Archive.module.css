@@ -20,9 +20,17 @@
 .date_navigation {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  gap: 16px;
-  margin-top: 20px;
+  gap: 10px;
+  margin-top: 16px;
   align-items: center;
+}
+
+.date_navigation a {
+  padding: 8px 10px;
+  border: 1px solid #303030;
+  border-radius: 8px;
+  background: #141414;
+  white-space: nowrap;
 }
 
 .date_navigation > :last-child {
@@ -57,11 +65,31 @@
 }
 
 @media (max-width: 600px) {
-  .date_navigation {
-    grid-template-columns: 1fr;
+  .date_intro {
+    padding: 12px 12px 0;
   }
 
-  .date_navigation > :last-child {
-    text-align: left;
+  .date_intro h1 {
+    margin: 0 0 8px;
+    font-size: 26px;
+    line-height: 1.2;
+  }
+
+  .date_intro p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .date_navigation {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .date_navigation a {
+    padding: 8px 4px;
+    font-size: 12px;
+    text-align: center;
   }
 }

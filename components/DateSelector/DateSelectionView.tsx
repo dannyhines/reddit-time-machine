@@ -61,26 +61,29 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
         <Card
           bordered={false}
           headStyle={{ borderBottom: 0 }}
+          bodyStyle={{ padding: onHomePage ? 24 : isMobile ? "12px 10px" : 16 }}
           style={{ width: "100%", backgroundColor: "#111111", borderRadius: 16, border: "1px solid #2b2b2b" }}
         >
-          <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
-            <p style={{ marginBottom: "1rem", color: "rgb(210, 210, 210)", fontSize: 15 }}>
-              Choose a date or click <strong>Random</strong> to see the most up-voted news, pictures and memes on a day
-              in Reddit history (since 2009)
-            </p>
-          </div>
+          {onHomePage ? (
+            <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
+              <p style={{ marginBottom: "1rem", color: "rgb(210, 210, 210)", fontSize: 15 }}>
+                Choose a date or click <strong>Random</strong> to see the most up-voted news, pictures and memes on a day
+                in Reddit history (since 2009)
+              </p>
+            </div>
+          ) : null}
           <Row
-            gutter={[16, 20]}
+            gutter={onHomePage ? [16, 20] : [8, 8]}
             justify='center'
-            align={isMobile ? "bottom" : "middle"}
-            style={{ marginTop: 20, marginBottom: 0, margin: "20px -20px 0", padding: "8px 0" }}
+            align='middle'
+            style={onHomePage ? { marginTop: 20, marginBottom: 0, margin: "20px -20px 0", padding: "8px 0" } : undefined}
           >
-            {!isMobile ? (
+            {onHomePage && !isMobile ? (
               <h4 style={{ fontSize: "1rem", marginRight: 8, marginTop: 0, marginBottom: 0 }}>Select a date:</h4>
             ) : null}
 
             <Col>
-              {isMobile ? <h4 style={{ fontSize: "1rem" }}>Select a date:</h4> : null}
+              {onHomePage && isMobile ? <h4 style={{ fontSize: "1rem" }}>Select a date:</h4> : null}
               <DatePicker
                 value={date}
                 format='MM-DD-YYYY'
@@ -114,30 +117,46 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 Go
               </Button>
             </Col>
+            {!onHomePage ? (
+              <Col>
+                <Button
+                  onClick={handleRandom}
+                  aria-label='View posts from a random date'
+                  disabled={justFinished || loading}
+                  style={{ backgroundColor: "black", padding: "0 12px" }}
+                >
+                  Random
+                </Button>
+              </Col>
+            ) : null}
           </Row>
 
-          <Row justify='center' align='middle'>
-            <Divider
-              style={{
-                width: orDividerWidth,
-                minWidth: orDividerWidth,
-                paddingBottom: 8,
-              }}
-            >
-              or
-            </Divider>
-          </Row>
-          <Row justify='center'>
-            <Button
-              onClick={handleRandom}
-              size='large'
-              aria-label='View posts from a random date'
-              disabled={justFinished || loading}
-              style={{ backgroundColor: "black", padding: "0 20px" }}
-            >
-              Random
-            </Button>
-          </Row>
+          {onHomePage ? (
+            <>
+              <Row justify='center' align='middle'>
+                <Divider
+                  style={{
+                    width: orDividerWidth,
+                    minWidth: orDividerWidth,
+                    paddingBottom: 8,
+                  }}
+                >
+                  or
+                </Divider>
+              </Row>
+              <Row justify='center'>
+                <Button
+                  onClick={handleRandom}
+                  size='large'
+                  aria-label='View posts from a random date'
+                  disabled={justFinished || loading}
+                  style={{ backgroundColor: "black", padding: "0 20px" }}
+                >
+                  Random
+                </Button>
+              </Row>
+            </>
+          ) : null}
         </Card>
       </Col>
     </Row>
