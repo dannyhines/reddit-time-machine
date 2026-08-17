@@ -45,7 +45,10 @@ const ListViewItem: React.FC<{ post: Post; contentOnly?: boolean }> = ({ post, c
   return contentOnly ? (
     content
   ) : (
-    <Card style={{ textAlign: "left", marginBottom: 12 }} bodyStyle={{ padding: "6px 10px" }}>
+    <Card
+      style={{ textAlign: "left", marginBottom: 10, overflow: "hidden", borderColor: "#292f33", borderRadius: 12 }}
+      bodyStyle={{ padding: "6px 10px" }}
+    >
       {content}
     </Card>
   );

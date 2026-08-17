@@ -28,7 +28,7 @@
 .date_navigation a {
   padding: 8px 10px;
   border: 1px solid #303030;
-  border-radius: 8px;
+  border-radius: 12px;
   background: #141414;
   white-space: nowrap;
 }
@@ -55,7 +55,7 @@
   display: block;
   padding: 10px 12px;
   border: 1px solid #303030;
-  border-radius: 6px;
+  border-radius: 12px;
   background: #141414;
 }
 

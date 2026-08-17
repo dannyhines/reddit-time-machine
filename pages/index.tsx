@@ -72,7 +72,7 @@ const Home: NextPage<HomeProps> = ({ initialDate }) => {
             handleSubmit={handleDateSelection}
             onHomePage
           />
-          {!loading && <FeaturedDates handleDateSelection={handleDateSelection} />}
+          {!loading && <FeaturedDates />}
 
           {loading && (
             <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>

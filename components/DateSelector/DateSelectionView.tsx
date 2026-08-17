@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Divider, Row } from "antd";
+import { Button, Card, Col, Row } from "antd";
 import DatePicker from "./DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import getRandomDate from "./getRandomDate";
@@ -17,7 +17,7 @@ interface DateSelectionProps {
 
 const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
   const { showingDate, handleSubmit, loading, onHomePage } = props;
-  const { width, isDesktop, isMobile } = useWindowDimensions();
+  const { isMobile } = useWindowDimensions();
   const [date, setDate] = useState<Dayjs | null>(dayjs(showingDate));
   // this variable makes sure they don't spam the 'Go' or 'Random' btns
   const [justFinished, setJustFinished] = useState(false);
@@ -53,37 +53,29 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
     submitDate(date);
   };
 
-  const orDividerWidth = width < 500 ? "90%" : width > 800 ? "50%" : "70%";
-
   return (
     <Row justify='center'>
       <Col lg={24} md={18}>
         <Card
           bordered={false}
           headStyle={{ borderBottom: 0 }}
-          bodyStyle={{ padding: onHomePage ? 24 : isMobile ? "12px 10px" : 16 }}
-          style={{ width: "100%", backgroundColor: "#111111", borderRadius: 16, border: "1px solid #2b2b2b" }}
+          bodyStyle={{ padding: onHomePage ? (isMobile ? "18px 12px" : "20px 24px") : isMobile ? "12px 10px" : 16 }}
+          style={{ width: "100%", backgroundColor: "#101214", borderRadius: 18, border: "1px solid #292f33" }}
         >
           {onHomePage ? (
             <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
-              <p style={{ marginBottom: "1rem", color: "rgb(210, 210, 210)", fontSize: 15 }}>
+              <p style={{ marginBottom: 14, color: "rgb(210, 210, 210)", fontSize: 15 }}>
                 Choose a date or click <strong>Random</strong> to see the most up-voted news, pictures and memes on a day
                 in Reddit history (since 2009)
               </p>
             </div>
           ) : null}
           <Row
-            gutter={onHomePage ? [16, 20] : [8, 8]}
+            gutter={[8, 8]}
             justify='center'
             align='middle'
-            style={onHomePage ? { marginTop: 20, marginBottom: 0, margin: "20px -20px 0", padding: "8px 0" } : undefined}
           >
-            {onHomePage && !isMobile ? (
-              <h4 style={{ fontSize: "1rem", marginRight: 8, marginTop: 0, marginBottom: 0 }}>Select a date:</h4>
-            ) : null}
-
             <Col>
-              {onHomePage && isMobile ? <h4 style={{ fontSize: "1rem" }}>Select a date:</h4> : null}
               <DatePicker
                 value={date}
                 format='MM-DD-YYYY'
@@ -117,46 +109,17 @@ const DateSelectionView: React.FC<DateSelectionProps> = (props) => {
                 Go
               </Button>
             </Col>
-            {!onHomePage ? (
-              <Col>
-                <Button
-                  onClick={handleRandom}
-                  aria-label='View posts from a random date'
-                  disabled={justFinished || loading}
-                  style={{ backgroundColor: "black", padding: "0 12px" }}
-                >
-                  Random
-                </Button>
-              </Col>
-            ) : null}
+            <Col>
+              <Button
+                onClick={handleRandom}
+                aria-label='View posts from a random date'
+                disabled={justFinished || loading}
+                style={{ backgroundColor: "black", padding: "0 12px" }}
+              >
+                Random
+              </Button>
+            </Col>
           </Row>
-
-          {onHomePage ? (
-            <>
-              <Row justify='center' align='middle'>
-                <Divider
-                  style={{
-                    width: orDividerWidth,
-                    minWidth: orDividerWidth,
-                    paddingBottom: 8,
-                  }}
-                >
-                  or
-                </Divider>
-              </Row>
-              <Row justify='center'>
-                <Button
-                  onClick={handleRandom}
-                  size='large'
-                  aria-label='View posts from a random date'
-                  disabled={justFinished || loading}
-                  style={{ backgroundColor: "black", padding: "0 20px" }}
-                >
-                  Random
-                </Button>
-              </Row>
-            </>
-          ) : null}
         </Card>
       </Col>
     </Row>

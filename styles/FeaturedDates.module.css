@@ -1,42 +1,140 @@
-.card_container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding-bottom: 30px;
+.featured_section {
+  padding-top: 24px;
+}
+
+.section_heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   gap: 16px;
 }
 
-@media screen and (max-width: 600px) {
-  .card_container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
+.section_heading p {
+  margin: 0 0 0.5em;
+  color: #8f969c;
+  font-size: 13px;
 }
 
-.featured_post_card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor:pointer;
-  border-radius: 8px;
-  border: 1px solid #262626;
+.card_container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding-bottom: 36px;
+  gap: 16px;
 }
 
-.featured_post_card > div {
-  padding: 0;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+.featured_date_link {
+  display: block;
+  color: inherit;
+  border-radius: 16px;
 }
 
-.featured_post_card:hover {
-  scale: 1.02;
+.featured_date_link:focus-visible {
+  outline: 2px solid #61dafb;
+  outline-offset: 3px;
 }
 
-.card_body {
-  padding: 12px;
+.featured_date_card {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid #2c3439;
+  border-radius: 16px;
+  background: #111518;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.featured_date_link:hover .featured_date_card {
+  transform: translateY(-3px);
+  border-color: #4d7f8c;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
+}
+
+.featured_date_card :global(.ant-image) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .card_image {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  transition: transform 240ms ease;
+}
+
+.featured_date_link:hover .card_image {
+  transform: scale(1.025);
+}
+
+.card_overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 42px 14px 13px;
+  background: linear-gradient(180deg, transparent 22%, rgba(3, 6, 8, 0.2) 45%, rgba(3, 6, 8, 0.96) 100%);
+}
+
+.card_overlay span {
+  margin-bottom: 4px;
+  color: #79dff8;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card_overlay h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.25;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.8);
+}
+
+.card_overlay time {
+  margin-top: 5px;
+  color: #c7ced3;
+  font-size: 12px;
+}
+
+@media screen and (max-width: 600px) {
+  .featured_section {
+    padding-top: 20px;
+  }
+
+  .section_heading p {
+    display: none;
+  }
+
+  .card_container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding-bottom: 28px;
+  }
+
+  .featured_date_card,
+  .featured_date_link {
+    border-radius: 14px;
+  }
+
+  .card_overlay {
+    padding: 32px 10px 10px;
+  }
+
+  .card_overlay span {
+    font-size: 8px;
+  }
+
+  .card_overlay h3 {
+    font-size: 13px;
+  }
+
+  .card_overlay time {
+    margin-top: 3px;
+    font-size: 10px;
+  }
 }
