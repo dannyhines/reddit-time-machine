@@ -49,7 +49,7 @@ const DatePage = (props: Props) => {
 
       <Header />
       <DateArchiveIntro date={props.date} posts={props.posts} />
-      <ContentView initialDate={props.date} posts={props.posts} />
+      <ContentView key={props.date} initialDate={props.date} posts={props.posts} />
       <Footer />
     </div>
   );

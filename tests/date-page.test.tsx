@@ -1,4 +1,5 @@
 import { renderToStaticMarkup } from "react-dom/server";
+import { render, screen } from "@testing-library/react";
 import { getPostsForDate } from "../server/database";
 import DatePage, { getStaticProps } from "../pages/[date]";
 import { Post } from "../types/Post";
@@ -9,6 +10,10 @@ jest.mock("../server/database", () => ({
 
 jest.mock("next/router", () => ({
   useRouter: () => ({ push: jest.fn() }),
+}));
+
+jest.mock("../hooks/useFetchPredictions", () => ({
+  useFetchPredictions: () => ({ predictions: [] }),
 }));
 
 const mockedGetPostsForDate = jest.mocked(getPostsForDate);
@@ -54,6 +59,23 @@ describe("date page routing", () => {
     expect(html).toContain("An archived Reddit post");
     expect(html).toContain("https://example.com");
     expect(html).not.toContain("No News on 7/4/14 to show");
+  });
+
+  it("replaces archive content when navigating to another date", () => {
+    const nextPost = {
+      ...post,
+      id: "post-2",
+      title: "The following day's archived post",
+      created_date: "2014-07-05",
+    };
+    const { rerender } = render(<DatePage date='2014-07-04' posts={[post]} />);
+
+    expect(screen.getAllByText("An archived Reddit post").length).toBeGreaterThan(0);
+
+    rerender(<DatePage date='2014-07-05' posts={[nextPost]} />);
+
+    expect(screen.getAllByText("The following day's archived post").length).toBeGreaterThan(0);
+    expect(screen.queryByText("An archived Reddit post")).not.toBeInTheDocument();
   });
 
   it("returns a 404 instead of publishing a thin page when a date has no posts", async () => {

@@ -26,14 +26,15 @@ describe("date SEO content", () => {
     const description = getDateMetaDescription("2014-07-04", posts);
 
     expect(description).toContain("Reddit's front page looked like on July 4, 2014");
-    expect(description).toContain("3 archived posts featuring news, pictures, and memes");
+    expect(description).toContain("featuring news, pictures, and memes");
+    expect(description).not.toContain("3 archived posts");
     expect(description).not.toContain("First story");
     expect(description.length).toBeLessThanOrEqual(160);
   });
 
   it("writes a concise visible summary without repeating post titles", () => {
     expect(getDateSummary("2014-07-04", posts)).toBe(
-      "This archive preserves Reddit's front page from July 4, 2014, with 3 posts featuring news, pictures, and memes."
+      "This archive preserves Reddit's front page from July 4, 2014, featuring news, pictures, and memes."
     );
   });
 });

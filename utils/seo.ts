@@ -29,7 +29,7 @@ const getCategoryList = (posts: Post[]) => {
 export const getDateMetaDescription = (date: string, posts: Post[]) => {
   const readableDate = getReadableDate(date);
   const categories = getCategoryList(posts);
-  const archiveDetails = categories ? `, with ${posts.length} archived posts featuring ${categories}` : "";
+  const archiveDetails = categories ? `, featuring ${categories}` : "";
 
   return trimDescription(`See what Reddit's front page looked like on ${readableDate}${archiveDetails}.`);
 };
@@ -42,5 +42,5 @@ export const getDateSummary = (date: string, posts: Post[]) => {
     return `Explore Reddit's archived front page from ${readableDate}.`;
   }
 
-  return `This archive preserves Reddit's front page from ${readableDate}, with ${posts.length} posts featuring ${categories}.`;
+  return `This archive preserves Reddit's front page from ${readableDate}, featuring ${categories}.`;
 };
