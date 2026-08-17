@@ -1,9 +1,14 @@
+import { renderToStaticMarkup } from "react-dom/server";
 import { getPostsForDate } from "../server/database";
-import { getStaticProps } from "../pages/[date]";
+import DatePage, { getStaticProps } from "../pages/[date]";
 import { Post } from "../types/Post";
 
 jest.mock("../server/database", () => ({
   getPostsForDate: jest.fn(),
+}));
+
+jest.mock("next/router", () => ({
+  useRouter: () => ({ push: jest.fn() }),
 }));
 
 const mockedGetPostsForDate = jest.mocked(getPostsForDate);
@@ -41,6 +46,14 @@ describe("date page routing", () => {
 
     expect(mockedGetPostsForDate).toHaveBeenCalledWith("2014-07-04");
     expect(result).toEqual({ props: { date: "2014-07-04", posts: [post] } });
+  });
+
+  it("includes archived post content in the server-rendered HTML", () => {
+    const html = renderToStaticMarkup(<DatePage date='2014-07-04' posts={[post]} />);
+
+    expect(html).toContain("An archived Reddit post");
+    expect(html).toContain("https://example.com");
+    expect(html).not.toContain("No News on 7/4/14 to show");
   });
 
   it("returns a 404 instead of publishing a thin page when a date has no posts", async () => {
