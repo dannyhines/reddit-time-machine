@@ -34,6 +34,13 @@ Schema changes and materialized-view refresh instructions live in
 [`database/README.md`](database/README.md). Database migrations are applied
 manually and are not part of the Vercel build.
 
+## Static archive migration
+
+The production archive is being moved from per-request SQL reads to immutable,
+gzip-compressed date objects. The exporter, provider cost comparison, deployment
+approval boundary, verification steps, and rollback procedure are documented in
+[`docs/archive-storage-migration.md`](docs/archive-storage-migration.md).
+
 ## Acknowledgements
 
 Originally I used Jason Baumgartner's free API on ([pushshift.io](https://pushshift.io/)) for fetching Reddit history. Unfortunately, the project died in 2023 in the wake of Reddit's changes to their API pricing.

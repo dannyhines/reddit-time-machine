@@ -41,7 +41,7 @@ export const getDatabasePool = () => {
   return globalForDatabase.redditTimeMachinePool;
 };
 
-export const getPostsForDate = async (date: string) => {
+export const getPostsForDateFromDatabase = async (date: string) => {
   const result = await getDatabasePool().query<DatabasePost>(
     `SELECT * FROM top_posts WHERE created_date = $1 ORDER BY score DESC NULLS LAST;`,
     [date]
