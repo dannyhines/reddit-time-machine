@@ -38,6 +38,7 @@ const Home: NextPage<HomeProps> = ({ initialDate }) => {
         <title>{title}</title>
         <meta name='title' content={title} />
         <meta name='description' content={description} />
+        <link rel='canonical' href={url} />
         <meta
           name='keywords'
           content='Reddit Archive,Reddit Time Machine,Reddit,news,politics,memes,history,predictions,internet history'
@@ -65,12 +66,13 @@ const Home: NextPage<HomeProps> = ({ initialDate }) => {
 
       <main className={styles.main}>
         <div className={styles.content_view}>
+          <h1 className={styles.home_title}>Explore Reddit history by date</h1>
           <DateSelectionView
             showingDate={initialDate}
             handleSubmit={handleDateSelection}
             onHomePage
           />
-          {!loading && <FeaturedDates handleDateSelection={handleDateSelection} />}
+          {!loading && <FeaturedDates />}
 
           {loading && (
             <div style={{ textAlign: "center", paddingTop: 16, minHeight: 500 }}>

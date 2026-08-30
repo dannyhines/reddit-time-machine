@@ -35,6 +35,11 @@ a {
   white-space: normal;
 }
 
+.ant-btn,
+.ant-picker {
+  border-radius: 8px;
+}
+
 .ant-list-item:first-child {
   padding-top: 0.25rem;
 }

@@ -25,6 +25,16 @@
   font-size: calc(8px + 2vmin);
 }
 
+.app_title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.home_title {
+  margin: 20px 0 4px;
+  text-align: center;
+}
+
 /* Footer */
 .footer_container {
   text-align: center;

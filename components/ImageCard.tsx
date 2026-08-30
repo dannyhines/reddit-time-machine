@@ -29,20 +29,22 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
   if (!post || loading) return <LoadingCard />;
 
   const titleStyle = (smallFont: number) => {
-    return { fontSize: isMobile ? smallFont : 16, margin: isMobile ? 0 : 4, color: "inherit" };
+    return { fontSize: isMobile ? smallFont : 15, lineHeight: 1.35, margin: 0, color: "inherit" };
   };
   const subtitleStyle = (smallFont: number) => {
-    return { fontSize: isMobile ? smallFont : 12, color: "inherit" };
+    return { fontSize: isMobile ? smallFont : 12, lineHeight: 1.3, margin: "4px 0 0", color: "inherit", opacity: 0.68 };
   };
 
   return (
     <Card
       style={{
         maxWidth,
-        margin: "16px 0",
-        border: "1px solid #262626",
-        padding: 1,
-        borderRadius: "8px",
+        margin: "8px 0 12px",
+        overflow: "hidden",
+        border: "1px solid #292f33",
+        padding: 0,
+        borderRadius: 16,
+        background: "#111315",
       }}
       cover={image ? (
         <Image
@@ -52,19 +54,18 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
           onError={() => setImageState({ postId: post.id, index: imageIndex + 1 })}
           style={{
             maxWidth,
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
+            borderTopLeftRadius: 15,
+            borderTopRightRadius: 15,
             maxHeight: 550,
             objectFit: "cover",
             aspectRatio: image.aspectRatio,
-            border: "1px solid #262626",
           }}
           width='100%'
           height='auto'
           preview={{ src: image.previewUrl }}
         />
       ) : undefined}
-      bodyStyle={{ padding: "12px 0", borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
+      bodyStyle={{ padding: "9px 10px 10px" }}
     >
       <a
         href={REDDIT_BASE_URL + post.permalink}
@@ -73,7 +74,7 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
         onClick={() => sendLinkClickToGA("reddit", REDDIT_BASE_URL + post.permalink)}
       >
         <Meta
-          style={{ padding: isMobile ? 0 : 8 }}
+          style={{ padding: 0 }}
           title={<p style={titleStyle(12)}>{post.title}</p>}
           description={
             <p style={subtitleStyle(10)}>{`r/${post.subreddit} · ${formatScore(post.score)} pts ${

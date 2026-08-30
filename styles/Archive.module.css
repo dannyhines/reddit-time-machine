@@ -1,0 +1,95 @@
+.date_intro,
+.archive_page {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 24px 20px 4px;
+}
+
+.date_intro h1,
+.archive_page h1 {
+  margin-bottom: 8px;
+}
+
+.date_intro p,
+.archive_page > p {
+  max-width: 850px;
+  color: #c8c8c8;
+  line-height: 1.6;
+}
+
+.date_navigation {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  margin-top: 16px;
+  align-items: center;
+}
+
+.date_navigation a {
+  padding: 8px 10px;
+  border: 1px solid #303030;
+  border-radius: 12px;
+  background: #141414;
+  white-space: nowrap;
+}
+
+.date_navigation > :last-child {
+  text-align: right;
+}
+
+.year_group {
+  margin: 28px 0;
+}
+
+.month_grid,
+.day_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.month_grid a,
+.day_grid a {
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid #303030;
+  border-radius: 12px;
+  background: #141414;
+}
+
+.archive_back {
+  display: inline-block;
+  margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+  .date_intro {
+    padding: 12px 12px 0;
+  }
+
+  .date_intro h1 {
+    margin: 0 0 8px;
+    font-size: 26px;
+    line-height: 1.2;
+  }
+
+  .date_intro p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .date_navigation {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .date_navigation a {
+    padding: 8px 4px;
+    font-size: 12px;
+    text-align: center;
+  }
+}

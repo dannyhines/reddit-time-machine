@@ -1,13 +1,15 @@
 import Head from "next/head";
 import Header from "../components/Header";
 import ContentView from "../components/ContentView";
+import DateArchiveIntro from "../components/DateArchiveIntro";
 import Footer from "../components/Footer";
-import { getMonthDayYear, getShortDateString, isDateInRange, isValidDate } from "../utils/date-util";
-import dayjs from "dayjs";
+import { isDateInRange, isValidDate } from "../utils/date-util";
 import { GetStaticProps, GetStaticPaths } from "next";
-import { generateDateStrings } from "../utils/generateDateStrings";
 import { Post } from "../types/Post";
 import { FEATURED_DATES_POSTS } from "../utils/featuredDatesPosts";
+import { getArchiveDates } from "../utils/archive";
+import { getDateMetaDescription, getReadableDate } from "../utils/seo";
+import { getPostsForDate } from "../server/database";
 
 interface Props {
   date: string;
@@ -15,11 +17,9 @@ interface Props {
 }
 
 const DatePage = (props: Props) => {
-  const date = dayjs(props.date);
-  const title = `Top Reddit Posts on ${getMonthDayYear(date)} - Reddit Time Machine`;
-  const description = `Explore Reddit history with Reddit Time Machine. See the most up-voted news, pictures, and memes on this day, ${getMonthDayYear(
-    date
-  )}, from the Reddit archive.`;
+  const readableDate = getReadableDate(props.date);
+  const title = `Reddit on ${readableDate}: Top Posts and Discussions`;
+  const description = getDateMetaDescription(props.date, props.posts);
   const url = `https://www.reddit-time-machine.com/${props.date}`;
   return (
     <div>
@@ -27,10 +27,7 @@ const DatePage = (props: Props) => {
         <title>{title}</title>
         <meta name='title' content={title} />
         <meta name='description' content={description} />
-        <meta
-          name='keywords'
-          content='Reddit Archive,Reddit Time Machine,Reddit,news,politics,memes,history,predictions,internet history'
-        />
+        <link rel='canonical' href={url} />
         <link rel='icon' href='/favicon.ico' />
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
         <meta name='theme-color' content='#050505' />
@@ -51,42 +48,36 @@ const DatePage = (props: Props) => {
       </Head>
 
       <Header />
-      <ContentView initialDate={props.date} posts={props.posts} />
+      <DateArchiveIntro date={props.date} posts={props.posts} />
+      <ContentView key={props.date} initialDate={props.date} posts={props.posts} />
       <Footer />
     </div>
   );
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allDates = generateDateStrings("2009-01-01", "2022-12-27");
+  const allDates = getArchiveDates();
   const devDates = FEATURED_DATES_POSTS.flatMap((x) => x.date);
 
   const datesToGenerate = process.env.NODE_ENV === "production" ? allDates : devDates;
   const paths = datesToGenerate.map((date) => ({ params: { date } }));
 
   console.log("[getStaticPaths] Generating " + paths.length + " paths");
-  return { paths, fallback: "blocking" };
+  return { paths, fallback: process.env.NODE_ENV === "production" ? false : "blocking" };
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps<Props> = async (context) => {
   const date = typeof context.params?.date === "string" ? context.params?.date : "";
   if (!isValidDate(date) || !isDateInRange(date)) {
     return { notFound: true };
   }
 
-  try {
-    const response = await fetch(`https://www.reddit-time-machine.com/api/posts?date=${date}`);
-    if (!response.ok) {
-      return { props: { date, posts: [] } };
-    }
-    const posts: Post[] = await response.json();
-    return {
-      props: { date, posts },
-    };
-  } catch (error) {
-    console.error(`[getStaticProps] Unable to load posts for ${date}`, error);
-    return { props: { date, posts: [] } };
+  const posts = await getPostsForDate(date);
+  if (!posts.length) {
+    return { notFound: true };
   }
+
+  return { props: { date, posts } };
 };
 
 export default DatePage;

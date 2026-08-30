@@ -1,5 +1,6 @@
 import { Col, Row } from "antd";
 import React from "react";
+import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import { LinkWithAnalytics } from "./LinkWithAnalytics";
 
@@ -13,6 +14,9 @@ const Footer: React.FC<HeaderProps> = (props) => {
           <p className={styles.footer_text}>Reddit Time Machine © 2023</p>
         </Col>
         <Col span={24}>
+          <p className={styles.footer_subtitle}>
+            <Link href='/archive'>Browse the complete Reddit archive</Link>
+          </p>
           <p className={styles.footer_subtitle}>
             Created by{" "}
             <LinkWithAnalytics url='https://www.dannyhines.io' text='Danny Hines' type='external' color='#61dafb' />
