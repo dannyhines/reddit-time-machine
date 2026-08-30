@@ -6,10 +6,8 @@ import Footer from "../components/Footer";
 import { isDateInRange, isValidDate } from "../utils/date-util";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { Post } from "../types/Post";
-import { FEATURED_DATES_POSTS } from "../utils/featuredDatesPosts";
-import { getArchiveDates } from "../utils/archive";
 import { getDateMetaDescription, getReadableDate } from "../utils/seo";
-import { getPostsForDate } from "../server/database";
+import { getPostsForDate } from "../server/archive";
 
 interface Props {
   date: string;
@@ -56,14 +54,10 @@ const DatePage = (props: Props) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allDates = getArchiveDates();
-  const devDates = FEATURED_DATES_POSTS.flatMap((x) => x.date);
-
-  const datesToGenerate = process.env.NODE_ENV === "production" ? allDates : devDates;
-  const paths = datesToGenerate.map((date) => ({ params: { date } }));
-
-  console.log("[getStaticPaths] Generating " + paths.length + " paths");
-  return { paths, fallback: process.env.NODE_ENV === "production" ? false : "blocking" };
+  // Date pages are generated once, on first request, then cached by Next/Vercel.
+  // Keeping this list empty guarantees that a deployment never fans out into
+  // thousands of archive/database reads.
+  return { paths: [], fallback: "blocking" };
 };
 
 export const getStaticProps: GetStaticProps<Props> = async (context) => {
