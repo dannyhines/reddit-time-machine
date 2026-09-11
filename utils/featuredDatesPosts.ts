@@ -20,14 +20,14 @@ export const FEATURED_DATES_POSTS = [
     img: "https://preview.redd.it/ltv53wz6lxm41.jpg?width=640&crop=smart&auto=webp&s=203dfc7b3c8d55c52be9a26f7d994063435e5453",
   },
   {
-    date: "2017-02-05",
-    description: "Patriots win Super Bowl LI",
-    img: "https://i.imgur.com/uiaiNcv.jpg",
+    date: "2021-01-28",
+    description: "The GameStop Short Squeeze",
+    img: "/featured/gamestop-short-squeeze.jpg",
   },
   {
-    date: "2015-12-25",
-    description: "Christmas 2016",
-    img: "https://i.redditmedia.com/hfPa8RYje0OkmgD_o1BSCjHMdZtqc8Bes7K6WjmZ59Q.jpg?s=2e896adec813a352ebe4c805cb781200",
+    date: "2017-12-25",
+    description: "Christmas 2017",
+    img: "/featured/christmas-2017.jpg",
   },
   {
     date: "2014-11-09",

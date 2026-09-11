@@ -8,7 +8,7 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import { Post } from "../types/Post";
 import { FEATURED_DATES_POSTS } from "../utils/featuredDatesPosts";
 import { getArchiveDates } from "../utils/archive";
-import { getDateMetaDescription, getReadableDate } from "../utils/seo";
+import { SITE_NAME, SOCIAL_IMAGE_URL, getDateMetaDescription, getReadableDate } from "../utils/seo";
 import { getPostsForDate } from "../server/database";
 
 interface Props {
@@ -34,17 +34,21 @@ const DatePage = (props: Props) => {
         <meta name='google-site-verification' content='gjIhXeExnAXrpzOM0Ck7qpYWPV6S7JuEC-gQ8RuHAOI' />
 
         <meta property='og:type' content='website' />
+        <meta property='og:site_name' content={SITE_NAME} />
         <meta property='og:url' content={url} />
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
-        <meta property='og:image' content='https://random-public-images-dch.s3.amazonaws.com/rtm-screenshot.png' />
+        <meta property='og:image' content={SOCIAL_IMAGE_URL} />
+        <meta property='og:image:width' content='1200' />
+        <meta property='og:image:height' content='628' />
+        <meta property='og:image:alt' content='Reddit Time Machine home page' />
         <meta property='og:author' content='Danny Hines' />
 
-        <meta name='twitter:card' content='summary' />
+        <meta name='twitter:card' content='summary_large_image' />
         <meta name='twitter:url' content={url} />
         <meta name='twitter:title' content={title} />
         <meta name='twitter:description' content={description} />
-        <meta name='twitter:image' content='https://random-public-images-dch.s3.amazonaws.com/rtm-screenshot.png' />
+        <meta name='twitter:image' content={SOCIAL_IMAGE_URL} />
       </Head>
 
       <Header />
