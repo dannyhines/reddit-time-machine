@@ -1,11 +1,33 @@
 @import "antd/dist/antd.dark.css";
 
 html,
+body,
+#__next {
+  min-height: 100%;
+}
+
+html,
 body {
   padding: 0;
   margin: 0;
   font-family: Helvetica Neue, sans-serif;
   background-color: #050505;
+}
+
+.app_shell,
+.app_shell > div {
+  display: flex;
+  min-height: 100vh;
+  flex: 1;
+  flex-direction: column;
+}
+
+.app_shell main {
+  flex: 1;
+}
+
+.app_shell footer {
+  margin-top: auto;
 }
 
 a {

@@ -33,6 +33,17 @@ export const getArchiveMonths = (): ArchiveMonth[] => {
 export const getDatesForArchiveMonth = (year: string, month: string) =>
   getArchiveDates().filter((date) => date.startsWith(`${year}-${month}-`));
 
+export const getAdjacentArchiveMonths = (year: string, month: string) => {
+  const months = getArchiveMonths();
+  const index = months.findIndex((archiveMonth) => archiveMonth.year === year && archiveMonth.month === month);
+
+  if (index === -1) return { previous: null, next: null };
+  return {
+    previous: index > 0 ? months[index - 1] : null,
+    next: index < months.length - 1 ? months[index + 1] : null,
+  };
+};
+
 export const getAdjacentArchiveDates = (date: string) => {
   const value = dayjs(date);
   const previous = value.isAfter(FIRST_AVAILABLE_DATE, "day") ? value.subtract(1, "day").format("YYYY-MM-DD") : null;
