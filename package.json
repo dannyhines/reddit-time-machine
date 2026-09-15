@@ -10,6 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "export:archive": "node scripts/export-archive.js",
+    "verify:archive": "node scripts/verify-archive.js",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "measuredAt": "2026-09-14",
+  "source": "public.top_posts",
+  "firstDate": "2009-01-01",
+  "lastDate": "2022-12-31",
+  "objectCount": 5113,
+  "postCount": 299749,
+  "emptyDateCount": 0,
+  "minimumPostsPerDate": 50,
+  "medianPostsPerDate": 60,
+  "maximumPostsPerDate": 60,
+  "compressedBytes": 90670127,
+  "uncompressedBytes": 341363114,
+  "fullyVerified": true
+}

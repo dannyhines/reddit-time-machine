@@ -16,18 +16,11 @@ const POST_COLUMNS = [
   "created_utc",
   "author",
   "domain",
-  "hidden",
   "score",
-  "ups",
-  "downs",
-  "is_reddit_media_domain",
   "is_video",
-  "num_comments",
-  "num_crossposts",
   "permalink",
   "preview",
   "subreddit",
-  "subreddit_id",
   "thumbnail",
   "thumbnail_height",
   "thumbnail_width",
@@ -117,6 +110,22 @@ const createDatabaseClient = () => {
   });
 };
 
+const verifySourceSchema = async (client) => {
+  const result = await client.query(
+    `SELECT a.attname AS column_name
+     FROM pg_catalog.pg_attribute a
+     WHERE a.attrelid = 'public.top_posts'::regclass
+       AND a.attnum > 0
+       AND NOT a.attisdropped
+     ORDER BY a.attnum`
+  );
+  const availableColumns = new Set(result.rows.map((row) => row.column_name));
+  const missingColumns = POST_COLUMNS.filter((column) => !availableColumns.has(column));
+  if (missingColumns.length) {
+    throw new Error(`top_posts is missing required columns: ${missingColumns.join(", ")}`);
+  }
+};
+
 const exportArchive = async ({
   outputDirectory,
   firstDate = FIRST_ARCHIVE_DATE,
@@ -144,6 +153,7 @@ const exportArchive = async ({
 
   await client.connect();
   try {
+    await verifySourceSchema(client);
     while (true) {
       const result = await client.query(
         `SELECT ${POST_COLUMNS.join(", ")}
@@ -207,4 +217,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { createManifest, exportArchive, getDateRange, sortPosts, writeDateObject };
+module.exports = { POST_COLUMNS, createManifest, exportArchive, getDateRange, sortPosts, verifySourceSchema, writeDateObject };

@@ -1,8 +1,9 @@
-const { mkdtempSync, readFileSync } = require("node:fs");
+const { mkdtempSync, readFileSync, writeFileSync } = require("node:fs");
 const { tmpdir } = require("node:os");
 const { join } = require("node:path");
 const { gunzipSync } = require("node:zlib");
-const { createManifest, getDateRange, writeDateObject } = require("./export-archive");
+const { POST_COLUMNS, createManifest, getDateRange, verifySourceSchema, writeDateObject } = require("./export-archive");
+const { verifyArchive } = require("./verify-archive");
 
 describe("archive exporter", () => {
   it("covers the complete 5,113-day archive range", () => {
@@ -34,5 +35,20 @@ describe("archive exporter", () => {
       compressedBytes: first.bytes,
       uncompressedBytes: first.uncompressedBytes,
     });
+  });
+
+  it("checks required columns before transferring archive rows", async () => {
+    const client = {
+      query: jest.fn().mockResolvedValue({ rows: POST_COLUMNS.slice(1).map((column_name) => ({ column_name })) }),
+    };
+
+    await expect(verifySourceSchema(client)).rejects.toThrow(`top_posts is missing required columns: ${POST_COLUMNS[0]}`);
+  });
+
+  it("rejects an incomplete export", () => {
+    const outputDirectory = mkdtempSync(join(tmpdir(), "reddit-archive-verify-"));
+    writeFileSync(join(outputDirectory, "manifest.json"), JSON.stringify(createManifest([])));
+
+    expect(() => verifyArchive(outputDirectory)).toThrow("Expected 5113 date objects");
   });
 });

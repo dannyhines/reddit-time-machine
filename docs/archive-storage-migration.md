@@ -14,7 +14,7 @@ Direct S3 is the lower-infrastructure alternative, but its public bucket and
 uncapped request charges are a worse failure mode. R2 becomes equally attractive
 if the site's DNS zone is already managed by Cloudflare.
 
-Pricing and limits below were checked on 2026-08-30 against the providers'
+Pricing and limits below were rechecked on 2026-09-14 against the providers'
 official pages:
 
 - [Amazon S3 pricing](https://aws.amazon.com/s3/pricing/)
@@ -25,42 +25,39 @@ official pages:
 - [Neon pricing](https://neon.com/pricing)
 - [Neon paid-plan transfer change](https://neon.com/blog/more-data-transfer-on-paid-plans)
 
-## Dataset estimate
+## Measured dataset
 
-The archive contains 5,113 dates (2009-01-01 through 2022-12-31). The Neon
-transfer quota currently prevents even a small aggregate measurement, so a
-complete export size is not yet available. A real, ignored media-heavy row in
-the existing checkout measured 5,700 bytes as JSON and 1,464 bytes with gzip.
-Using the 36 posts selected for the desktop category layout as a planning
-average gives this sizing model (it is not a hard upper bound on `top_posts`):
+A complete read-only export succeeded on 2026-09-14 and passed full local
+checksum, gzip, JSON-shape, date, per-object count, and aggregate verification.
 
-| Measure | 36-post/day model |
+| Measure | Verified export |
 | --- | ---: |
 | Date objects | 5,113 |
-| Rows | 184,068 |
-| JSON | 1,049,187,600 bytes (0.98 GiB) |
-| Gzip | 269,475,552 bytes (257 MiB) |
-| Average gzip object | 52.7 KB |
+| Posts | 299,749 |
+| JSON | 341,363,114 bytes (325.5 MiB) |
+| Gzip | 90,670,127 bytes (86.5 MiB / 0.0907 GB) |
+| Average gzip object | 17.7 KB |
+| Posts per date | 50 minimum, 60 median, 60 maximum |
+| Empty dates | 0 |
 
-Daily-object compression should usually beat the per-row estimate because JSON
-keys and URL prefixes repeat. At 100 exported rows per date, the same deliberately
-heavy per-row model is about 714 MiB gzip; at 250 rows it is about 1.74 GiB. The
-exporter's `manifest.json` records exact post, object, compressed-byte,
-uncompressed-byte, and SHA-256 measurements; use those numbers for the final
-approval checkpoint.
+The compressed export is 26.6% of the JSON size. The ignored local export is the
+source of the exact figures; `manifest.json` records every object size and
+SHA-256 checksum without containing credentials. A committed, credential-free
+measurement record is in [`archive-export-summary.json`](archive-export-summary.json).
 
 ## Cost comparison
 
-Costs use the 0.269 GB compressed planning estimate. Traffic scenarios are
-one complete 5,113-page crawl and 100,000 cold object reads/month (about 5.27 GB).
+Costs use the measured 0.0907 GB compressed export. Traffic scenarios are one
+complete 5,113-page crawl (0.0907 GB) and 100,000 cold object reads/month (about
+1.77 GB).
 Cached date-page hits on Vercel do not read object storage again.
 
 | Option | Storage and write cost | Read/transfer cost | Operational notes |
 | --- | --- | --- | --- |
-| S3 + CloudFront Free flat-rate | $0/month: the plan includes 5 GB of S3 storage credits, 1M requests, and 100 GB transfer per distribution | $0 in both scenarios; no overage charges | Recommended. Two dedicated resources, private origin, global cache, WAF/DDoS, default HTTPS domain. |
-| Direct S3, us-east-1 | About $0.0062/month storage; about $0.0256 one-time for 5,114 PUTs | About $0.002 per full crawl or $0.040 per 100k GETs; transfer stays within AWS's shared 100 GB/month free allowance | One resource and regional latency. Requires public object reads and leaves request costs uncapped. S3 website endpoints do not support HTTPS; use the REST endpoint. |
+| S3 + CloudFront Free flat-rate | $0/month CloudFront and storage: the plan includes 5 GB of S3 storage credits, 1M requests, and 100 GB transfer per distribution. About $0.0256 one-time for 5,114 S3 PUTs | CloudFront delivery is $0 within the allowance. S3 origin GETs are about $0.002 per complete 5,113-object fill or $0.040 per 100k origin GETs | Recommended. Two dedicated resources, private origin, global cache, WAF/DDoS, default HTTPS domain. |
+| Direct S3, us-east-1 | About $0.0021/month storage; about $0.0256 one-time for 5,114 PUTs | About $0.002 per full crawl or $0.040 per 100k GETs; transfer stays within AWS's shared 100 GB/month free allowance | One resource and regional latency. Requires public object reads and leaves request costs uncapped. S3 website endpoints do not support HTTPS; use the REST endpoint. |
 | Cloudflare R2 Standard | $0: 10 GB-month and 1M Class A writes included | $0: 10M Class B reads included and egress is free | Production caching requires a Cloudflare-managed custom domain; `r2.dev` is rate-limited/non-production, and JSON needs an explicit Cache Rule. |
-| Vercel Blob | About $0.0062/month and $0.0256 for 5,114 uploads at on-demand rates | Up to about $0.264 Blob transfer plus $0.040 simple operations per 100k cold reads, before standard Edge/Fast Origin charges | Lowest integration effort on Pro. Hobby includes 1 GB, 2,000 advanced operations, and 10 GB transfer, so the 5,114-object initial upload exceeds its hard monthly operation allowance even if the final archive fits its storage allowance. |
+| Vercel Blob | About $0.0021/month and $0.0256 for 5,114 uploads at on-demand rates | Up to about $0.089 Blob transfer plus $0.040 simple operations per 100k cold reads, before standard Edge/Fast Origin charges | Lowest integration effort on Pro. Hobby includes 1 GB, 2,000 advanced operations, and 10 GB transfer, so the 5,114-object initial upload exceeds its hard monthly operation allowance. |
 | Neon primary reads | Launch: $0.35/GB-month storage plus $0.106/CU-hour; Free includes 0.5 GB, 100 CU-hours, and 5 GB public transfer | Paid plans include 500 GB transfer, then $0.10/GB | Queryable but unnecessary for immutable data; compute wakeups, quotas, and per-request SQL remain failure modes. Retain only as a temporary, explicit fallback. |
 
 CloudFront and R2 are tied at $0 for this workload. CloudFront wins here because
@@ -89,15 +86,14 @@ The exporter:
 - writes a deterministic manifest with exact sizes and SHA-256 hashes.
 
 The export is one read-only database pass, but PostgreSQL compression happens
-client-side, so Neon meters the uncompressed result transfer. The 36-post/day
-model is roughly 1 GB uncompressed; use the current row count or restore enough
-quota headroom before running the real export.
+client-side. The verified JSON payload is 341.4 MB before protocol overhead,
+which is also a useful lower-bound approximation for the repeated transfer caused
+by every full database-backed build.
 
 Verify before any upload:
 
 ```bash
-node -e 'const m=require("./archive-export/manifest.json"); if(m.objectCount!==5113) process.exit(1); console.log({objects:m.objectCount,posts:m.postCount,compressedBytes:m.compressedBytes,uncompressedBytes:m.uncompressedBytes})'
-find archive-export/dates -type f | wc -l
+yarn verify:archive archive-export
 ```
 
 ## Approval-gated production migration
@@ -106,20 +102,31 @@ None of these steps are performed by this change. Before executing them, present
 the manifest's exact sizes plus the exact AWS account/region/resource names and
 obtain approval for that scope.
 
-Proposed targets:
+Proposed exact targets (not yet created or changed):
 
-1. A new private S3 bucket in `us-east-1`, dedicated only to Reddit Time Machine
-   archive objects, with versioning off and default SSE-S3 encryption.
-2. A new CloudFront distribution on the $0/month Free flat-rate plan, using its
-   generated HTTPS hostname, an Origin Access Control for that bucket, and no
-   custom DNS or certificate.
-3. A bucket policy granting that distribution `s3:GetObject` only. Do not grant
-   public access or `s3:ListBucket`.
-4. Exactly 5,114 uploads: 5,113 gzip date objects plus `manifest.json`.
-5. Vercel Production environment variables for the existing project:
-   `ARCHIVE_BASE_URL=https://<distribution>.cloudfront.net` and initially
+1. AWS account alias `dhines-ccp`, region `us-east-1`.
+2. New private S3 bucket `reddit-time-machine-archive-prod-20260914`, dedicated
+   only to Reddit Time Machine archive objects, with Bucket owner enforced,
+   Block Public Access on, versioning off, and default SSE-S3 encryption. A
+   read-only availability check returned 404, so the name is currently unused.
+3. New CloudFront distribution comment `reddit-time-machine-archive-prod` on the
+   $0/month Free flat-rate plan, using its generated HTTPS hostname and no custom
+   DNS, certificate, access logs, Lambda, or CloudFront Functions.
+4. New Origin Access Control named `reddit-time-machine-archive-prod-oac`, using
+   always-signed SigV4 requests to the S3 REST origin.
+5. A bucket policy granting only that distribution `s3:GetObject` for the
+   bucket's objects. Do not grant public access or `s3:ListBucket`.
+6. Exactly 5,114 uploads: 5,113 gzip date objects plus `manifest.json`.
+7. Vercel project `reddit-time-machine`, Production environment only:
+   `ARCHIVE_BASE_URL=https://<new-distribution>.cloudfront.net` and initially
    `ARCHIVE_DATABASE_FALLBACK=true`.
-6. One production deployment of the approved commit.
+8. One production deployment of the approved PR commit.
+
+The installed AWS CLI is version 2.0.16 and predates CloudFront flat-rate plans.
+Use the AWS console for the new distribution/plan selection or a current,
+configuration-preserving SDK; do not use the old CLI to update an existing
+distribution. The S3 upload commands below remain compatible with the installed
+CLI.
 
 Upload metadata must be:
 
