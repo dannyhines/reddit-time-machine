@@ -4,8 +4,9 @@
 
 Store one gzip-compressed JSON object per archive date in a **new, dedicated,
 private S3 bucket** and expose it through a **CloudFront Free flat-rate
-distribution** using Origin Access Control. Use the CloudFront-generated domain
-as `ARCHIVE_BASE_URL`; no public DNS change is required.
+distribution** using Origin Access Control. The deployed CloudFront-generated
+domain is the committed application default; `ARCHIVE_BASE_URL` remains an
+optional endpoint override. No public DNS change is required.
 
 This is the best default for this project because it has a $0/month envelope at
 the expected size and traffic, keeps the S3 bucket private, adds global caching
@@ -146,11 +147,13 @@ Deployed and verified on 2026-09-14:
 8. Exactly 5,114 uploaded objects: 5,113 gzip date objects plus `manifest.json`.
    The remote listing contains 91,896,119 bytes including the manifest; every
    remote key, size, and single-part S3 ETag matches its local source.
-9. Not yet changed: Vercel project `reddit-time-machine`, Production environment
-   only, with proposed values:
-   `ARCHIVE_BASE_URL=https://d62zosiwnxg1g.cloudfront.net` and initially
-   `ARCHIVE_DATABASE_FALLBACK=true`.
-10. Not yet performed: one production deployment of the approved PR commit.
+9. The application defaults to
+   `https://d62zosiwnxg1g.cloudfront.net` in source control, so Vercel Preview
+   and Production deployments use the archive without environment mutation.
+   `ARCHIVE_BASE_URL` can override the endpoint; setting it to `database` (or an
+   empty value) explicitly restores database-primary reads.
+10. `ARCHIVE_DATABASE_FALLBACK` remains disabled by default. Setting it to
+    `true` is an optional emergency fallback, not part of the normal cutover.
 
 The installed AWS CLI is version 2.0.16 and predates CloudFront flat-rate plan
 commands, but its credential, CloudFormation, and S3 operations used here remain
@@ -185,10 +188,9 @@ S3 access is denied with 403. Missing objects also return 403 because the OAC ha
 rendered 2009-01-01 and 2022-12-31 from CloudFront with database fallback
 disabled.
 
-The remaining approval-gated application cutover is to configure Vercel, deploy
-the PR commit, verify production, and then set `ARCHIVE_DATABASE_FALLBACK=false`
-in a second deployment so an object storage outage fails visibly instead of
-silently consuming Neon quota.
+The remaining application cutover is to merge and deploy the PR commit, then
+verify production. No Vercel environment change is required, and an object
+storage outage fails visibly instead of silently consuming Neon quota.
 
 ## Build and rollback behavior
 
@@ -199,9 +201,9 @@ visitors and crawlers. Archive index/month pages and the sitemap remain generate
 without data reads, so crawlers still discover every date.
 
 Application rollback is configuration-only: redeploy the previous production
-deployment, or unset `ARCHIVE_BASE_URL` to restore database-primary reads. Keep
-Neon and all database variables unchanged until the static path has been
-verified and a separate retirement decision is approved.
+deployment, or set `ARCHIVE_BASE_URL=database` to restore database-primary
+reads. Keep Neon and all database variables unchanged until the static path has
+been verified and a separate retirement decision is approved.
 
 Infrastructure rollback is `cdk destroy`. CloudFormation removes the Free
 subscription first (AWS cancels a Free subscription immediately), then the

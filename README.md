@@ -43,6 +43,9 @@ approval boundary, verification steps, and rollback procedure are documented in
 The dedicated AWS resources are defined in [`infra/`](infra/) using AWS CDK v2;
 its checked deployment command refuses to run outside the documented account
 alias and region.
+The deployed CloudFront archive is the application default. Set
+`ARCHIVE_BASE_URL` only to override it, or set `ARCHIVE_BASE_URL=database` for an
+explicit database-primary rollback.
 
 ## Acknowledgements
 

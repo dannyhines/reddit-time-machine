@@ -18,5 +18,7 @@
   "directS3PublicAccessDenied": true,
   "cloudFrontCacheHitVerified": true,
   "liveLoaderSmokeTestWithDatabaseFallbackDisabled": true,
+  "committedApplicationDefault": "https://d62zosiwnxg1g.cloudfront.net",
+  "databaseFallbackDefault": false,
   "vercelProductionConfigured": false
 }

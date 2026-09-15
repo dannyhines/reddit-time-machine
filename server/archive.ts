@@ -3,6 +3,7 @@ import { Post } from "../types/Post";
 import { getPostsForDateFromDatabase } from "./database";
 
 const ARCHIVE_CACHE_LIMIT = 256;
+export const DEFAULT_ARCHIVE_BASE_URL = "https://d62zosiwnxg1g.cloudfront.net";
 const archiveCache = new Map<string, Promise<Post[]>>();
 
 class ArchiveObjectError extends Error {
@@ -12,8 +13,17 @@ class ArchiveObjectError extends Error {
   }
 }
 
+const getArchiveBaseUrl = () => {
+  const configuredBaseUrl = process.env.ARCHIVE_BASE_URL;
+  if (configuredBaseUrl !== undefined && ["", "database"].includes(configuredBaseUrl.trim().toLowerCase())) {
+    return null;
+  }
+
+  return (configuredBaseUrl ?? DEFAULT_ARCHIVE_BASE_URL).replace(/\/+$/, "");
+};
+
 const getArchiveObjectUrl = (date: string) => {
-  const baseUrl = process.env.ARCHIVE_BASE_URL?.replace(/\/+$/, "");
+  const baseUrl = getArchiveBaseUrl();
   return baseUrl ? `${baseUrl}/dates/${date}.json.gz` : null;
 };
 
@@ -84,7 +94,7 @@ const getCachedArchiveObject = (date: string) => {
 };
 
 export const getPostsForDate = async (date: string): Promise<Post[]> => {
-  if (!process.env.ARCHIVE_BASE_URL) {
+  if (!getArchiveBaseUrl()) {
     return getPostsForDateFromDatabase(date);
   }
 

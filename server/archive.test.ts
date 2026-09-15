@@ -1,7 +1,7 @@
 import { gzipSync } from "node:zlib";
 import { Post } from "../types/Post";
 import { getPostsForDateFromDatabase } from "./database";
-import { clearArchiveCacheForTests, getPostsForDate } from "./archive";
+import { DEFAULT_ARCHIVE_BASE_URL, clearArchiveCacheForTests, getPostsForDate } from "./archive";
 
 jest.mock("./database", () => ({
   getPostsForDateFromDatabase: jest.fn(),
@@ -53,8 +53,7 @@ describe("archive object loader", () => {
     else process.env.ARCHIVE_DATABASE_FALLBACK = originalFallback;
   });
 
-  it("loads a compressed date object and caches repeated reads", async () => {
-    process.env.ARCHIVE_BASE_URL = "https://archive.example.com/";
+  it("loads from the committed AWS archive by default and caches repeated reads", async () => {
     mockedFetch.mockResolvedValue(mockResponse(gzipSync(JSON.stringify([post]))));
 
     await expect(getPostsForDate("2014-07-04")).resolves.toEqual([post]);
@@ -62,19 +61,32 @@ describe("archive object loader", () => {
 
     expect(mockedFetch).toHaveBeenCalledTimes(1);
     expect(mockedFetch).toHaveBeenCalledWith(
-      "https://archive.example.com/dates/2014-07-04.json.gz",
+      `${DEFAULT_ARCHIVE_BASE_URL}/dates/2014-07-04.json.gz`,
       expect.objectContaining({ cache: "force-cache" })
     );
     expect(mockedDatabaseRead).not.toHaveBeenCalled();
   });
 
-  it("uses the database when object storage is not configured", async () => {
+  it("allows an explicit database-primary rollback", async () => {
+    process.env.ARCHIVE_BASE_URL = "database";
     mockedDatabaseRead.mockResolvedValue([post]);
 
     await expect(getPostsForDate("2014-07-04")).resolves.toEqual([post]);
 
     expect(mockedDatabaseRead).toHaveBeenCalledWith("2014-07-04");
     expect(mockedFetch).not.toHaveBeenCalled();
+  });
+
+  it("allows the archive endpoint to be overridden", async () => {
+    process.env.ARCHIVE_BASE_URL = "https://archive.example.com/";
+    mockedFetch.mockResolvedValue(mockResponse(gzipSync(JSON.stringify([post]))));
+
+    await expect(getPostsForDate("2014-07-04")).resolves.toEqual([post]);
+
+    expect(mockedFetch).toHaveBeenCalledWith(
+      "https://archive.example.com/dates/2014-07-04.json.gz",
+      expect.any(Object)
+    );
   });
 
   it("uses the database only when the explicit fallback flag is enabled", async () => {
