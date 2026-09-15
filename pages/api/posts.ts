@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getPostsForDate } from "../../server/database";
+import { getPostsForDate } from "../../server/archive";
 import { isDateInRange, isValidDate } from "../../utils/date-util";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -17,11 +17,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const posts = await getPostsForDate(date);
-    res.setHeader("Cache-Control", "public, s-maxage=86400, stale-while-revalidate=604800");
+    res.setHeader("Cache-Control", "public, s-maxage=31536000, stale-while-revalidate=31536000");
     return res.status(200).json(posts);
-  } catch (error: any) {
-    console.log("Error in handler for GET /posts:", error);
-    return res.status(500).json({ error: error.message });
+  } catch {
+    console.error("Archive data unavailable for GET /posts");
+    return res.status(503).json({ error: "Archive data temporarily unavailable" });
   }
 };
 

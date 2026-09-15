@@ -1,10 +1,10 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { render, screen } from "@testing-library/react";
-import { getPostsForDate } from "../server/database";
-import DatePage, { getStaticProps } from "../pages/[date]";
+import { getPostsForDate } from "../server/archive";
+import DatePage, { getStaticPaths, getStaticProps } from "../pages/[date]";
 import { Post } from "../types/Post";
 
-jest.mock("../server/database", () => ({
+jest.mock("../server/archive", () => ({
   getPostsForDate: jest.fn(),
 }));
 
@@ -34,6 +34,11 @@ const post: Post = {
 
 describe("date page routing", () => {
   beforeEach(() => mockedGetPostsForDate.mockReset());
+
+  it("defers every date so production builds perform no archive reads", async () => {
+    await expect(getStaticPaths({} as never)).resolves.toEqual({ paths: [], fallback: "blocking" });
+    expect(mockedGetPostsForDate).not.toHaveBeenCalled();
+  });
 
   it.each(["nope", "2022-02-29", "2008-12-31", "2025-01-01"])(
     "returns a real 404 for malformed or out-of-range date %s",

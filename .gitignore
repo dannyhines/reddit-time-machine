@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/infra/node_modules
+/infra/cdk.out
 /.pnp
 .pnp.js
 
@@ -14,6 +16,7 @@
 
 # production
 /build
+/archive-export
 
 # misc
 .DS_Store
