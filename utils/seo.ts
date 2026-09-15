@@ -1,6 +1,9 @@
 import dayjs from "dayjs";
 import { Post } from "../types/Post";
 
+export const SITE_NAME = "Reddit Time Machine";
+export const SOCIAL_IMAGE_URL = "https://www.reddit-time-machine.com/og.jpg";
+
 export const getReadableDate = (date: string) => dayjs(date).format("MMMM D, YYYY");
 
 const trimDescription = (description: string, maxLength = 160) => {

@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { Card, Image } from "antd";
 import { Post } from "../types/Post";
 import { sendLinkClickToGA } from "../utils/googleAnalytics";
-import { REDDIT_BASE_URL } from "../utils/constants";
+import { normalizePostUrl } from "../utils/postUrl";
 import { getImageCandidates } from "../utils/getImageUrls";
 import { LoadingCard } from "./LoadingCard";
 import dayjs from "dayjs";
@@ -25,6 +25,7 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
   const imageIndex = imageState.postId === post?.id ? imageState.index : 0;
   const image = imageCandidates[imageIndex];
   const { isMobile } = useWindowDimensions();
+  const postUrl = normalizePostUrl(post?.url, post?.permalink);
 
   if (!post || loading) return <LoadingCard />;
 
@@ -68,10 +69,10 @@ const ImageCard: React.FC<CardViewProps> = (props) => {
       bodyStyle={{ padding: "9px 10px 10px" }}
     >
       <a
-        href={REDDIT_BASE_URL + post.permalink}
+        href={postUrl}
         target='_blank'
         rel='noopener noreferrer'
-        onClick={() => sendLinkClickToGA("reddit", REDDIT_BASE_URL + post.permalink)}
+        onClick={() => sendLinkClickToGA("reddit", postUrl)}
       >
         <Meta
           style={{ padding: 0 }}

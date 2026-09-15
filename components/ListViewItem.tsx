@@ -1,14 +1,15 @@
 // ListViewItem.tsx
 import { List, Avatar, Card } from "antd";
 import React from "react";
-import { REDDIT_BASE_URL } from "../utils/constants";
+import { getRedditPermalinkUrl, normalizePostUrl } from "../utils/postUrl";
 import { LinkWithAnalytics } from "./LinkWithAnalytics";
 import { Post } from "../types/Post";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 
 const ListViewItem: React.FC<{ post: Post; contentOnly?: boolean }> = ({ post, contentOnly }) => {
   const { isMobile } = useWindowDimensions();
-  const redditUrl = REDDIT_BASE_URL + post.permalink;
+  const redditUrl = getRedditPermalinkUrl(post.permalink);
+  const postUrl = normalizePostUrl(post.url, post.permalink);
 
   const thumbnail = React.useMemo(() => {
     const imgResolutions = post.preview?.images[0].resolutions ?? [];
@@ -24,9 +25,9 @@ const ListViewItem: React.FC<{ post: Post; contentOnly?: boolean }> = ({ post, c
         avatar={<Avatar shape='square' src={thumbnail} size='large' alt={post.title} />}
         title={
           <LinkWithAnalytics
-            url={post.url || redditUrl}
+            url={postUrl}
             text={post.title}
-            type={post.url ? "external" : "reddit"}
+            type={postUrl === redditUrl ? "reddit" : "external"}
             fontSize={isMobile ? 12 : undefined}
           />
         }

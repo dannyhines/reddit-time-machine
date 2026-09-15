@@ -62,6 +62,8 @@ describe("date page routing", () => {
     expect(html).not.toContain("Choose a date or click");
     expect(html).toContain("aria-label=\"Previous day: July 3, 2014\"");
     expect(html).toContain("aria-label=\"Next day: July 5, 2014\"");
+    expect(html).toContain("July 3rd, 2014");
+    expect(html).toContain("July 5th, 2014");
   });
 
   it("replaces archive content when navigating to another date", () => {
