@@ -98,9 +98,29 @@ yarn verify:archive archive-export
 
 ## Approval-gated production migration
 
-None of these steps are performed by this change. Before executing them, present
-the manifest's exact sizes plus the exact AWS account/region/resource names and
-obtain approval for that scope.
+The infrastructure is defined in the separate TypeScript CDK app under
+`infra/`. Synthesize and test it without changing AWS:
+
+```bash
+cd infra
+yarn install --frozen-lockfile
+yarn build
+yarn test
+yarn synth
+```
+
+`yarn preflight` checks that the active credentials resolve to account alias
+`dhines-ccp` and region `us-east-1`; it deliberately does not print or commit the
+numeric account ID. Use `yarn diff:checked` for a read-only diff.
+`yarn deploy:checked` performs the same guard before deployment.
+
+The pinned CDK CLI uses CloudFormation's current resource types, including
+`AWS::PricingPlanManager::Subscription`, so the system AWS CLI does not need to
+be upgraded for this deployment. The account has an existing legacy
+`CDKToolkit` stack but not the modern bootstrap marker. Because this app contains
+no CDK file or Docker assets, it intentionally uses `LegacyStackSynthesizer` and
+does not create or update bootstrap buckets, ECR repositories, KMS keys, or IAM
+roles.
 
 Proposed exact targets (not yet created or changed):
 
@@ -114,19 +134,25 @@ Proposed exact targets (not yet created or changed):
    DNS, certificate, access logs, Lambda, or CloudFront Functions.
 4. New Origin Access Control named `reddit-time-machine-archive-prod-oac`, using
    always-signed SigV4 requests to the S3 REST origin.
-5. A bucket policy granting only that distribution `s3:GetObject` for the
+5. New CloudFront-scope WAF web ACL named
+   `reddit-time-machine-archive-prod-web-acl`. AWS requires a WAF ACL for every
+   flat-rate CloudFront plan; this dedicated allow-by-default ACL has metrics and
+   request sampling disabled and is covered by the Free plan.
+6. New Free-tier `AWS::PricingPlanManager::Subscription` associating only the
+   new distribution and WAF ACL. Free subscriptions activate immediately and
+   cost $0/month.
+7. A bucket policy granting only that distribution `s3:GetObject` for the
    bucket's objects. Do not grant public access or `s3:ListBucket`.
-6. Exactly 5,114 uploads: 5,113 gzip date objects plus `manifest.json`.
-7. Vercel project `reddit-time-machine`, Production environment only:
+8. Exactly 5,114 uploads: 5,113 gzip date objects plus `manifest.json`.
+9. Vercel project `reddit-time-machine`, Production environment only:
    `ARCHIVE_BASE_URL=https://<new-distribution>.cloudfront.net` and initially
    `ARCHIVE_DATABASE_FALLBACK=true`.
-8. One production deployment of the approved PR commit.
+10. One production deployment of the approved PR commit.
 
-The installed AWS CLI is version 2.0.16 and predates CloudFront flat-rate plans.
-Use the AWS console for the new distribution/plan selection or a current,
-configuration-preserving SDK; do not use the old CLI to update an existing
-distribution. The S3 upload commands below remain compatible with the installed
-CLI.
+The installed AWS CLI is version 2.0.16 and predates CloudFront flat-rate plan
+commands, but its credential, CloudFormation, and S3 operations used here remain
+compatible. The project pins its own current CDK CLI, so a system-wide AWS CLI
+upgrade is optional rather than a deployment dependency.
 
 Upload metadata must be:
 
@@ -161,8 +187,14 @@ generates the HTML once; Next/Vercel caches that immutable page for subsequent
 visitors and crawlers. Archive index/month pages and the sitemap remain generated
 without data reads, so crawlers still discover every date.
 
-Rollback is configuration-only: redeploy the previous production deployment, or
-unset `ARCHIVE_BASE_URL` to restore database-primary reads. Keep Neon and all
-database variables unchanged until the static path has been verified and a
-separate retirement decision is approved. No database, bucket, distribution, or
-blob deletion is part of this migration.
+Application rollback is configuration-only: redeploy the previous production
+deployment, or unset `ARCHIVE_BASE_URL` to restore database-primary reads. Keep
+Neon and all database variables unchanged until the static path has been
+verified and a separate retirement decision is approved.
+
+Infrastructure rollback is `cdk destroy`. CloudFormation removes the Free
+subscription first (AWS cancels a Free subscription immediately), then the
+distribution, WAF ACL, OAC, and bucket policy. The archive bucket has a `Retain`
+deletion policy, so its objects survive stack deletion and can be downloaded or
+deleted separately after explicit approval. No existing distribution is
+imported, updated, or deleted by this stack.

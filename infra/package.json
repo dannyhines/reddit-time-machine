@@ -1,0 +1,24 @@
+{
+  "name": "reddit-time-machine-infrastructure",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "yarn@1.22.19",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "test": "node --import tsx --test test/**/*.test.ts",
+    "synth": "cdk synth",
+    "preflight": "node scripts/check-target.js",
+    "diff:checked": "yarn preflight && cdk diff RedditTimeMachineArchive --no-change-set",
+    "deploy:checked": "yarn preflight && cdk deploy RedditTimeMachineArchive --require-approval broadening"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.269.0",
+    "constructs": "10.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.3.1",
+    "aws-cdk": "2.1141.0",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3"
+  }
+}
