@@ -96,7 +96,7 @@ Verify before any upload:
 yarn verify:archive archive-export
 ```
 
-## Approval-gated production migration
+## Deployed AWS archive infrastructure
 
 The infrastructure is defined in the separate TypeScript CDK app under
 `infra/`. Synthesize and test it without changing AWS:
@@ -122,32 +122,35 @@ no CDK file or Docker assets, it intentionally uses `LegacyStackSynthesizer` and
 does not create or update bootstrap buckets, ECR repositories, KMS keys, or IAM
 roles.
 
-Proposed exact targets (not yet created or changed):
+Deployed and verified on 2026-09-14:
 
 1. AWS account alias `dhines-ccp`, region `us-east-1`.
-2. New private S3 bucket `reddit-time-machine-archive-prod-20260914`, dedicated
+2. Private S3 bucket `reddit-time-machine-archive-prod-20260914`, dedicated
    only to Reddit Time Machine archive objects, with Bucket owner enforced,
-   Block Public Access on, versioning off, and default SSE-S3 encryption. A
-   read-only availability check returned 404, so the name is currently unused.
-3. New CloudFront distribution comment `reddit-time-machine-archive-prod` on the
-   $0/month Free flat-rate plan, using its generated HTTPS hostname and no custom
-   DNS, certificate, access logs, Lambda, or CloudFront Functions.
-4. New Origin Access Control named `reddit-time-machine-archive-prod-oac`, using
+   Block Public Access on, versioning off, default SSE-S3 encryption, and a
+   `Retain` deletion policy.
+3. CloudFront distribution comment `reddit-time-machine-archive-prod` on the
+   $0/month Free flat-rate plan, available at
+   `https://d62zosiwnxg1g.cloudfront.net`, with no custom DNS, certificate,
+   access logs, Lambda, or CloudFront Functions.
+4. Origin Access Control named `reddit-time-machine-archive-prod-oac`, using
    always-signed SigV4 requests to the S3 REST origin.
-5. New CloudFront-scope WAF web ACL named
+5. CloudFront-scope WAF web ACL named
    `reddit-time-machine-archive-prod-web-acl`. AWS requires a WAF ACL for every
    flat-rate CloudFront plan; this dedicated allow-by-default ACL has metrics and
    request sampling disabled and is covered by the Free plan.
-6. New Free-tier `AWS::PricingPlanManager::Subscription` associating only the
-   new distribution and WAF ACL. Free subscriptions activate immediately and
-   cost $0/month.
+6. Active Free-tier `AWS::PricingPlanManager::Subscription` associating only the
+   distribution and WAF ACL at $0/month.
 7. A bucket policy granting only that distribution `s3:GetObject` for the
    bucket's objects. Do not grant public access or `s3:ListBucket`.
-8. Exactly 5,114 uploads: 5,113 gzip date objects plus `manifest.json`.
-9. Vercel project `reddit-time-machine`, Production environment only:
-   `ARCHIVE_BASE_URL=https://<new-distribution>.cloudfront.net` and initially
+8. Exactly 5,114 uploaded objects: 5,113 gzip date objects plus `manifest.json`.
+   The remote listing contains 91,896,119 bytes including the manifest; every
+   remote key, size, and single-part S3 ETag matches its local source.
+9. Not yet changed: Vercel project `reddit-time-machine`, Production environment
+   only, with proposed values:
+   `ARCHIVE_BASE_URL=https://d62zosiwnxg1g.cloudfront.net` and initially
    `ARCHIVE_DATABASE_FALLBACK=true`.
-10. One production deployment of the approved PR commit.
+10. Not yet performed: one production deployment of the approved PR commit.
 
 The installed AWS CLI is version 2.0.16 and predates CloudFront flat-rate plan
 commands, but its credential, CloudFormation, and S3 operations used here remain
@@ -174,10 +177,18 @@ aws s3 cp archive-export/manifest.json s3://<approved-bucket>/manifest.json \
   --cache-control no-cache
 ```
 
-After upload, verify the manifest, a known populated date, an empty date if one
-exists, response headers, a 404 object, the sitemap, and a random sample of date
-pages. Then set `ARCHIVE_DATABASE_FALLBACK=false` and deploy again so an object
-storage outage fails visibly instead of silently consuming Neon quota.
+Post-upload verification passed for both boundary dates. CloudFront returns
+byte-identical content with the expected type, gzip encoding, and cache headers;
+a repeated application-style request changed from an edge miss to a hit. Direct
+S3 access is denied with 403. Missing objects also return 403 because the OAC has
+`s3:GetObject` but deliberately lacks `s3:ListBucket`. A local production runtime
+rendered 2009-01-01 and 2022-12-31 from CloudFront with database fallback
+disabled.
+
+The remaining approval-gated application cutover is to configure Vercel, deploy
+the PR commit, verify production, and then set `ARCHIVE_DATABASE_FALLBACK=false`
+in a second deployment so an object storage outage fails visibly instead of
+silently consuming Neon quota.
 
 ## Build and rollback behavior
 

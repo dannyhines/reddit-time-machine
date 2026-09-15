@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "deployedAt": "2026-09-14",
+  "accountAlias": "dhines-ccp",
+  "region": "us-east-1",
+  "stackName": "RedditTimeMachineArchive",
+  "stackStatus": "CREATE_COMPLETE",
+  "bucketName": "reddit-time-machine-archive-prod-20260914",
+  "distributionDomain": "d62zosiwnxg1g.cloudfront.net",
+  "distributionStatus": "Deployed",
+  "pricingPlanTier": "FREE",
+  "dateObjectCount": 5113,
+  "totalObjectCount": 5114,
+  "postCount": 299749,
+  "compressedArchiveBytes": 90670127,
+  "remoteBytesIncludingManifest": 91896119,
+  "allRemoteKeysSizesAndEtagsVerified": true,
+  "directS3PublicAccessDenied": true,
+  "cloudFrontCacheHitVerified": true,
+  "liveLoaderSmokeTestWithDatabaseFallbackDisabled": true,
+  "vercelProductionConfigured": false
+}
