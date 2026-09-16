@@ -4,7 +4,7 @@ import Link from "next/link";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { ArchiveMonth, getArchiveMonths } from "../../utils/archive";
-import { SITE_NAME, SOCIAL_IMAGE_URL } from "../../utils/seo";
+import { SITE_NAME, SOCIAL_IMAGE_HEIGHT, SOCIAL_IMAGE_WIDTH, getSocialImageUrl } from "../../utils/seo";
 import styles from "../../styles/Archive.module.css";
 
 interface ArchiveIndexProps {
@@ -14,6 +14,7 @@ interface ArchiveIndexProps {
 const url = "https://www.reddit-time-machine.com/archive";
 const title = "Browse the Reddit Archive by Date | Reddit Time Machine";
 const description = "Browse Reddit's archived front page by year, month, and day from 2009 through 2022.";
+const socialImageUrl = getSocialImageUrl({ kind: "archive" });
 
 const ArchiveIndex: NextPage<ArchiveIndexProps> = ({ months }) => {
   const monthsByYear = months.reduce<Record<string, ArchiveMonth[]>>((years, month) => {
@@ -33,14 +34,14 @@ const ArchiveIndex: NextPage<ArchiveIndexProps> = ({ months }) => {
         <meta property='og:url' content={url} />
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
-        <meta property='og:image' content={SOCIAL_IMAGE_URL} />
-        <meta property='og:image:width' content='1200' />
-        <meta property='og:image:height' content='628' />
-        <meta property='og:image:alt' content='Reddit Time Machine home page' />
+        <meta property='og:image' content={socialImageUrl} />
+        <meta property='og:image:width' content={String(SOCIAL_IMAGE_WIDTH)} />
+        <meta property='og:image:height' content={String(SOCIAL_IMAGE_HEIGHT)} />
+        <meta property='og:image:alt' content='Browse the Reddit archive by date' />
         <meta name='twitter:card' content='summary_large_image' />
         <meta name='twitter:title' content={title} />
         <meta name='twitter:description' content={description} />
-        <meta name='twitter:image' content={SOCIAL_IMAGE_URL} />
+        <meta name='twitter:image' content={socialImageUrl} />
       </Head>
       <Header />
       <main className={styles.archive_page}>

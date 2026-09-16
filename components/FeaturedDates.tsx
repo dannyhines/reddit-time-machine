@@ -10,8 +10,8 @@ const FeaturedDates = () => {
     <section className={styles.featured_section}>
       <div className={styles.section_heading}>
         <ListTitle>Featured dates</ListTitle>
-        <p>Jump to memorable moments in Reddit history.</p>
       </div>
+      <p className={styles.section_description}>Jump to memorable moments in Reddit history.</p>
       <div className={styles.card_container}>
         {FEATURED_DATES_POSTS.map(({ date, description, img }) => (
           <Link

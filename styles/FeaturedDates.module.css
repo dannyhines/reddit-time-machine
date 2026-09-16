@@ -3,14 +3,11 @@
 }
 
 .section_heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
+  display: block;
 }
 
-.section_heading p {
-  margin: 0 0 0.5em;
+.section_description {
+  margin: -8px 0 14px;
   color: #8f969c;
   font-size: 13px;
 }
@@ -106,7 +103,7 @@
     padding-top: 20px;
   }
 
-  .section_heading p {
+  .section_description {
     display: none;
   }
 

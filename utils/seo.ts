@@ -2,7 +2,33 @@ import dayjs from "dayjs";
 import { Post } from "../types/Post";
 
 export const SITE_NAME = "Reddit Time Machine";
-export const SOCIAL_IMAGE_URL = "https://www.reddit-time-machine.com/og.jpg";
+export const SITE_URL = "https://www.reddit-time-machine.com";
+export const SOCIAL_IMAGE_WIDTH = 1200;
+export const SOCIAL_IMAGE_HEIGHT = 630;
+
+type SocialImageOptions = {
+  kind?: "home" | "archive" | "month" | "date";
+  date?: string;
+  year?: string;
+  month?: string;
+};
+
+/**
+ * Builds a share-card URL for the page being described. Keeping the page
+ * context in the image URL prevents every archive page from sharing the same
+ * generic preview in chat clients and search previews.
+ */
+export const getSocialImageUrl = ({ kind = "home", date, year, month }: SocialImageOptions = {}) => {
+  const params = new URLSearchParams({ kind });
+
+  if (date) params.set("date", date);
+  if (year) params.set("year", year);
+  if (month) params.set("month", month);
+
+  return `${SITE_URL}/api/og?${params.toString()}`;
+};
+
+export const SOCIAL_IMAGE_URL = getSocialImageUrl();
 
 export const getReadableDate = (date: string) => dayjs(date).format("MMMM D, YYYY");
 

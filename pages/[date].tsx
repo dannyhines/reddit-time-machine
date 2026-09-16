@@ -6,7 +6,14 @@ import Footer from "../components/Footer";
 import { isDateInRange, isValidDate } from "../utils/date-util";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { Post } from "../types/Post";
-import { SITE_NAME, SOCIAL_IMAGE_URL, getDateMetaDescription, getReadableDate } from "../utils/seo";
+import {
+  SITE_NAME,
+  SOCIAL_IMAGE_HEIGHT,
+  SOCIAL_IMAGE_WIDTH,
+  getDateMetaDescription,
+  getReadableDate,
+  getSocialImageUrl,
+} from "../utils/seo";
 import { getPostsForDate } from "../server/archive";
 
 interface Props {
@@ -19,6 +26,7 @@ const DatePage = (props: Props) => {
   const title = `Reddit on ${readableDate}: Top Posts and Discussions`;
   const description = getDateMetaDescription(props.date, props.posts);
   const url = `https://www.reddit-time-machine.com/${props.date}`;
+  const socialImageUrl = getSocialImageUrl({ kind: "date", date: props.date });
   return (
     <div>
       <Head>
@@ -36,17 +44,17 @@ const DatePage = (props: Props) => {
         <meta property='og:url' content={url} />
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
-        <meta property='og:image' content={SOCIAL_IMAGE_URL} />
-        <meta property='og:image:width' content='1200' />
-        <meta property='og:image:height' content='628' />
-        <meta property='og:image:alt' content='Reddit Time Machine home page' />
+        <meta property='og:image' content={socialImageUrl} />
+        <meta property='og:image:width' content={String(SOCIAL_IMAGE_WIDTH)} />
+        <meta property='og:image:height' content={String(SOCIAL_IMAGE_HEIGHT)} />
+        <meta property='og:image:alt' content={`Reddit archive for ${readableDate}`} />
         <meta property='og:author' content='Danny Hines' />
 
         <meta name='twitter:card' content='summary_large_image' />
         <meta name='twitter:url' content={url} />
         <meta name='twitter:title' content={title} />
         <meta name='twitter:description' content={description} />
-        <meta name='twitter:image' content={SOCIAL_IMAGE_URL} />
+        <meta name='twitter:image' content={socialImageUrl} />
       </Head>
 
       <Header />
