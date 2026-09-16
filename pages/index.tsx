@@ -12,7 +12,7 @@ import { Divider, Spin } from "antd";
 import { getShortDateString } from "../utils/date-util";
 import FeaturedDates from "../components/FeaturedDates";
 import BestMemes from "../components/BestMemes";
-import { SITE_NAME, SOCIAL_IMAGE_URL } from "../utils/seo";
+import { SITE_NAME, SOCIAL_IMAGE_HEIGHT, SOCIAL_IMAGE_WIDTH, SOCIAL_IMAGE_URL } from "../utils/seo";
 
 const title = "Reddit Time Machine - Explore a day in internet history";
 const description = `Explore Reddit history with Reddit Time Machine. See the most up-voted news, pictures, and memes on any day in the Reddit archive.`;
@@ -55,8 +55,8 @@ const Home: NextPage<HomeProps> = ({ initialDate }) => {
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
         <meta property='og:image' content={SOCIAL_IMAGE_URL} />
-        <meta property='og:image:width' content='1200' />
-        <meta property='og:image:height' content='628' />
+        <meta property='og:image:width' content={String(SOCIAL_IMAGE_WIDTH)} />
+        <meta property='og:image:height' content={String(SOCIAL_IMAGE_HEIGHT)} />
         <meta property='og:image:alt' content='Reddit Time Machine home page' />
         <meta property='og:author' content='Danny Hines' />
 
